@@ -1,5 +1,4 @@
 # Ignore file
 
-# Keil
-*.uvproj
-*.bak
+# Projekt ordner
+Projekt-dateien/
