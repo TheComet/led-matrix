@@ -2,3 +2,6 @@
 
 # Projekt ordner
 project
+
+# Windows thumbnails
+*.db
