@@ -5,3 +5,6 @@ project
 
 # Windows thumbnails
 *.db
+
+# documentation locks
+.~lock
