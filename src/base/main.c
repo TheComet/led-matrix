@@ -4,8 +4,7 @@
 // Programmed by	: Alex Murray
 //			  Marcel Kaltenrieder
 // ----------------------------------------------------------------------
-// This program interfaces with the LED driver by providing
-// utility functions
+// This program interfaces with the LED matrix module
 // ----------------------------------------------------------------------
 
 /*
@@ -14,26 +13,34 @@
 -------------------------------------------------------------------------
 
                                  _______________________
-                                |     MSP430F5172       |
+                                |     MSP430F2418       |
                                 |                       |
-                          ------| P1.0             P3.0 |------ DS_R_0                 OUT/D
-                      TxD ------| P1.1             P3.1 |------ DS_R_1                 OUT/D
-                      RxD ------| P1.2             P3.2 |------ DS_G_0                 OUT/D
-                          ------| P1.3             P3.3 |------ DS_G_1                 OUT/D
-                          ------| P1.4             P3.4 |------ DS_B_0                 OUT/D
-                          ------| P1.5             P3.5 |------ DS_B_1                 OUT/D
-                          ------| P1.6             P3.6 |------ SHCP                   OUT/D
-                          ------| P1.7             P3.7 |------ STCP                   OUT/D
+  IN/D   Player[0].btn[0] ------| P1.0             P4.0 |------ Player[3].btn[0]      IN/D
+  IN/D   Player[0].btn[1] ------| P1.1             P4.1 |------ Player[3].btn[1]      IN/D 
+  IN/D   Player[0].btn[2] ------| P1.2             P4.2 |------ Player[3].btn[2]      IN/D
+  IN/D   Player[0].btn[3] ------| P1.3             P4.3 |------ Player[3].btn[3]      IN/D
+  IN/D   Player[0].btn[4] ------| P1.4             P4.4 |------ Player[3].btn[4]      IN/D
+                          ------| P1.5             P4.5 |------ 
+                          ------| P1.6             P4.6 |------ 
+                          ------| P1.7             P4.7 |------ 
                                 |                       |
-  OUT/D             ROW_0 ------| P2.0                  |
-  OUT/D             ROW_1 ------| P2.1                  |
-  OUT/D             ROW_2 ------| P2.2                  |
-  OUT/D             ROW_3 ------| P2.3                  |
-  OUT/D           /ROW_EN ------| P2.4                  |
-                          ------| P2.5                  |
-                          ------| P2.6                  |
-                          ------| P2.7                  |
+  IN/D   Player[1].btn[0] ------| P2.0             P5.0 |------ 
+  IN/D   Player[1].btn[1] ------| P2.1             P5.1 |------ 
+  IN/D   Player[1].btn[2] ------| P2.2             P5.2 |------ 
+  IN/D   Player[1].btn[3] ------| P2.3             P5.3 |------ 
+  IN/D   Player[1].btn[4] ------| P2.4             P5.4 |------ 
+                          ------| P2.5             P5.5 |------ 
+                          ------| P2.6             P5.6 |------ 
+                          ------| P2.7             P5.7 |------ 
                                 |                       |
+  IN/D   Player[1].btn[0] ------| P3.0             P6.0 |------ 
+  IN/D   Player[1].btn[1] ------| P3.1             P6.1 |------ 
+  IN/D   Player[1].btn[2] ------| P3.2             P6.2 |------ 
+  IN/D   Player[1].btn[3] ------| P3.3             P6.3 |------ 
+  IN/D   Player[1].btn[4] ------| P3.4             P6.4 |------ 
+                          ------| P3.5             P6.5 |------ 
+                     TxD  ------| P3.6             P6.6 |------ 
+                     RxD  ------| P3.7             P6.7 |------ 
                                 |_______________________|
 
 
@@ -46,22 +53,8 @@
      TxD                | For serial communication
      RxD                |
    ---------------------+-------------------------------------------------------------
-     ROW_0              | Selects the active row to write to.
-     ROW_1              | These 4 bits are externally demultiplexed to 16 bits.
-     ROW_2              |
-     ROW_3              |
+     Player[].btn[]     | Input buttons for each player
    ---------------------+-------------------------------------------------------------
-     /ROW_EN            | When set to 1, all LEDs are deactivated
-   ---------------------+-------------------------------------------------------------
-     DS_R_0             | Lower byte for Red colour data to write to shift registers
-     DS_R_1             | Higher byte for Red colour data to write to shift registers
-     DS_G_0             | Lower byte for Green colour data to write to shift registers
-     DS_G_1             | Higher byte for Green colour data to write to shift registers
-     DS_B_0             | Lower byte for Blue colour data to write to shift registers
-     DS_B_1             | Higher byte for Blue colour data to write to shift registers
-   ---------------------+-------------------------------------------------------------
-     SHCP               | Serial data is read in on positive edge
-     STCP               | Serial data is applied to outputs on positive edge
 
 */
 
@@ -75,10 +68,6 @@
 // ----------------------------------------------------------------------
 // global variables & arrays
 // ----------------------------------------------------------------------
-
-// see main.h for more info
-unsigned char volatile pixelArray[8][16][PWM_RESOLUTION];
-unsigned char ROW_EN;
 
 // ----------------------------------------------------------------------
 // Main entry point
