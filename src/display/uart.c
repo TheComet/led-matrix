@@ -3,7 +3,9 @@
 // ----------------------------------------------------------------------
 
 // include files
-#include "main.h"
+#include "common.h"
+#include "uart.h"
+#include "drawUtils.h"
 
 // global variables
 struct UART_t UART;

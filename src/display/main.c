@@ -72,6 +72,7 @@
 // ----------------------------------------------------------------------
 
 // main header
+#include "common.h"
 #include "main.h"
 
 // ----------------------------------------------------------------------
@@ -79,7 +80,7 @@
 // ----------------------------------------------------------------------
 
 // see main.h for more info
-unsigned char volatile pixelArray[8][16][PWM_RESOLUTION];
+volatile unsigned char pixelArray[8][16][PWM_RESOLUTION];
 unsigned char ROW_EN;
 
 // ----------------------------------------------------------------------
@@ -161,7 +162,7 @@ extern inline unsigned short blendColours( unsigned short colour1, unsigned shor
 }
 
 // returns true if the point is out of bounds of the screen
-extern inline unsigned char isOffScreen( signed char x, signed char y )
+extern inline unsigned char isOffScreen( unsigned char x, unsigned char y )
 {
 	return (x&0xF0 || y&0xF0);
 }

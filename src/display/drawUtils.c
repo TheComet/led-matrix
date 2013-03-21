@@ -3,7 +3,8 @@
 // ----------------------------------------------------------------------
 
 // include files
-#include "main.h"
+#include "common.h"
+#include "drawUtils.h"
 
 // global variables
 struct drawUtils_t drawUtils;
@@ -307,15 +308,15 @@ void blendColourFillCircle( unsigned char* x, unsigned char* y, unsigned char* r
 
 void _circle_draw8points( unsigned char* cx, unsigned char* cy, signed char* x, signed char* y, unsigned short* colour )
 {
-	signed char nx, ny;
-	nx = *cx+*x; ny = *cy+*y; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx-*x; ny = *cy+*y; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx+*x; ny = *cy-*y; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx-*x; ny = *cy-*y; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx+*y; ny = *cy+*x; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx-*y; ny = *cy+*x; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx+*y; ny = *cy-*x; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
-	nx = *cx-*y; ny = *cy-*x; if( isOffScreen( nx, ny ) ){}else{ dot( &nx, &ny, colour ); }
+	unsigned char nx, ny;
+	nx = *cx+*x; ny = *cy+*y; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx-*x; ny = *cy+*y; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx+*x; ny = *cy-*y; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx-*x; ny = *cy-*y; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx+*y; ny = *cy+*x; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx-*y; ny = *cy+*x; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx+*y; ny = *cy-*x; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
+	nx = *cx-*y; ny = *cy-*x; if( isOffScreen( nx, ny ) ){} else { dot( &nx, &ny, colour ); }
 	return;
 }
 

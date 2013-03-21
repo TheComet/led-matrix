@@ -3,7 +3,10 @@
 // ----------------------------------------------------------------------
 
 // header files
-#include "main.h"
+#include "common.h"
+#include "init.h"
+#include "uart.h"
+#include "drawUtils.h"
 
 // ------------------------------------------------------------------------------------------------------------------
 // call this to initialise the device
