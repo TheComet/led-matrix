@@ -5,6 +5,7 @@
 // header files
 #include "init.h"
 #include "uart.h"
+#include "framework.h"
 #include "common.h"
 
 // ------------------------------------------------------------------------------------------------------------------
@@ -36,6 +37,9 @@ void initDevice( void )
 	UART.bufferWritePtr = 0;
 	UART.bufferReadPtr = 0;
 	UART.isSending = 0;
+	FrameWork.updateCounter = 0;
+	FrameWork.updateDivider = 1;
+	FrameWork.updateFlag = 0;
 
 	// enable global interrupts
 	__bis_SR_register( GIE );
@@ -86,7 +90,7 @@ void cfgSystemClock( void )
 void cfgTimerA( void )
 {
 	CCTL0 = CCIE;                             // CCR0 interrupt enabled
-	CCR0 = 60000;
+	CCR0 = 50000;
 	TACTL = TASSEL_2 + MC_3 + ID_3;           // SMCLK, upmode, divide by 8
 }
 
@@ -96,7 +100,7 @@ void cfgUART( void )
 	// configure UART
 	UCA1CTL1 |= UCSWRST;			// **Put state machine in reset**
 	UCA1CTL1 |= 0xC0;			// Select SMCLK for BRCLK
-	UCA1BR0 = 0x04;				// 14.7456 MHz divided by 8 = Baud 3'686'400
+	UCA1BR0 = 0x04;				// 14.7456 MHz divided by 0x04 = Baud 3'686'400
 	UCA1BR1 = 0x00;
 	UCA1CTL1 &= ~UCSWRST;			// **Initialise USCI state machine**
 

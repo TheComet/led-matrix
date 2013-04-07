@@ -283,7 +283,7 @@ void setBlendMode( unsigned char blendMode )
 	}
 
 	// write command to buffer
-	write_to_buffer( &n );
+	_write_to_buffer( &n );
 
 	// return
 	return;

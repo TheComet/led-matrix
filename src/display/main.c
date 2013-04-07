@@ -136,8 +136,8 @@ void main( void )
         colour1 = 0xEE0; colour2 = 0xE00; colour3 = 0x0E0; colour4 = 0x00E;
         blendColourFillBox( &x1, &y1, &x2, &y2, &colour1, &colour2, &colour3, &colour4 );
         x1 = 7; y1 = 7; x2 = 7; colour1 = 0xEEE;
-        circle( &x1, &y1, &x2, &colour1 );
-*/
+        circle( &x1, &y1, &x2, &colour1 );*/
+
 
 
 	// main loop

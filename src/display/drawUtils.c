@@ -143,11 +143,11 @@ void line( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned cha
 	// get delta
 	unsigned char dx = absolute(*x2-*x1);
 	unsigned char dy = absolute(*y2-*y1);
-	char sx, sy;
+	signed char sx, sy;
 	if( *x1 < *x2 ) sx=1; else sx=-1;
 	if( *y1 < *y2 ) sy=1; else sy=-1;
-	char err = dx - dy;
-	char e2;
+	signed char err = (signed char)(dx - dy);
+	signed char e2;
 
 	// plot line
 	while(1)
@@ -179,11 +179,11 @@ void blendColourLine( unsigned char* x1, unsigned char* y1, unsigned char* x2, u
 	// get delta
 	unsigned char dx = absolute(*x2-*x1);
 	unsigned char dy = absolute(*y2-*y1);
-	char sx, sy;
+	signed char sx, sy;
 	if( *x1 < *x2 ) sx=1; else sx=-1;
 	if( *y1 < *y2 ) sy=1; else sy=-1;
-	char err = dx - dy;
-	char e2;
+	signed char err = (signed char)(dx - dy);
+	signed char e2;
 	unsigned short finalColour;
 
 	// plot line

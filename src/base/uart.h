@@ -5,8 +5,15 @@
 #ifndef _UART_H_
 	#define _UART_H_
 
-// definitions
+// ----------------------------------------------------------------------
+// Definitions
+// ----------------------------------------------------------------------
+
 #define UART_BUFFER_SIZE 1024
+
+// ----------------------------------------------------------------------
+// Structs
+// ----------------------------------------------------------------------
 
 // structs
 struct UART_t
@@ -17,6 +24,10 @@ struct UART_t
 	unsigned char isSending;
 };
 extern struct UART_t UART;
+
+// ----------------------------------------------------------------------
+// Enumerators
+// ----------------------------------------------------------------------
 
 // blend modes
 enum blendMode_e
@@ -48,7 +59,10 @@ enum commandList_e
 	CMD_SET_BLEND_MODE__MULTIPLY
 };
 
-// function prototypes
+// ----------------------------------------------------------------------
+// Function Prototypes
+// ----------------------------------------------------------------------
+
 unsigned char _buffer_overflow( void );
 void _increase_buffer_pointer( unsigned short* ptr );
 void _write_to_buffer( unsigned char* data );

@@ -82,15 +82,17 @@ void main( void )
 	// main loop
 	while( 1 )
 	{
-		if( PLAYER4_BUTTON_DOWN )
-		{
-			unsigned char x1=0, y1=0, x2=15, y2=15;
-			unsigned short cA=0xE00, cB=0x0E0, cC=0x00E, cD=0x0EE;
-			cls();
-			blendColourFillBox( &x1, &y1, &x2, &y2, &cA, &cB, &cC, &cD );
-			send();
-			__delay_cycles( 100000 );
+
+		// read input
+		pollPorts();
+
+		// update
+		if( FrameWork.updateFlag ){
+			frameWorkUpdate();
+			clearPorts();
+			FrameWork.updateFlag = 0;
 		}
+
 	}
 }
 
@@ -99,4 +101,10 @@ void main( void )
 #pragma vector=TIMERA0_VECTOR
 __interrupt void Timer_A( void )
 {
+	// divide update rate
+	if( (FrameWork.updateCounter++) != FrameWork.updateDivider ) return;
+	FrameWork.updateCounter = 0;
+
+	// set update flag (this is caught in the main loop)
+	FrameWork.updateFlag = 1;
 }
