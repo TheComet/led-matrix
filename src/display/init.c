@@ -31,9 +31,8 @@ void initDevice( void )
 	cfgUART();
 
 	// initialise some variables
-	UART.commandBufferWritePtr = 0;
-	UART.commandBufferReadPtr = 0;
-	UART.timeToProcessCommandBuffer = 0;
+	UART.commandState = CMD_STATE_NOP;
+	UART.commandStateGroup = CMD_STATE_NOP;
 	drawUtils.blendMode = BLEND_MODE_REPLACE;
 
 	// enable global interrupts
@@ -101,7 +100,7 @@ void cfgUART( void )
 	// configure UART
 	UCA0CTL1 |= UCSWRST;				// **Put state machine in reset**
 	UCA0CTL1 |= UCSSEL_2;				// SMCLK (29088000)
-	UCA0BR0 = 0xDD;					// 0xDD for Baud 115'200
+	UCA0BR0 = 0x07;					// 0xDD for Baud 115'200, 0x07 for Baud 3'686'400
 	UCA0BR1 = 0x00;
 	UCA0MCTL |= UCBRS_1 + UCBRF_0;			// Modulation UCBRSx=1, UCBRFx=0
 	UCA0CTL1 &= ~UCSWRST;				// **Initialize USCI state machine**

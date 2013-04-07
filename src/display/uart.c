@@ -2,6 +2,11 @@
 // UART handling
 // ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
+// NOTES
+// received data is always sent back when the command was processed
+// ----------------------------------------------------------------------
+
 // include files
 #include "common.h"
 #include "uart.h"
@@ -11,380 +16,495 @@
 struct UART_t UART;
 
 // ------------------------------------------------------------------------------------------------------------------
-// process data in command buffer
-void processCommandBuffer( void )
+// process received data
+void processCommand( void )
 {
 
-	// clear flag
-	UART.timeToProcessCommandBuffer = 0;
-
-	// copy volatile variables into non volatile ones for processing
-	unsigned char cpy_commandBufferWritePtr = UART.commandBufferWritePtr;
-
-	// state of the command
-	unsigned char commandState = CMD_STATE_NOP;
-
-	// data to be extracted
-	unsigned char x1, y1, x2, y2;
-	unsigned short cA, cB, cC, cD;
-	unsigned char data;
-
-	// disable UART interrupt
-	//UCA0IE &= ~UCRXIE;
-
-	// extract command to execute
-	switch( UART.commandBuffer[ UART.commandBufferReadPtr ] )
+	// extract command to execute, if ready
+	if( UART.commandStateGroup == CMD_STATE_NOP )
 	{
-		case CMD_CLS				: commandState = CMD_STATE_CLS; 					break;
-		case CMD_DOT 				: commandState = CMD_STATE_DOT__POSITION;				break;
-		case CMD_BLEND_COLOUR_BOX		: commandState = CMD_STATE_BLEND_COLOUR_BOX__POSITION_A;		break;
-		case CMD_BLEND_COLOUR_FILL_BOX		: commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_A;		break;
-		case CMD_BOX				: commandState = CMD_STATE_BOX__POSITION_A;				break;
-		case CMD_FILL_BOX			: commandState = CMD_STATE_FILL_BOX__POSITION_A;			break;
-		case CMD_BLEND_COLOUR_LINE		: commandState = CMD_STATE_BLEND_COLOUR_LINE__POSITION_A;		break;
-		case CMD_LINE				: commandState = CMD_STATE_LINE__POSITION_A;				break;
-		case CMD_CIRCLE				: commandState = CMD_STATE_CIRCLE__POSITION;				break;
-		case CMD_FILL_CIRCLE			: commandState = CMD_STATE_FILL_CIRCLE__POSITION;			break;
-		case CMD_BLEND_COLOUR_FILL_CIRCLE	: commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__POSITION;		break;
-		case CMD_SET_BLEND_MODE__REPLACE	: commandState = CMD_STATE_SET_BLEND_MODE__REPLACE;			break;
-		case CMD_SET_BLEND_MODE__ADD		: commandState = CMD_STATE_SET_BLEND_MODE__ADD;				break;
-		case CMD_SET_BLEND_MODE__SUBTRACT	: commandState = CMD_STATE_SET_BLEND_MODE__SUBTRACT;			break;
-		case CMD_SET_BLEND_MODE__MULTIPLY	: commandState = CMD_STATE_SET_BLEND_MODE__MULTIPLY;			break;
-		default 				: commandState = CMD_STATE_NOP;						break;
+		if( UCA0RXBUF == CMD_CLS ){
+			cls();
+			return;
+		}
+		if( UCA0RXBUF == CMD_DOT ){
+			UART.commandState = CMD_STATE_DOT__POSITION;
+			UART.commandStateGroup = CMD_DOT;
+			return;
+		}
+		if( UCA0RXBUF ==  CMD_BLEND_COLOUR_BOX ){
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__POSITION_A;
+			UART.commandStateGroup = CMD_BLEND_COLOUR_BOX;
+			return;
+		}
+		if( UCA0RXBUF ==  CMD_BLEND_COLOUR_FILL_BOX ){
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_A;
+			UART.commandStateGroup = CMD_BLEND_COLOUR_FILL_BOX;
+			return;
+		}
+		if( UCA0RXBUF ==  CMD_BOX){
+			UART.commandState = CMD_STATE_BOX__POSITION_A;
+			UART.commandStateGroup = CMD_BOX;
+			return;
+		}
+		if( UCA0RXBUF == CMD_FILL_BOX){
+			UART.commandState = CMD_STATE_FILL_BOX__POSITION_A;
+			UART.commandStateGroup = CMD_FILL_BOX;
+			return;
+		}
+		if( UCA0RXBUF == CMD_BLEND_COLOUR_LINE ){
+			UART.commandState = CMD_STATE_BLEND_COLOUR_LINE__POSITION_A;
+			UART.commandStateGroup = CMD_BLEND_COLOUR_LINE;
+			return;
+		}
+		if( UCA0RXBUF == CMD_LINE ){
+			UART.commandState = CMD_STATE_LINE__POSITION_A;
+			UART.commandStateGroup = CMD_LINE;
+			return;
+		}
+		if( UCA0RXBUF == CMD_CIRCLE ){
+			UART.commandState = CMD_STATE_CIRCLE__POSITION;
+			UART.commandStateGroup = CMD_CIRCLE;
+			return;
+		}
+		if( UCA0RXBUF == CMD_FILL_CIRCLE ){
+			UART.commandState = CMD_STATE_FILL_CIRCLE__POSITION;
+			UART.commandStateGroup = CMD_FILL_CIRCLE;
+			return;
+		}
+		if( UCA0RXBUF == CMD_BLEND_COLOUR_FILL_CIRCLE ){
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__POSITION;
+			UART.commandStateGroup = CMD_BLEND_COLOUR_FILL_CIRCLE;
+			return;
+		}
+		if( UCA0RXBUF == CMD_SET_BLEND_MODE__REPLACE ){
+			drawUtils_SetBlendMode( BLEND_MODE_REPLACE );
+			return;
+		}
+		if( UCA0RXBUF == CMD_SET_BLEND_MODE__ADD ){
+			drawUtils_SetBlendMode( BLEND_MODE_ADD );
+			return;
+		}
+		if( UCA0RXBUF == CMD_SET_BLEND_MODE__SUBTRACT ){
+			drawUtils_SetBlendMode( BLEND_MODE_SUBTRACT );
+			return;
+		}
+		if( UCA0RXBUF == CMD_SET_BLEND_MODE__MULTIPLY ){
+			drawUtils_SetBlendMode( BLEND_MODE_MULTIPLY );
+			return;
+		}
 	}
 
-	if( commandState == CMD_STATE_NOP )
+	// ------------------------------------------------------------------------------------------
+	// dot
+	if( UART.commandStateGroup == CMD_DOT )
 	{
-		UART.commandBufferReadPtr = UART.commandBufferWritePtr;
-		//UCA0IE |= UCRXIE;
-		return;
-	}
-	UART.commandBufferReadPtr++;
-
-	// loop through buffer
-	for( ; UART.commandBufferReadPtr != cpy_commandBufferWritePtr; UART.commandBufferReadPtr++ )
-	{
-
-		// get next set of data
-		data = UART.commandBuffer[ UART.commandBufferReadPtr ];
-
-		// process command states
-		switch( commandState )
-		{
-
-			// ------------------------------------------------------------------------------------------
-			// clear screen
-			case CMD_STATE_CLS :
-				cls();
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// dot
-			case CMD_STATE_DOT__POSITION :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_DOT__COLOUR_MSB;
-				break;
-			case CMD_STATE_DOT__COLOUR_MSB :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_DOT__COLOUR_LSB;
-				break;
-			case CMD_STATE_DOT__COLOUR_LSB :
-				cA |= (data>>4);
-				dot( &x1, &y1, &cA );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// blend colour box
-			case CMD_STATE_BLEND_COLOUR_BOX__POSITION_A :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__POSITION_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__POSITION_B :
-				x2 = data>>4;
-				y2 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_A;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__COLOUR_A :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_AB;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__COLOUR_AB :
-				cA |= data>>4;
-				cB = data&0x0F;
-				cB <<= 8;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__COLOUR_B :
-				cB |= data;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_C;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__COLOUR_C :
-				cC = data;
-				cC <<= 4;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_CD;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__COLOUR_CD :
-				cC |= data>>4;
-				cD = data&0x0F;
-				cD <<= 8;
-				commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_D;
-				break;
-			case CMD_STATE_BLEND_COLOUR_BOX__COLOUR_D :
-				cD |= data;
-				blendColourBox( &x1, &y1, &x2, &y2, &cA, &cB, &cC, &cD );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// blend colour fill box
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_A :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_B :
-				x2 = data>>4;
-				y2 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_A;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_A :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_AB;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_AB :
-				cA |= data>>4;
-				cB = data&0x0F;
-				cB <<= 8;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_B :
-				cB |= data;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_C;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_C :
-				cC = data;
-				cC <<= 4;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_CD;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_CD :
-				cC |= data>>4;
-				cD = data&0x0F;
-				cD <<= 8;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_D;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_D :
-				cD |= data;
-				blendColourFillBox( &x1, &y1, &x2, &y2, &cA, &cB, &cC, &cD );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// box
-			case CMD_STATE_BOX__POSITION_A :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_BOX__POSITION_B;
-				break;
-			case CMD_STATE_BOX__POSITION_B :
-				x2 = data>>4;
-				y2 = data&0x0F;
-				commandState = CMD_STATE_BOX__COLOUR_MSB;
-				break;
-			case CMD_STATE_BOX__COLOUR_MSB :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_BOX__COLOUR_LSB;
-				break;
-			case CMD_STATE_BOX__COLOUR_LSB :
-				cA |= data>>4;
-				box( &x1, &y1, &x2, &y2, &cA );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// fill box
-			case CMD_STATE_FILL_BOX__POSITION_A :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_FILL_BOX__POSITION_B;
-				break;
-			case CMD_STATE_FILL_BOX__POSITION_B :
-				x2 = data>>4;
-				y2 = data&0x0F;
-				commandState = CMD_STATE_FILL_BOX__COLOUR_MSB;
-				break;
-			case CMD_STATE_FILL_BOX__COLOUR_MSB :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_FILL_BOX__COLOUR_LSB;
-				break;
-			case CMD_STATE_FILL_BOX__COLOUR_LSB :
-				cA |= data>>4;
-				fillBox( &x1, &y1, &x2, &y2, &cA );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// blend colour line
-			case CMD_STATE_BLEND_COLOUR_LINE__POSITION_A :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_LINE__POSITION_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_LINE__POSITION_B :
-				x2 = data>>4;
-				y2 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_LINE__COLOUR_A;
-				break;
-			case CMD_STATE_BLEND_COLOUR_LINE__COLOUR_A :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_BLEND_COLOUR_LINE__COLOUR_AB;
-				break;
-			case CMD_STATE_BLEND_COLOUR_LINE__COLOUR_AB :
-				cA |= data>>4;
-				cB = data&0x0F;
-				cB <<= 8;
-				commandState = CMD_STATE_BLEND_COLOUR_LINE__COLOUR_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_LINE__COLOUR_B :
-				cB |= data;
-				blendColourLine( &x1, &y1, &x2, &y2, &cA, &cB );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// line
-			case CMD_STATE_LINE__POSITION_A :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_LINE__POSITION_B;
-				break;
-			case CMD_STATE_LINE__POSITION_B :
-				x2 = data>>4;
-				y2 = data&0x0F;
-				commandState = CMD_STATE_LINE__COLOUR_MSB;
-				break;
-			case CMD_STATE_LINE__COLOUR_MSB :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_LINE__COLOUR_LSB;
-				break;
-			case CMD_STATE_LINE__COLOUR_LSB :
-				cA |= data>>4;
-				line( &x1, &y1, &x2, &y2, &cA );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// circle
-			case CMD_STATE_CIRCLE__POSITION :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_CIRCLE__RADIUS;
-				break;
-			case CMD_STATE_CIRCLE__RADIUS :
-				x2 = data;
-				commandState = CMD_STATE_CIRCLE__COLOUR_MSB;
-				break;
-			case CMD_STATE_CIRCLE__COLOUR_MSB :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_CIRCLE__COLOUR_LSB;
-				break;
-			case CMD_STATE_CIRCLE__COLOUR_LSB :
-				cA |= data>>4;
-				circle( &x1, &y1, &x2, &cA );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// fill circle
-			case CMD_STATE_FILL_CIRCLE__POSITION :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_FILL_CIRCLE__RADIUS;
-				break;
-			case CMD_STATE_FILL_CIRCLE__RADIUS :
-				x2 = data;
-				commandState = CMD_STATE_FILL_CIRCLE__COLOUR_MSB;
-				break;
-			case CMD_STATE_FILL_CIRCLE__COLOUR_MSB :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_FILL_CIRCLE__COLOUR_LSB;
-				break;
-			case CMD_STATE_FILL_CIRCLE__COLOUR_LSB :
-				cA |= data>>4;
-				fillCircle( &x1, &y1, &x2, &cA );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// blend colour fill circle
-			case CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__POSITION :
-				x1 = data>>4;
-				y1 = data&0x0F;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__RADIUS;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__RADIUS :
-				x2 = data;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_A;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_A :
-				cA = data;
-				cA <<= 4;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_AB;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_AB :
-				cA |= data>>4;
-				cB = data&0x0F;
-				cB <<= 8;
-				commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_B;
-				break;
-			case CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_B :
-				cB |= data;
-				blendColourFillCircle( &x1, &y1, &x2, &cA, &cB );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// ------------------------------------------------------------------------------------------
-			// set blend modes
-			case CMD_STATE_SET_BLEND_MODE__REPLACE :
-				drawUtils_SetBlendMode( BLEND_MODE_REPLACE );
-				commandState = CMD_STATE_NOP;
-				break;
-			case CMD_STATE_SET_BLEND_MODE__ADD :
-				drawUtils_SetBlendMode( BLEND_MODE_ADD );
-				commandState = CMD_STATE_NOP;
-				break;
-			case CMD_STATE_SET_BLEND_MODE__SUBTRACT :
-				drawUtils_SetBlendMode( BLEND_MODE_SUBTRACT );
-				commandState = CMD_STATE_NOP;
-				break;
-			case CMD_STATE_SET_BLEND_MODE__MULTIPLY :
-				drawUtils_SetBlendMode( BLEND_MODE_MULTIPLY );
-				commandState = CMD_STATE_NOP;
-				break;
-
-			// nothing
-			default: break;
+		if( UART.commandState == CMD_STATE_DOT__POSITION ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_DOT__COLOUR_MSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_DOT__COLOUR_MSB ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_DOT__COLOUR_LSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_DOT__COLOUR_LSB ){
+			UART.cA |= (UCA0RXBUF>>4);
+			dot( &UART.x1, &UART.y1, &UART.cA );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
 		}
 
-		// wrap buffer
-		if( UART.commandBufferReadPtr+1 == COMMAND_BUFFER_SIZE ) UART.commandBufferReadPtr = 255;
-
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
 	}
 
-	// enable UART interrupt
-	//UCA0IE |= UCRXIE;
+	// ------------------------------------------------------------------------------------------
+	// blend colour box
+	if( UART.commandStateGroup == CMD_BLEND_COLOUR_BOX )
+	{
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__POSITION_A ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__POSITION_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__POSITION_B ){
+			UART.x2 = UCA0RXBUF>>4;
+			UART.y2 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_A;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__COLOUR_A ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_AB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__COLOUR_AB ){
+			UART.cA |= UCA0RXBUF>>4;
+			UART.cB = UCA0RXBUF&0x0F;
+			UART.cB <<= 8;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__COLOUR_B ){
+			UART.cB |= UCA0RXBUF;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_C;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__COLOUR_C ){
+			UART.cC = UCA0RXBUF;
+			UART.cC <<= 4;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_CD;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__COLOUR_CD ){
+			UART.cC |= UCA0RXBUF>>4;
+			UART.cD = UCA0RXBUF&0x0F;
+			UART.cD <<= 8;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_BOX__COLOUR_D;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_BOX__COLOUR_D ){
+			UART.cD |= UCA0RXBUF;
+			blendColourBox( &UART.x1, &UART.y1, &UART.x2, &UART.y2, &UART.cA, &UART.cB, &UART.cC, &UART.cD );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	
+
+	// ------------------------------------------------------------------------------------------
+	// blend colour fill box
+	if( UART.commandStateGroup == CMD_BLEND_COLOUR_FILL_BOX )
+	{
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_A ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__POSITION_B ){
+			UART.x2 = UCA0RXBUF>>4;
+			UART.y2 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_A;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_A ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_AB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_AB ){
+			UART.cA |= UCA0RXBUF>>4;
+			UART.cB = UCA0RXBUF&0x0F;
+			UART.cB <<= 8;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_B ){
+			UART.cB |= UCA0RXBUF;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_C;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_C ){
+			UART.cC = UCA0RXBUF;
+			UART.cC <<= 4;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_CD;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_CD ){
+			UART.cC |= UCA0RXBUF>>4;
+			UART.cD = UCA0RXBUF&0x0F;
+			UART.cD <<= 8;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_D;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_BOX__COLOUR_D ){
+			UART.cD |= UCA0RXBUF;
+			blendColourFillBox( &UART.x1, &UART.y1, &UART.x2, &UART.y2, &UART.cA, &UART.cB, &UART.cC, &UART.cD );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// box
+	if( UART.commandStateGroup == CMD_BOX )
+	{
+		if( UART.commandState == CMD_STATE_BOX__POSITION_A ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BOX__POSITION_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BOX__POSITION_B ){
+			UART.x2 = UCA0RXBUF>>4;
+			UART.y2 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BOX__COLOUR_MSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BOX__COLOUR_MSB ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_BOX__COLOUR_LSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BOX__COLOUR_LSB ){
+			UART.cA |= UCA0RXBUF>>4;
+			box( &UART.x1, &UART.y1, &UART.x2, &UART.y2, &UART.cA );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// fill box
+	if( UART.commandStateGroup == CMD_FILL_BOX )
+	{
+		if( UART.commandState == CMD_STATE_FILL_BOX__POSITION_A ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_FILL_BOX__POSITION_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_FILL_BOX__POSITION_B ){
+			UART.x2 = UCA0RXBUF>>4;
+			UART.y2 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_FILL_BOX__COLOUR_MSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_FILL_BOX__COLOUR_MSB ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_FILL_BOX__COLOUR_LSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_FILL_BOX__COLOUR_LSB ){
+			UART.cA |= UCA0RXBUF>>4;
+			fillBox( &UART.x1, &UART.y1, &UART.x2, &UART.y2, &UART.cA );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// blend colour line
+	if( UART.commandStateGroup == CMD_BLEND_COLOUR_LINE )
+	{
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_LINE__POSITION_A ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_LINE__POSITION_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_LINE__POSITION_B ){
+			UART.x2 = UCA0RXBUF>>4;
+			UART.y2 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_LINE__COLOUR_A;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_LINE__COLOUR_A ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_LINE__COLOUR_AB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_LINE__COLOUR_AB ){
+			UART.cA |= UCA0RXBUF>>4;
+			UART.cB = UCA0RXBUF&0x0F;
+			UART.cB <<= 8;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_LINE__COLOUR_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_LINE__COLOUR_B ){
+			UART.cB |= UCA0RXBUF;
+			blendColourLine( &UART.x1, &UART.y1, &UART.x2, &UART.y2, &UART.cA, &UART.cB );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// line
+	if( UART.commandStateGroup == CMD_LINE )
+	{
+		if( UART.commandState == CMD_STATE_LINE__POSITION_A ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_LINE__POSITION_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_LINE__POSITION_B ){
+			UART.x2 = UCA0RXBUF>>4;
+			UART.y2 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_LINE__COLOUR_MSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_LINE__COLOUR_MSB ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_LINE__COLOUR_LSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_LINE__COLOUR_LSB ){
+			UART.cA |= UCA0RXBUF>>4;
+			line( &UART.x1, &UART.y1, &UART.x2, &UART.y2, &UART.cA );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// circle
+	if( UART.commandStateGroup == CMD_CIRCLE )
+	{
+		if( UART.commandState == CMD_STATE_CIRCLE__POSITION ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_CIRCLE__RADIUS;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_CIRCLE__RADIUS ){
+			UART.x2 = UCA0RXBUF;
+			UART.commandState = CMD_STATE_CIRCLE__COLOUR_MSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_CIRCLE__COLOUR_MSB ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_CIRCLE__COLOUR_LSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_CIRCLE__COLOUR_LSB ){
+			UART.cA |= UCA0RXBUF>>4;
+			circle( &UART.x1, &UART.y1, &UART.x2, &UART.cA );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// fill circle
+	if( UART.commandStateGroup == CMD_FILL_CIRCLE )
+	{
+		if( UART.commandState == CMD_STATE_FILL_CIRCLE__POSITION ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_FILL_CIRCLE__RADIUS;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_FILL_CIRCLE__RADIUS ){
+			UART.x2 = UCA0RXBUF;
+			UART.commandState = CMD_STATE_FILL_CIRCLE__COLOUR_MSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_FILL_CIRCLE__COLOUR_MSB ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_FILL_CIRCLE__COLOUR_LSB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_FILL_CIRCLE__COLOUR_LSB ){
+			UART.cA |= UCA0RXBUF>>4;
+			fillCircle( &UART.x1, &UART.y1, &UART.x2, &UART.cA );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// ------------------------------------------------------------------------------------------
+	// blend colour fill circle
+	if( UART.commandStateGroup == CMD_BLEND_COLOUR_FILL_CIRCLE )
+	{
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__POSITION ){
+			UART.x1 = UCA0RXBUF>>4;
+			UART.y1 = UCA0RXBUF&0x0F;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__RADIUS;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__RADIUS ){
+			UART.x2 = UCA0RXBUF;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_A;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_A ){
+			UART.cA = UCA0RXBUF;
+			UART.cA <<= 4;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_AB;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_AB ){
+			UART.cA |= UCA0RXBUF>>4;
+			UART.cB = UCA0RXBUF&0x0F;
+			UART.cB <<= 8;
+			UART.commandState = CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_B;
+			return;
+		}
+		if( UART.commandState == CMD_STATE_BLEND_COLOUR_FILL_CIRCLE__COLOUR_B ){
+			UART.cB |= UCA0RXBUF;
+			blendColourFillCircle( &UART.x1, &UART.y1, &UART.x2, &UART.cA, &UART.cB );
+			UART.commandState = CMD_STATE_NOP;
+			UART.commandStateGroup = CMD_STATE_NOP;
+			return;
+		}
+
+		// transmission or synchronization failure, reset
+		UART.commandState = CMD_STATE_NOP;
+		UART.commandStateGroup = CMD_STATE_NOP;
+	}
+
+	// transmission or synchronization failure, reset
+	UART.commandState = CMD_STATE_NOP;
+	UART.commandStateGroup = CMD_STATE_NOP;
 
 	// return
 	return;
@@ -397,26 +517,20 @@ __interrupt void USCI_A0_ISR( void )
 {
 
 	// process received data, if any
-	__bic_SR_register( GIE );
 	switch(__even_in_range(UCA0IV,4))
 	{
 		case 0:break;				// Vector 0 - no interrupt
 		case 2:					// Vector 2 - RXIFG
 
-			// store received command
-			UART.commandBuffer[ UART.commandBufferWritePtr ] = UCA0RXBUF;
+			// process data
+			processCommand();
 
-			// check for ending signature (0xFFFF)
-			if( UCA0RXBUF == 0xFF ) UART.timeToProcessCommandBuffer++; else UART.timeToProcessCommandBuffer = 0;
+			// ready for next
+			UCA0TXBUF = UCA0RXBUF;
 
-			// increase pointer
-			if( UART.commandBufferWritePtr+1 == COMMAND_BUFFER_SIZE ) UART.commandBufferWritePtr = 255;
-			UART.commandBufferWritePtr++;
-                        
 			break;
 
 		case 4:break;				// Vector 4 - TXIFG
 	default: break;
 	}
-	__bis_SR_register( GIE );
 }

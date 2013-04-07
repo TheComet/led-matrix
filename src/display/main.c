@@ -128,7 +128,8 @@ void main( void )
 	dot( 0x4E, 0x0EE );
 	dot( 0x5D, 0x0EE );
 */
-        
+
+/*
         unsigned char x1, y1, x2, y2;
         unsigned short colour1, colour2, colour3, colour4;
         x1 = 0; y1 = 0; x2 = 15; y2 = 15;
@@ -136,11 +137,12 @@ void main( void )
         blendColourFillBox( &x1, &y1, &x2, &y2, &colour1, &colour2, &colour3, &colour4 );
         x1 = 7; y1 = 7; x2 = 7; colour1 = 0xEEE;
         circle( &x1, &y1, &x2, &colour1 );
+*/
+
 
 	// main loop
 	while( 1 )
 	{
-		if( UART.timeToProcessCommandBuffer == 2 ) processCommandBuffer();
 	}
 }
 

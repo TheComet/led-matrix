@@ -1,0 +1,78 @@
+// ----------------------------------------------------------------------
+// Common declarations
+// ----------------------------------------------------------------------
+
+#ifndef _COMMON_H_
+	#define _COMMON_H_
+
+// ----------------------------------------------------------------------
+// include files
+// ----------------------------------------------------------------------
+
+#include "msp430f2418.h"
+
+// ----------------------------------------------------------------------
+// definitions
+// ----------------------------------------------------------------------
+
+// map player ports
+#define MAP_PLAYER1_BUTTON         P1IN
+#define MAP_PLAYER3_BUTTON         P2IN
+#define MAP_PLAYER2_BUTTON         P3IN
+#define MAP_PLAYER4_BUTTON         P4IN
+
+// map player buttons
+#define MAP_PLAYER1_BUTTON_FIRE    0x01
+#define MAP_PLAYER1_BUTTON_RIGHT   0x02
+#define MAP_PLAYER1_BUTTON_DOWN    0x04
+#define MAP_PLAYER1_BUTTON_LEFT    0x08
+#define MAP_PLAYER1_BUTTON_UP      0x10
+
+#define MAP_PLAYER2_BUTTON_FIRE    0x10
+#define MAP_PLAYER2_BUTTON_RIGHT   0x08
+#define MAP_PLAYER2_BUTTON_DOWN    0x04
+#define MAP_PLAYER2_BUTTON_LEFT    0x02
+#define MAP_PLAYER2_BUTTON_UP      0x01
+
+#define MAP_PLAYER3_BUTTON_FIRE    0x10
+#define MAP_PLAYER3_BUTTON_RIGHT   0x08
+#define MAP_PLAYER3_BUTTON_DOWN    0x04
+#define MAP_PLAYER3_BUTTON_LEFT    0x02
+#define MAP_PLAYER3_BUTTON_UP      0x01
+
+#define MAP_PLAYER4_BUTTON_FIRE    0x10
+#define MAP_PLAYER4_BUTTON_RIGHT   0x08
+#define MAP_PLAYER4_BUTTON_DOWN    0x04
+#define MAP_PLAYER4_BUTTON_LEFT    0x02
+#define MAP_PLAYER4_BUTTON_UP      0x01
+
+// macros to get button states of each player
+#define PLAYER1_BUTTON_FIRE        ((~MAP_PLAYER1_BUTTON) & MAP_PLAYER1_BUTTON_FIRE)
+#define PLAYER1_BUTTON_RIGHT       ((~MAP_PLAYER1_BUTTON) & MAP_PLAYER1_BUTTON_RIGHT)
+#define PLAYER1_BUTTON_DOWN        ((~MAP_PLAYER1_BUTTON) & MAP_PLAYER1_BUTTON_DOWN)
+#define PLAYER1_BUTTON_LEFT        ((~MAP_PLAYER1_BUTTON) & MAP_PLAYER1_BUTTON_LEFT)
+#define PLAYER1_BUTTON_UP          ((~MAP_PLAYER1_BUTTON) & MAP_PLAYER1_BUTTON_UP)
+
+#define PLAYER2_BUTTON_FIRE        ((~MAP_PLAYER2_BUTTON) & MAP_PLAYER2_BUTTON_FIRE)
+#define PLAYER2_BUTTON_RIGHT       ((~MAP_PLAYER2_BUTTON) & MAP_PLAYER2_BUTTON_RIGHT)
+#define PLAYER2_BUTTON_DOWN        ((~MAP_PLAYER2_BUTTON) & MAP_PLAYER2_BUTTON_DOWN)
+#define PLAYER2_BUTTON_LEFT        ((~MAP_PLAYER2_BUTTON) & MAP_PLAYER2_BUTTON_LEFT)
+#define PLAYER2_BUTTON_UP          ((~MAP_PLAYER2_BUTTON) & MAP_PLAYER2_BUTTON_UP)
+
+#define PLAYER3_BUTTON_FIRE        ((~MAP_PLAYER3_BUTTON) & MAP_PLAYER3_BUTTON_FIRE)
+#define PLAYER3_BUTTON_RIGHT       ((~MAP_PLAYER3_BUTTON) & MAP_PLAYER3_BUTTON_RIGHT)
+#define PLAYER3_BUTTON_DOWN        ((~MAP_PLAYER3_BUTTON) & MAP_PLAYER3_BUTTON_DOWN)
+#define PLAYER3_BUTTON_LEFT        ((~MAP_PLAYER3_BUTTON) & MAP_PLAYER3_BUTTON_LEFT)
+#define PLAYER3_BUTTON_UP          ((~MAP_PLAYER3_BUTTON) & MAP_PLAYER3_BUTTON_UP)
+
+#define PLAYER4_BUTTON_FIRE        ((~MAP_PLAYER4_BUTTON) & MAP_PLAYER4_BUTTON_FIRE)
+#define PLAYER4_BUTTON_RIGHT       ((~MAP_PLAYER4_BUTTON) & MAP_PLAYER4_BUTTON_RIGHT)
+#define PLAYER4_BUTTON_DOWN        ((~MAP_PLAYER4_BUTTON) & MAP_PLAYER4_BUTTON_DOWN)
+#define PLAYER4_BUTTON_LEFT        ((~MAP_PLAYER4_BUTTON) & MAP_PLAYER4_BUTTON_LEFT)
+#define PLAYER4_BUTTON_UP          ((~MAP_PLAYER4_BUTTON) & MAP_PLAYER4_BUTTON_UP)
+
+// ----------------------------------------------------------------------
+// global variables
+// ----------------------------------------------------------------------
+
+#endif // _COMMON_H_

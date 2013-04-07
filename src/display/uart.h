@@ -5,9 +5,6 @@
 #ifndef _UART_H_
 	#define _UART_H_
 
-// buffer size
-#define COMMAND_BUFFER_SIZE 12
-
 // command list
 enum commandList_e
 {
@@ -104,15 +101,26 @@ enum commandState_e
 struct UART_t
 {
 
-	// buffer
-	volatile unsigned char commandBuffer[ COMMAND_BUFFER_SIZE ];
-	volatile unsigned char commandBufferWritePtr;
-	unsigned char commandBufferReadPtr;
-	volatile unsigned char timeToProcessCommandBuffer;
+	// state machine for incomming commands
+	unsigned char commandState;
+	unsigned char commandStateGroup;
+
+	// data to be set by the state machine
+	// positions
+	unsigned char x1;
+	unsigned char y1;
+	unsigned char x2;
+	unsigned char y2;
+
+	// colours
+	unsigned short cA;
+	unsigned short cB;
+	unsigned short cC;
+	unsigned short cD;
 };
 extern struct UART_t UART;
 
 // function prototypes
-void processCommandBuffer( void );
+void processCommand( void );
 
 #endif // _UART_H_

@@ -16,31 +16,31 @@
                                 |     MSP430F2418       |
                                 |                       |
   IN/D   Player[0].btn[0] ------| P1.0             P4.0 |------ Player[3].btn[0]      IN/D
-  IN/D   Player[0].btn[1] ------| P1.1             P4.1 |------ Player[3].btn[1]      IN/D 
+  IN/D   Player[0].btn[1] ------| P1.1             P4.1 |------ Player[3].btn[1]      IN/D
   IN/D   Player[0].btn[2] ------| P1.2             P4.2 |------ Player[3].btn[2]      IN/D
   IN/D   Player[0].btn[3] ------| P1.3             P4.3 |------ Player[3].btn[3]      IN/D
   IN/D   Player[0].btn[4] ------| P1.4             P4.4 |------ Player[3].btn[4]      IN/D
-                          ------| P1.5             P4.5 |------ 
-                          ------| P1.6             P4.6 |------ 
-                          ------| P1.7             P4.7 |------ 
+                          ------| P1.5             P4.5 |------
+                          ------| P1.6             P4.6 |------
+                          ------| P1.7             P4.7 |------
                                 |                       |
-  IN/D   Player[1].btn[0] ------| P2.0             P5.0 |------ 
-  IN/D   Player[1].btn[1] ------| P2.1             P5.1 |------ 
-  IN/D   Player[1].btn[2] ------| P2.2             P5.2 |------ 
-  IN/D   Player[1].btn[3] ------| P2.3             P5.3 |------ 
-  IN/D   Player[1].btn[4] ------| P2.4             P5.4 |------ 
-                          ------| P2.5             P5.5 |------ 
-                          ------| P2.6             P5.6 |------ 
-                          ------| P2.7             P5.7 |------ 
+  IN/D   Player[1].btn[0] ------| P2.0             P5.0 |------
+  IN/D   Player[1].btn[1] ------| P2.1             P5.1 |------
+  IN/D   Player[1].btn[2] ------| P2.2             P5.2 |------
+  IN/D   Player[1].btn[3] ------| P2.3             P5.3 |------
+  IN/D   Player[1].btn[4] ------| P2.4             P5.4 |------
+                          ------| P2.5             P5.5 |------
+                          ------| P2.6             P5.6 |------
+                          ------| P2.7             P5.7 |------
                                 |                       |
-  IN/D   Player[1].btn[0] ------| P3.0             P6.0 |------ 
-  IN/D   Player[1].btn[1] ------| P3.1             P6.1 |------ 
-  IN/D   Player[1].btn[2] ------| P3.2             P6.2 |------ 
-  IN/D   Player[1].btn[3] ------| P3.3             P6.3 |------ 
-  IN/D   Player[1].btn[4] ------| P3.4             P6.4 |------ 
-                          ------| P3.5             P6.5 |------ 
-                     TxD  ------| P3.6             P6.6 |------ 
-                     RxD  ------| P3.7             P6.7 |------ 
+  IN/D   Player[1].btn[0] ------| P3.0             P6.0 |------
+  IN/D   Player[1].btn[1] ------| P3.1             P6.1 |------
+  IN/D   Player[1].btn[2] ------| P3.2             P6.2 |------
+  IN/D   Player[1].btn[3] ------| P3.3             P6.3 |------
+  IN/D   Player[1].btn[4] ------| P3.4             P6.4 |------
+                          ------| P3.5             P6.5 |------
+                     TxD  ------| P3.6             P6.6 |------
+                     RxD  ------| P3.7             P6.7 |------
                                 |_______________________|
 
 
@@ -75,8 +75,28 @@
 
 void main( void )
 {
-	// Stop watchdog timer to prevent time out reset
-	WDTCTL = WDTPW + WDTHOLD;
 
-	return 0;
+	// Initialise device
+  	initDevice();
+
+	// main loop
+	while( 1 )
+	{
+		if( PLAYER4_BUTTON_DOWN )
+		{
+			unsigned char x1=0, y1=0, x2=15, y2=15;
+			unsigned short cA=0xE00, cB=0x0E0, cC=0x00E, cD=0x0EE;
+			cls();
+			blendColourFillBox( &x1, &y1, &x2, &y2, &cA, &cB, &cC, &cD );
+			send();
+			__delay_cycles( 100000 );
+		}
+	}
+}
+
+// ----------------------------------------------------------------------
+// Update interrupt
+#pragma vector=TIMERA0_VECTOR
+__interrupt void Timer_A( void )
+{
 }
