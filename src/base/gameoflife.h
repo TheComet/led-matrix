@@ -12,6 +12,8 @@
 struct GameOfLife_t
 {
 	unsigned char* frameBuffer;
+	unsigned char state;
+	unsigned char bufferOffset;
 };
 
 // ----------------------------------------------------------------------

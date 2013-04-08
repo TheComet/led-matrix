@@ -128,14 +128,24 @@ void menuDrawSnakeIcon( void )
 }
 
 // ----------------------------------------------------------------------
+// draws game of life icon
+void menuDrawGameOfLifeIcon( void )
+{
+	unsigned char x=5, y=5;
+	unsigned short cA = 0xEE0;
+	dot( &x, &y, &cA );
+}
+
+// ----------------------------------------------------------------------
 // updates the icon
 void menuUpdateIcon( unsigned char* selected )
 {
 	menuClearIcon();
 	menuDrawLeftArrow(0);
 	menuDrawRightArrow(0);
-	if( *selected == MENU_SELECT_COLOUR_DEMO ){ menuDrawColourDemoIcon(); return; }
-	if( *selected == MENU_SELECT_SNAKE )      { menuDrawSnakeIcon();      return; }
+	if( *selected == MENU_SELECT_COLOUR_DEMO )  { menuDrawColourDemoIcon(); return; }
+	if( *selected == MENU_SELECT_SNAKE )        { menuDrawSnakeIcon();      return; }
+	if( *selected == MENU_SELECT_GAME_OF_LIFE ) { menuDrawGameOfLifeIcon(); return; }
 	return;
 }
 
@@ -147,8 +157,6 @@ void loadMenu( unsigned char* frameBuffer )
 	// initial state
 	Menu.state = MENU_STATE_PRESS_START;
 	Menu.toggleArrow = 0;
-	unsigned char* yeah = frameBuffer;
-	clearFrameBuffer( yeah );
 
 	// reset player list
 	Menu.playerList = 0;

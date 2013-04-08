@@ -51,6 +51,7 @@ void menuDrawJoinArrows( unsigned char* playerList );
 void menuClearIcon( void );
 void menuDrawColourDemoIcon( void );
 void menuDrawSnakeIcon( void );
+void menuDrawGameOfLifeIcon( void );
 void menuUpdateIcon( unsigned char* selected );
 
 #endif // _MENU_H_
