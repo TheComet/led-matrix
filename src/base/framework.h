@@ -24,7 +24,6 @@ struct FrameWork_t
 	unsigned char updateFlag;
 	unsigned char state;
 };
-extern struct FrameWork_t FrameWork;
 
 // ----------------------------------------------------------------------
 // Enumerators
@@ -36,17 +35,25 @@ enum FrameWork_State_e
 	FRAMEWORK_STATE_LOAD_MENU,
 	FRAMEWORK_STATE_MENU,
 	FRAMEWORK_STATE_LOAD_SNAKE,
-	FRAMEWORK_STATE_SNAKE
+	FRAMEWORK_STATE_SNAKE,
+	FRAMEWORK_STATE_LOAD_COLOUR_DEMO,
+	FRAMEWORK_STATE_COLOUR_DEMO
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
+void initFrameWork( void );
+void startFrameWork( void );
 void pollPorts( void );
 void clearPorts( void );
 void frameWorkUpdate( void );
 void setRefreshRate( unsigned char refresh );
+
+void startColourDemo( void );
+void startSnake( void );
+void endGame( void );
 
 extern inline unsigned char player1ButtonFire( void );
 extern inline unsigned char player1ButtonLeft( void );

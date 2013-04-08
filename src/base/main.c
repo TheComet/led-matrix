@@ -79,32 +79,6 @@ void main( void )
 	// Initialise device
   	initDevice();
 
-	// main loop
-	while( 1 )
-	{
-
-		// read input
-		pollPorts();
-
-		// update
-		if( FrameWork.updateFlag ){
-			frameWorkUpdate();
-			clearPorts();
-			FrameWork.updateFlag = 0;
-		}
-
-	}
-}
-
-// ----------------------------------------------------------------------
-// Update interrupt
-#pragma vector=TIMERA0_VECTOR
-__interrupt void Timer_A( void )
-{
-	// divide update rate
-	if( (FrameWork.updateCounter++) != FrameWork.updateDivider ) return;
-	FrameWork.updateCounter = 0;
-
-	// set update flag (this is caught in the main loop)
-	FrameWork.updateFlag = 1;
+	// start framework
+	startFrameWork();
 }

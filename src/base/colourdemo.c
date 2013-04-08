@@ -1,30 +1,30 @@
 // ----------------------------------------------------------------------
-// Snake
+// Colour Demo
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 // Include files
 // ----------------------------------------------------------------------
 
-#include "snake.h"
+#include "colourdemo.h"
 #include "framework.h"
 #include "uart.h"
 
 // ----------------------------------------------------------------------
-// load snake
-void loadSnake( void )
+// load colour demo
+void loadColourDemo( void )
 {
 
-	// set up screen
+	// clear screen
 	cls();
 	send();
 
 	// set refresh rate
-	setRefreshRate( 24 );
+	setRefreshRate( 255 );
 }
 
 // ----------------------------------------------------------------------
-// process snake
-void processSnake( void )
+// process colour demo
+void processColourDemo( void )
 {
 }

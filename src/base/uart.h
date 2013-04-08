@@ -23,7 +23,6 @@ struct UART_t
 	unsigned char buffer[ UART_BUFFER_SIZE ];
 	unsigned char isSending;
 };
-extern struct UART_t UART;
 
 // ----------------------------------------------------------------------
 // Enumerators
@@ -63,6 +62,7 @@ enum commandList_e
 // Function Prototypes
 // ----------------------------------------------------------------------
 
+void initUART( void );
 unsigned char _buffer_overflow( void );
 void _increase_buffer_pointer( unsigned short* ptr );
 void _write_to_buffer( unsigned char* data );

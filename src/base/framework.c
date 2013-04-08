@@ -10,8 +10,41 @@
 #include "framework.h"
 #include "uart.h"
 #include "menu.h"
+#include "snake.h"
+#include "colourdemo.h"
 
 struct FrameWork_t FrameWork;
+
+// ----------------------------------------------------------------------
+// initialise framework
+void initFrameWork( void )
+{
+	FrameWork.updateCounter = 0;
+	FrameWork.updateDivider = 1;
+	FrameWork.updateFlag = 0;
+}
+
+// ----------------------------------------------------------------------
+// main loop for entire micro controller
+void startFrameWork( void )
+{
+
+	// main loop
+	while( 1 )
+	{
+
+		// read input
+		pollPorts();
+
+		// update
+		if( FrameWork.updateFlag ){
+			frameWorkUpdate();
+			clearPorts();
+			FrameWork.updateFlag = 0;
+		}
+
+	}
+}
 
 // ----------------------------------------------------------------------
 // poll all ports
@@ -55,6 +88,27 @@ void setRefreshRate( unsigned char refresh )
 }
 
 // ----------------------------------------------------------------------
+// starts the colour demo
+void startColourDemo( void )
+{
+	FrameWork.state = FRAMEWORK_STATE_LOAD_COLOUR_DEMO;
+}
+
+// ----------------------------------------------------------------------
+// starts snake
+void startSnake( void )
+{
+	FrameWork.state = FRAMEWORK_STATE_LOAD_SNAKE;
+}
+
+// ----------------------------------------------------------------------
+// end the game
+void endGame( void )
+{
+	FrameWork.state = FRAMEWORK_STATE_LOAD_MENU;
+}
+
+// ----------------------------------------------------------------------
 // gets the button state of a specific player (positive edge only)
 // unfortunately, I see no way to compress this, because it is dependant on global definitions
 extern inline unsigned char player1ButtonFire ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_FIRE;  }
@@ -95,8 +149,23 @@ void frameWorkUpdate( void )
 		case FRAMEWORK_STATE_MENU               : processMenu();                                                              break;
 		case FRAMEWORK_STATE_LOAD_SNAKE         : loadSnake();            FrameWork.state = FRAMEWORK_STATE_SNAKE;            break;
 		case FRAMEWORK_STATE_SNAKE              : processSnake();                                                             break;
+		case FRAMEWORK_STATE_LOAD_COLOUR_DEMO   : loadColourDemo();       FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;      break;
+		case FRAMEWORK_STATE_COLOUR_DEMO        : processColourDemo();                                                        break;
 
 		// error, reset to main menu
 		default: FrameWork.state = FRAMEWORK_STATE_LOAD_MENU; break;
 	}
+}
+
+// ----------------------------------------------------------------------
+// Update interrupt
+#pragma vector=TIMERA0_VECTOR
+__interrupt void Timer_A( void )
+{
+	// divide update rate
+	if( (FrameWork.updateCounter++) != FrameWork.updateDivider ) return;
+	FrameWork.updateCounter = 0;
+
+	// set update flag (this is caught in the main loop)
+	FrameWork.updateFlag = 1;
 }

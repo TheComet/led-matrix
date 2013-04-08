@@ -10,6 +10,15 @@
 struct UART_t UART;
 
 // ----------------------------------------------------------------------
+// initialise UART
+void initUART( void )
+{
+	UART.bufferWritePtr = 0;
+	UART.bufferReadPtr = 0;
+	UART.isSending = 0;
+}
+
+// ----------------------------------------------------------------------
 // returns 1 on buffer overflow
 unsigned char _buffer_overflow( void )
 {

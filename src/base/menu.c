@@ -239,8 +239,8 @@ void processMenu( void )
 			{
 				switch( Menu.selected )
 				{
-					case MENU_SELECT_COLOUR_DEMO : break;
-					case MENU_SELECT_SNAKE       : FrameWork.state = FRAMEWORK_STATE_LOAD_SNAKE;                break;
+					case MENU_SELECT_COLOUR_DEMO : startColourDemo();           break;
+					case MENU_SELECT_SNAKE       : startSnake();                break;
 					default: break;
 				}
 			}
