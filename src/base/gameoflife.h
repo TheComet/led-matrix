@@ -1,15 +1,15 @@
 // ----------------------------------------------------------------------
-// Snake
+// Game of Life
 // ----------------------------------------------------------------------
 
-#ifndef _SNAKE_H_
-	#define _SNAKE_H_
+#ifndef _GAMEOFLIFE_H_
+	#define _GAMEOFLIFE_H_
 
 // ----------------------------------------------------------------------
-// Function prototypes
+// Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadSnake( unsigned char* frameBuffer );
-void processSnake( void );
+void loadGameOfLife( unsigned char* frameBuffer );
+void processGameOfLife( void );
 
-#endif // _SNAKE_H_
+#endif // _GAMEOFLIFE_H_

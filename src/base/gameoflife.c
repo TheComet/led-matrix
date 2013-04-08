@@ -1,30 +1,21 @@
 // ----------------------------------------------------------------------
-// Colour Demo
+// Game of Life
 // ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
-// Include files
+// include files
 // ----------------------------------------------------------------------
 
-#include "colourdemo.h"
-#include "framework.h"
-#include "uart.h"
+#include "gameoflife.h"
 
 // ----------------------------------------------------------------------
-// load colour demo
-void loadColourDemo( unsigned char* frameBuffer )
+// load game of life
+void loadGameOfLife( unsigned char* frameBuffer )
 {
-
-	// clear screen
-	cls();
-	send();
-
-	// set refresh rate
-	setRefreshRate( 255 );
 }
 
 // ----------------------------------------------------------------------
-// process colour demo
-void processColourDemo( void )
+// process game of life
+void processGameOfLife( void )
 {
 }

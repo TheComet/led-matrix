@@ -12,6 +12,7 @@
 #include "menu.h"
 #include "snake.h"
 #include "colourdemo.h"
+#include "gameoflife.h"
 
 struct FrameWork_t FrameWork;
 
@@ -102,6 +103,13 @@ void startSnake( void )
 }
 
 // ----------------------------------------------------------------------
+// starts the game of life
+void startGameOfLife( void )
+{
+	FrameWork.state = FRAMEWORK_STATE_LOAD_GAME_OF_LIFE;
+}
+
+// ----------------------------------------------------------------------
 // end the game
 void endGame( void )
 {
@@ -145,12 +153,40 @@ void frameWorkUpdate( void )
 	{
 
 		// main menu
-		case FRAMEWORK_STATE_LOAD_MENU          : loadMenu();             FrameWork.state = FRAMEWORK_STATE_MENU;             break;
-		case FRAMEWORK_STATE_MENU               : processMenu();                                                              break;
-		case FRAMEWORK_STATE_LOAD_SNAKE         : loadSnake();            FrameWork.state = FRAMEWORK_STATE_SNAKE;            break;
-		case FRAMEWORK_STATE_SNAKE              : processSnake();                                                             break;
-		case FRAMEWORK_STATE_LOAD_COLOUR_DEMO   : loadColourDemo();       FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;      break;
-		case FRAMEWORK_STATE_COLOUR_DEMO        : processColourDemo();                                                        break;
+		case FRAMEWORK_STATE_LOAD_MENU :
+			loadMenu( &FrameWork.frameBuffer[0] );
+			FrameWork.state = FRAMEWORK_STATE_MENU;
+			break;
+		case FRAMEWORK_STATE_MENU :
+			processMenu();
+			break;
+
+		// snake
+		case FRAMEWORK_STATE_LOAD_SNAKE :
+			loadSnake( &FrameWork.frameBuffer[0] );
+			FrameWork.state = FRAMEWORK_STATE_SNAKE;
+			break;
+		case FRAMEWORK_STATE_SNAKE :
+			processSnake();
+			break;
+
+		// colour demo
+		case FRAMEWORK_STATE_LOAD_COLOUR_DEMO :
+			loadColourDemo( &FrameWork.frameBuffer[0] );
+			FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;
+			break;
+		case FRAMEWORK_STATE_COLOUR_DEMO :
+			processColourDemo();
+			break;
+
+		// game of life
+		case FRAMEWORK_STATE_LOAD_GAME_OF_LIFE :
+			loadGameOfLife( &FrameWork.frameBuffer[0] );
+			FrameWork.state = FRAMEWORK_STATE_GAME_OF_LIFE;
+			break;
+		case FRAMEWORK_STATE_GAME_OF_LIFE :
+			processGameOfLife();
+			break;
 
 		// error, reset to main menu
 		default: FrameWork.state = FRAMEWORK_STATE_LOAD_MENU; break;

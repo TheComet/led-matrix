@@ -29,18 +29,19 @@ enum Menu_State_e
 };
 
 // games/demos - specify game count-1
-#define GAME_COUNT 1
+#define GAME_COUNT 2
 enum Menu_Games_e
 {
 	MENU_SELECT_COLOUR_DEMO,
-	MENU_SELECT_SNAKE
+	MENU_SELECT_SNAKE,
+	MENU_SELECT_GAME_OF_LIFE
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadMenu( void );
+void loadMenu( unsigned char* frameBuffer );
 void processMenu( void );
 void menuDrawFrame( void );
 void menuDrawLeftArrow( unsigned char clear );

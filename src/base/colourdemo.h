@@ -9,7 +9,7 @@
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadColourDemo( void );
+void loadColourDemo( unsigned char* frameBuffer );
 void processColourDemo( void );
 
 #endif // _COLOURDEMO_H_

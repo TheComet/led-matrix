@@ -23,6 +23,7 @@ struct FrameWork_t
 	unsigned char updateCounter;
 	unsigned char updateFlag;
 	unsigned char state;
+	unsigned char frameBuffer[256];
 };
 
 // ----------------------------------------------------------------------
@@ -37,7 +38,9 @@ enum FrameWork_State_e
 	FRAMEWORK_STATE_LOAD_SNAKE,
 	FRAMEWORK_STATE_SNAKE,
 	FRAMEWORK_STATE_LOAD_COLOUR_DEMO,
-	FRAMEWORK_STATE_COLOUR_DEMO
+	FRAMEWORK_STATE_COLOUR_DEMO,
+	FRAMEWORK_STATE_LOAD_GAME_OF_LIFE,
+	FRAMEWORK_STATE_GAME_OF_LIFE
 };
 
 // ----------------------------------------------------------------------
@@ -53,6 +56,7 @@ void setRefreshRate( unsigned char refresh );
 
 void startColourDemo( void );
 void startSnake( void );
+void startGameOfLife( void );
 void endGame( void );
 
 extern inline unsigned char player1ButtonFire( void );

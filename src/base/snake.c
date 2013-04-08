@@ -12,7 +12,7 @@
 
 // ----------------------------------------------------------------------
 // load snake
-void loadSnake( void )
+void loadSnake( unsigned char* frameBuffer )
 {
 
 	// set up screen

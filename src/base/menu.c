@@ -141,7 +141,7 @@ void menuUpdateIcon( unsigned char* selected )
 
 // ----------------------------------------------------------------------
 // load menu
-void loadMenu( void )
+void loadMenu( unsigned char* frameBuffer )
 {
 
 	// initial state
@@ -184,6 +184,10 @@ void processMenu( void )
 			if( player1ButtonFire() )
 			{
 
+				// switch states
+				Menu.selected = MENU_SELECT_COLOUR_DEMO;
+				Menu.state = MENU_STATE_SELECT_GAME;
+
 				// draw first game
 				cls();
 				menuDrawColourDemoIcon();
@@ -192,10 +196,6 @@ void processMenu( void )
 				menuDrawLeftArrow(0);
 				menuDrawJoinArrows( &Menu.playerList );
 				send();
-				
-				// switch states
-				Menu.selected = MENU_SELECT_COLOUR_DEMO;
-				Menu.state = MENU_STATE_SELECT_GAME;
 			}
 
 			break;
@@ -213,12 +213,13 @@ void processMenu( void )
 			{
 				Menu.selected--;
 				
+				// reset players joined
+				Menu.playerList = 0;
+				menuDrawJoinArrows( &Menu.playerList );
+
 				// draw appropriate icon
 				menuUpdateIcon( &Menu.selected );
 				send();
-
-				// reset players joined
-				Menu.playerList = 0;
 			}
 
 			// select next game
@@ -226,12 +227,13 @@ void processMenu( void )
 			{
 				Menu.selected++;
 
+				// reset players joined
+				Menu.playerList = 0;
+				menuDrawJoinArrows( &Menu.playerList );
+
 				// draw appropriate icon
 				menuUpdateIcon( &Menu.selected );
 				send();
-
-				// reset players joined
-				Menu.playerList = 0;
 			}
 
 			// select a game
@@ -239,9 +241,10 @@ void processMenu( void )
 			{
 				switch( Menu.selected )
 				{
-					case MENU_SELECT_COLOUR_DEMO : startColourDemo();           break;
-					case MENU_SELECT_SNAKE       : startSnake();                break;
-					default: break;
+					case MENU_SELECT_COLOUR_DEMO    : startColourDemo();           break;
+					case MENU_SELECT_SNAKE          : startSnake();                break;
+					case MENU_SELECT_GAME_OF_LIFE   : startGameOfLife();           break;
+					default : Menu.selected = MENU_SELECT_COLOUR_DEMO; break;
 				}
 			}
 
