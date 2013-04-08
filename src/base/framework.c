@@ -89,6 +89,17 @@ void setRefreshRate( unsigned char refresh )
 }
 
 // ----------------------------------------------------------------------
+// clears a frame buffer
+void clearFrameBuffer( unsigned char* frameBuffer )
+{
+	unsigned char x = 0;
+	do{
+		frameBuffer[x] = 0;
+		x++;
+	}while( x != 0 );
+}
+
+// ----------------------------------------------------------------------
 // starts the colour demo
 void startColourDemo( void )
 {

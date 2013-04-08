@@ -147,6 +147,8 @@ void loadMenu( unsigned char* frameBuffer )
 	// initial state
 	Menu.state = MENU_STATE_PRESS_START;
 	Menu.toggleArrow = 0;
+	unsigned char* yeah = frameBuffer;
+	clearFrameBuffer( yeah );
 
 	// reset player list
 	Menu.playerList = 0;

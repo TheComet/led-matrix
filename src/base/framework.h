@@ -53,6 +53,7 @@ void pollPorts( void );
 void clearPorts( void );
 void frameWorkUpdate( void );
 void setRefreshRate( unsigned char refresh );
+void clearFrameBuffer( unsigned char* frameBuffer );
 
 void startColourDemo( void );
 void startSnake( void );
