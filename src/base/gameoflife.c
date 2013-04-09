@@ -72,13 +72,13 @@ void processGameOfLifeLoop( void )
 					{
 
 						// less than 2 neighbours or more than 3 neighbours kills it
-						if( count < 2 || count > 3 ) *(GameOfLife.frameBuffer + y + (x*16)) &= ~writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) |= writeMask;
+						if( count < 2 || count > 3 ) (*(GameOfLife.frameBuffer + y + (x*16))) &= ~writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) |= writeMask;
 
 					// current cell is dead
 					}else{
 
 						// has 3 neighbours, new cell is born
-						if( count == 3 ) *(GameOfLife.frameBuffer + y + (x*16)) |= writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) &= ~writeMask;
+						if( count == 3 ) (*(GameOfLife.frameBuffer + y + (x*16))) |= writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) &= ~writeMask;
 
 					}
 				}
