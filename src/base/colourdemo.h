@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------------
 
 void loadColourDemo( unsigned char* frameBuffer );
-void processColourDemo( void );
+void processColourDemoLoop( void );
+void processColourDemoInput( void );
 
 #endif // _COLOURDEMO_H_

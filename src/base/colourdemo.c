@@ -24,7 +24,13 @@ void loadColourDemo( unsigned char* frameBuffer )
 }
 
 // ----------------------------------------------------------------------
-// process colour demo
-void processColourDemo( void )
+// process colour demo loop
+void processColourDemoLoop( void )
+{
+}
+
+// ----------------------------------------------------------------------
+// process colour demo input
+void processColourDemoInput( void )
 {
 }

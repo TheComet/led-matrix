@@ -42,7 +42,8 @@ enum Menu_Games_e
 // ----------------------------------------------------------------------
 
 void loadMenu( unsigned char* frameBuffer );
-void processMenu( void );
+void processMenuLoop( void );
+void processMenuInput( void );
 void menuDrawFrame( void );
 void menuDrawLeftArrow( unsigned char clear );
 void menuDrawRightArrow( unsigned char clear );

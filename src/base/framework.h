@@ -24,6 +24,7 @@ struct FrameWork_t
 	unsigned char updateFlag;
 	unsigned char state;
 	unsigned char frameBuffer[256];
+	unsigned short randomSeed;
 };
 
 // ----------------------------------------------------------------------
@@ -50,10 +51,11 @@ enum FrameWork_State_e
 void initFrameWork( void );
 void startFrameWork( void );
 void pollPorts( void );
-void clearPorts( void );
-void frameWorkUpdate( void );
+void frameWorkUpdateProcessLoop( void );
+void frameWorkUpdateInputLoop( void );
 void setRefreshRate( unsigned char refresh );
 void clearFrameBuffer( unsigned char* frameBuffer );
+unsigned char rnd( void );
 
 void startColourDemo( void );
 void startSnake( void );

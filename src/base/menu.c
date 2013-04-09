@@ -131,9 +131,19 @@ void menuDrawSnakeIcon( void )
 // draws game of life icon
 void menuDrawGameOfLifeIcon( void )
 {
-	unsigned char x=5, y=5;
-	unsigned short cA = 0xEE0;
-	dot( &x, &y, &cA );
+	unsigned short cA = 0x260;
+	unsigned char x, y;
+	for( unsigned char i = 0; i != 40; i++ )
+	{
+		x = rnd() & 0x0F;
+		y = rnd() & 0x0F;
+		if( x < 3 ) x = 3;
+		if( x > 12 ) x = 3+(x-12);
+		if( y < 3 ) y = 3;
+		if( y > 12 ) y = 3+(y-12);
+		dot( &x, &y, &cA );
+	}
+		
 }
 
 // ----------------------------------------------------------------------
@@ -166,19 +176,14 @@ void loadMenu( unsigned char* frameBuffer )
 }
 
 // ----------------------------------------------------------------------
-// process menu
-void processMenu( void )
+// process menu loop
+void processMenuLoop( void )
 {
 
 	// toggle arrow
 	Menu.toggleArrow = 1-Menu.toggleArrow;
 
-	// process players joining/leaving
-	if( player2ButtonFire() ){ Menu.playerList ^= 0x01; menuDrawJoinArrows( &Menu.playerList ); send(); }
-	if( player3ButtonFire() ){ Menu.playerList ^= 0x02; menuDrawJoinArrows( &Menu.playerList ); send(); }
-	if( player4ButtonFire() ){ Menu.playerList ^= 0x04; menuDrawJoinArrows( &Menu.playerList ); send(); }
-
-	// different menu screens
+	// draw different menu screens
 	switch( Menu.state )
 	{
 
@@ -189,6 +194,39 @@ void processMenu( void )
 			cls();
 			menuDrawStartArrow( Menu.toggleArrow );
 			send();
+
+			break;
+
+		// select game
+		case MENU_STATE_SELECT_GAME :
+
+			// control left and right arrow blinking
+			if( Menu.selected ) menuDrawLeftArrow( Menu.toggleArrow );
+			if( Menu.selected < GAME_COUNT ) menuDrawRightArrow( Menu.toggleArrow );
+			send();
+
+			break;
+
+		default: break;
+	}
+}
+
+// ----------------------------------------------------------------------
+// process menu input
+void processMenuInput( void )
+{
+
+	// process players joining/leaving
+	if( player2ButtonFire() ){ Menu.playerList ^= 0x01; menuDrawJoinArrows( &Menu.playerList ); send(); }
+	if( player3ButtonFire() ){ Menu.playerList ^= 0x02; menuDrawJoinArrows( &Menu.playerList ); send(); }
+	if( player4ButtonFire() ){ Menu.playerList ^= 0x04; menuDrawJoinArrows( &Menu.playerList ); send(); }
+
+	// draw different menu screens
+	switch( Menu.state )
+	{
+
+		// press start
+		case MENU_STATE_PRESS_START :
 
 			// start is pressed
 			if( player1ButtonFire() )
@@ -212,11 +250,6 @@ void processMenu( void )
 
 		// select game
 		case MENU_STATE_SELECT_GAME :
-
-			// control left and right arrow blinking
-			if( Menu.selected ) menuDrawLeftArrow( Menu.toggleArrow );
-			if( Menu.selected < GAME_COUNT ) menuDrawRightArrow( Menu.toggleArrow );
-			send();
 
 			// select previous game
 			if( player1ButtonLeft() && Menu.selected )
@@ -254,12 +287,12 @@ void processMenu( void )
 					case MENU_SELECT_COLOUR_DEMO    : startColourDemo();           break;
 					case MENU_SELECT_SNAKE          : startSnake();                break;
 					case MENU_SELECT_GAME_OF_LIFE   : startGameOfLife();           break;
-					default : Menu.selected = MENU_SELECT_COLOUR_DEMO; break;
+					default : break;
 				}
 			}
 
 			break;
 
-		default: Menu.state = MENU_STATE_PRESS_START; break;
+		default: break;
 	}
 }

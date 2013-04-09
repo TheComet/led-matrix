@@ -297,7 +297,6 @@ void setBlendMode( unsigned char blendMode )
 	// return
 	return;
 }
-	
 
 // ----------------------------------------------------------------------
 // RxD interrupt

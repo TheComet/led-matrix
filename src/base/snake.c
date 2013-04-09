@@ -24,7 +24,13 @@ void loadSnake( unsigned char* frameBuffer )
 }
 
 // ----------------------------------------------------------------------
-// process snake
-void processSnake( void )
+// process snake loop
+void processSnakeLoop( void )
+{
+}
+
+// ----------------------------------------------------------------------
+// process snake input
+void processSnakeInput( void )
 {
 }

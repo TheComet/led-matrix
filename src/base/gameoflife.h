@@ -31,6 +31,9 @@ enum GameOfLife_States_e
 // ----------------------------------------------------------------------
 
 void loadGameOfLife( unsigned char* frameBuffer );
-void processGameOfLife( void );
+void processGameOfLifeLoop( void );
+void processGameOfLifeInput( void );
+void randomizeFrameBuffer( void );
+void drawFrameBuffer( void );
 
 #endif // _GAMEOFLIFE_H_

@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------------
 
 void loadSnake( unsigned char* frameBuffer );
-void processSnake( void );
+void processSnakeLoop( void );
+void processSnakeInput( void );
 
 #endif // _SNAKE_H_
