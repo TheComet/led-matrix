@@ -9,11 +9,10 @@
 #include "snake.h"
 #include "framework.h"
 #include "uart.h"
-#include "common.h"
 
 // ----------------------------------------------------------------------
 // load snake
-void loadSnake( void )
+void loadSnake( unsigned char* frameBuffer )
 {
   
  unsigned char Pos_X;
@@ -25,13 +24,16 @@ void loadSnake( void )
 	// set up screen
 	cls();
 	send();
+
+	// set refresh rate
+	setRefreshRate( 24 );
 }
 
 // ----------------------------------------------------------------------
-// process snake
-void processSnake( void )
+// process snake loop
+void processSnakeLoop( void )
 {
-	FrameWork.state = FRAMEWORK_STATE_LOAD_MENU;
+  	FrameWork.state = FRAMEWORK_STATE_LOAD_MENU;
         
         if (player1BottomLeft())
           Pos_X = Pos_X-1;
@@ -48,10 +50,11 @@ void processSnake( void )
    
         
         dot(Pos_X, Pos_Y, 0x00E)
-        dot(Pos_X_Hinten, Pos_Y_Hinten, 0) 
-        
-        
-        
-        
-        
+        dot(Pos_X_Hinten, Pos_Y_Hinten, 0)
+}
+
+// ----------------------------------------------------------------------
+// process snake input
+void processSnakeInput( void )
+{ 
 }

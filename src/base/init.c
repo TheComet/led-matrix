@@ -34,12 +34,8 @@ void initDevice( void )
 	cfgUART();
 
 	// initial values
-	UART.bufferWritePtr = 0;
-	UART.bufferReadPtr = 0;
-	UART.isSending = 0;
-	FrameWork.updateCounter = 0;
-	FrameWork.updateDivider = 1;
-	FrameWork.updateFlag = 0;
+	initUART();
+	initFrameWork();
 
 	// enable global interrupts
 	__bis_SR_register( GIE );

@@ -1,16 +1,16 @@
 // ----------------------------------------------------------------------
-// Snake
+// Colour Demo
 // ----------------------------------------------------------------------
 
-#ifndef _SNAKE_H_
-	#define _SNAKE_H_
+#ifndef _COLOURDEMO_H_
+	#define _COLOURDEMO_H_
 
 // ----------------------------------------------------------------------
-// Function prototypes
+// Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadSnake( unsigned char* frameBuffer );
-void processSnakeLoop( void );
-void processSnakeInput( void );
+void loadColourDemo( unsigned char* frameBuffer );
+void processColourDemoLoop( void );
+void processColourDemoInput( void );
 
-#endif // _SNAKE_H_
+#endif // _COLOURDEMO_H_
