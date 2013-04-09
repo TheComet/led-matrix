@@ -36,6 +36,7 @@ void initDevice( void )
 	// initial values
 	initUART();
 	initFrameWork();
+	initMenu();
 
 	// enable global interrupts
 	__bis_SR_register( GIE );

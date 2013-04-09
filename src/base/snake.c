@@ -10,7 +10,7 @@
 #include "framework.h"
 #include "uart.h"
 
-struct Snake_t Snake;
+static struct Snake_t Snake;
 
 // ----------------------------------------------------------------------
 // load snake
@@ -76,4 +76,7 @@ void processSnakeInput( void )
 
         if (player1ButtonDown())
           Snake.Pos_X = Snake.Pos_Y-1;  
+
+	// end game with menu button
+	if( player1ButtonMenu() ) endGame();
 }

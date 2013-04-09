@@ -24,7 +24,6 @@ struct Menu_t
 // menu states
 enum Menu_State_e
 {
-	MENU_STATE_PRESS_START,
 	MENU_STATE_SELECT_GAME
 };
 
@@ -41,6 +40,7 @@ enum Menu_Games_e
 // Function Prototypes
 // ----------------------------------------------------------------------
 
+void initMenu( void );
 void loadMenu( unsigned char* frameBuffer );
 void processMenuLoop( void );
 void processMenuInput( void );

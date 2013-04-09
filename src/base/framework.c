@@ -10,6 +10,7 @@
 #include "framework.h"
 #include "uart.h"
 #include "menu.h"
+#include "startupscreen.h"
 #include "snake.h"
 #include "colourdemo.h"
 #include "gameoflife.h"
@@ -23,6 +24,7 @@ void initFrameWork( void )
 	FrameWork.updateCounter = 0;
 	FrameWork.updateDivider = 1;
 	FrameWork.updateFlag = 0;
+	FrameWork.state = FRAMEWORK_STATE_LOAD_START_UP_SCREEN;
 }
 
 // ----------------------------------------------------------------------
@@ -58,7 +60,7 @@ void pollPorts( void )
 	FrameWork.player[3].buttonState = MAP_PLAYER4_BUTTON;
 
 	// add start menu button to 6th bit
-	if( FrameWork.player[0].buttonState & (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN) )
+	if( (FrameWork.player[0].buttonState & (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN)) == (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN) )
 		FrameWork.player[0].buttonState |= MAP_PLAYER_BUTTON_MENU;
 	if( FrameWork.player[1].buttonState & (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN) )
 		FrameWork.player[1].buttonState |= MAP_PLAYER_BUTTON_MENU;
@@ -92,6 +94,7 @@ void pollPorts( void )
 void setRefreshRate( unsigned char refresh )
 {
 	FrameWork.updateDivider = 255/refresh;
+	FrameWork.updateCounter = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -168,14 +171,14 @@ extern inline unsigned char player3ButtonLeft ( void ){ return FrameWork.player[
 extern inline unsigned char player3ButtonRight( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_RIGHT; }
 extern inline unsigned char player3ButtonUp   ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_UP;    }
 extern inline unsigned char player3ButtonDown ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_DOWN;  }
-extern inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+extern inline unsigned char player3ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 extern inline unsigned char player4ButtonFire ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_FIRE;  }
 extern inline unsigned char player4ButtonLeft ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_LEFT;  }
 extern inline unsigned char player4ButtonRight( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_RIGHT; }
 extern inline unsigned char player4ButtonUp   ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_UP;    }
 extern inline unsigned char player4ButtonDown ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_DOWN;  }
-extern inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+extern inline unsigned char player4ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 // ----------------------------------------------------------------------
 // call update loop of current game running - passes the process on to
@@ -193,6 +196,15 @@ void frameWorkUpdateProcessLoop( void )
 			break;
 		case FRAMEWORK_STATE_MENU :
 			processMenuLoop();
+			break;
+
+		// start up screen
+		case FRAMEWORK_STATE_LOAD_START_UP_SCREEN :
+			loadStartUpScreen();
+			FrameWork.state = FRAMEWORK_STATE_START_UP_SCREEN;
+			break;
+		case FRAMEWORK_STATE_START_UP_SCREEN :
+			processStartUpScreenLoop();
 			break;
 
 		// snake
@@ -236,6 +248,7 @@ void frameWorkUpdateInputLoop( void )
 	switch( FrameWork.state )
 	{
 		case FRAMEWORK_STATE_MENU                  : processMenuInput();               break;
+		case FRAMEWORK_STATE_START_UP_SCREEN       : processStartUpScreenInput();      break;
 		case FRAMEWORK_STATE_COLOUR_DEMO           : processColourDemoInput();         break;
 		case FRAMEWORK_STATE_SNAKE                 : processSnakeInput();              break;
 		case FRAMEWORK_STATE_GAME_OF_LIFE          : processGameOfLifeInput();         break;

@@ -9,11 +9,19 @@
 // Structs
 // ----------------------------------------------------------------------
 
+struct GameOfLife_Cursor_t
+{
+	unsigned char x;
+	unsigned char y;
+};
+
 struct GameOfLife_t
 {
 	unsigned char* frameBuffer;
 	unsigned char state;
 	unsigned char bufferOffset;
+	struct GameOfLife_Cursor_t cursor;
+	struct GameOfLife_Cursor_t oldCursor;
 };
 
 // ----------------------------------------------------------------------
@@ -34,6 +42,6 @@ void loadGameOfLife( unsigned char* frameBuffer );
 void processGameOfLifeLoop( void );
 void processGameOfLifeInput( void );
 void randomizeFrameBuffer( void );
-void drawFrameBuffer( void );
+void drawFrameBuffer( const unsigned short* colour, unsigned char forceDraw );
 
 #endif // _GAMEOFLIFE_H_

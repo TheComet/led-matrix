@@ -6,6 +6,27 @@
 	#define _FRAMEWORK_H_
 
 // ----------------------------------------------------------------------
+// global constants
+// ----------------------------------------------------------------------
+
+// common colours
+static const unsigned short BLACK     = 0x000;
+static const unsigned short WHITE     = 0xEEE;
+static const unsigned short RED       = 0xE00;
+static const unsigned short GREEN     = 0x0E0;
+static const unsigned short BLUE      = 0x00E;
+static const unsigned short YELLOW    = 0xEE0;
+static const unsigned short MAGENTA   = 0xE0E;
+static const unsigned short LIGHTBLUE = 0x0EE;
+static const unsigned short PINK      = 0xE07;
+static const unsigned short PURPLE    = 0x70E;
+static const unsigned short ORANGE    = 0xE70;
+
+// states
+#define ZERO BLACK
+#define ONE 1
+
+// ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
 
@@ -38,6 +59,8 @@ enum FrameWork_State_e
 {
 	FRAMEWORK_STATE_LOAD_MENU,
 	FRAMEWORK_STATE_MENU,
+	FRAMEWORK_STATE_LOAD_START_UP_SCREEN,
+	FRAMEWORK_STATE_START_UP_SCREEN,
 	FRAMEWORK_STATE_LOAD_SNAKE,
 	FRAMEWORK_STATE_SNAKE,
 	FRAMEWORK_STATE_LOAD_COLOUR_DEMO,

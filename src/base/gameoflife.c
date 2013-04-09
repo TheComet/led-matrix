@@ -10,7 +10,7 @@
 #include "framework.h"
 #include "uart.h"
 
-struct GameOfLife_t GameOfLife;
+static struct GameOfLife_t GameOfLife;
 
 // ----------------------------------------------------------------------
 // load game of life
@@ -26,11 +26,11 @@ void loadGameOfLife( unsigned char* frameBuffer )
 	GameOfLife.bufferOffset = 0;
 
 	// set refresh rate
-	setRefreshRate( 64 );
+	setRefreshRate( 128 );
 
-	// draw screen
+	// initialise screen
 	cls();
-	drawFrameBuffer();
+	drawFrameBuffer( &GREEN, 0 );
 	send();
 }
 
@@ -84,7 +84,7 @@ void processGameOfLifeLoop( void )
 			}
 
 			// draw buffer
-			drawFrameBuffer();
+			drawFrameBuffer( &GREEN, 0 );
 			send();
 
 			// flip buffers
@@ -108,7 +108,55 @@ void processGameOfLifeLoop( void )
 // process game of life input
 void processGameOfLifeInput( void )
 {
-	if( player1ButtonFire() ) endGame();
+	
+	// switch modes
+	if( player1ButtonFire() )
+	{
+		switch( GameOfLife.state )
+		{
+
+			// switching to edit mode
+			case GAMEOFLIFE_STATE_PLAY :
+				GameOfLife.bufferOffset = 0; // edit mode always in buffer 0
+				drawFrameBuffer( &BLUE, 1 ); // force re-drawing of all pixels in a different colour
+				GameOfLife.state = GAMEOFLIFE_STATE_EDIT;
+				break;
+
+			// switching to play mode
+			case GAMEOFLIFE_STATE_EDIT :
+				drawFrameBuffer( &GREEN, 1 ); // force re-drawing of all pixels in a different colour
+				GameOfLife.state = GAMEOFLIFE_STATE_PLAY;
+				break;
+
+			default: break;
+		}
+	}
+
+	// end game with menu button
+	if( player1ButtonMenu() ) endGame();
+
+	// state dependant input
+	switch( GameOfLife.state )
+	{
+
+		// edit mode
+		case GAMEOFLIFE_STATE_EDIT :
+
+			// move cursor with up, down, left, right
+			if( player1ButtonUp() ) GameOfLife.cursor.y--;
+			if( player1ButtonDown() ) GameOfLife.cursor.y++;
+			if( player1ButtonLeft() ) GameOfLife.cursor.x--;
+			if( player1ButtonRight() ) GameOfLife.cursor.x++;
+
+			// update cursor graphic
+			if( (*(GameOfLife.frameBuffer + GameOfLife.oldCursor.y + (GameOfLife.oldCursor.x*16) )) & 0x02 )
+				dot( &GameOfLife.oldCursor.x, &GameOfLife.oldCursor.x, &ZERO );
+			
+
+			break;
+
+		default: break;
+	}
 }
 
 // ----------------------------------------------------------------------
@@ -124,11 +172,8 @@ void randomizeFrameBuffer( void )
 
 // ----------------------------------------------------------------------
 // draws the buffer
-void drawFrameBuffer( void )
+void drawFrameBuffer( const unsigned short* colour, unsigned char forceDraw )
 {
-
-	// colours
-	unsigned short cD = 0x0E0, cC = 0;
 
 	// render pixels
 	unsigned char x, y;
@@ -139,11 +184,11 @@ void drawFrameBuffer( void )
 			unsigned char buffer = (*(GameOfLife.frameBuffer+y+(x*16)));
 			if( buffer & (0x01 << GameOfLife.bufferOffset) )
 			{
-				if( (buffer & (0x02 >> GameOfLife.bufferOffset)) == 0 )
-					dot( &x, &y, &cD );
+				if( forceDraw || (buffer & (0x02 >> GameOfLife.bufferOffset)) == 0 )
+					dot( &x, &y, colour );
 			}else{
-				if( buffer & (0x02 >> GameOfLife.bufferOffset) )
-					dot( &x, &y, &cC );
+				if( forceDraw || (buffer & (0x02 >> GameOfLife.bufferOffset)) )
+					dot( &x, &y, &BLACK );
 			}
 		}
 	}

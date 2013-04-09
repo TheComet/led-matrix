@@ -11,32 +11,17 @@
 #include "uart.h"
 #include "framework.h"
 
-struct Menu_t Menu;
+static struct Menu_t Menu;
 
-// colour data for snake
-unsigned short snake[100] = {0x0,0x0,0xA71,0x972,0x852,0x751,0x0,0x0,0x0,0x0,0x0,0xB92,0xA91,0x972,0x862,0x851,0x730,0x0,0x0,0x0,0x0,0xBA2,0xA82,0x420,0x0,0x851,0x750,0x0,0x0,0x0,0x0,0x0,0xD00,0x0,0x0,0x852,0x851,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x972,0x851,0x0,0x0,0x0,0x0,0x0,0x0,0x420,0xA81,0x972,0x0,0x0,0x0,0x0,0x0,0x0,0xCA3,0xB92,0x420,0x0,0x0,0x100,0x740,0x0,0x0,0xDC4,0xCB3,0xBA2,0x0,0x0,0x0,0x0,0x0,0x730,0x0,0xDC4,0xCC3,0xBB3,0x0,0x0,0x0,0x420,0x851,0x730,0x0,0x0,0xDC4,0xCA3,0xBA2,0xA92,0x971,0x972,0x420,0x0};
-
-// ----------------------------------------------------------------------
-// draws an arrow pointing to player 1's port
-void menuDrawStartArrow( unsigned char offset )
-{
-
-	// draw arrow
-	for( unsigned char i = 0; i != 5; i++ )
-	{
-		unsigned char x1=7-i, y1=15-offset-i, x2=8+i;
-		unsigned short cA=(0x00E|((i<<4)*3));
-		line( &x1, &y1, &x2, &y1, &cA );
-	}
-}
+// icon images
+static const unsigned short snakeIcon[100] = {0x0,0x0,0xA71,0x972,0x852,0x751,0x0,0x0,0x0,0x0,0x0,0xB92,0xA91,0x972,0x862,0x851,0x730,0x0,0x0,0x0,0x0,0xBA2,0xA82,0x420,0x0,0x851,0x750,0x0,0x0,0x0,0x0,0x0,0xD00,0x0,0x0,0x852,0x851,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x972,0x851,0x0,0x0,0x0,0x0,0x0,0x0,0x420,0xA81,0x972,0x0,0x0,0x0,0x0,0x0,0x0,0xCA3,0xB92,0x420,0x0,0x0,0x100,0x740,0x0,0x0,0xDC4,0xCB3,0xBA2,0x0,0x0,0x0,0x0,0x0,0x730,0x0,0xDC4,0xCC3,0xBB3,0x0,0x0,0x0,0x420,0x851,0x730,0x0,0x0,0xDC4,0xCA3,0xBA2,0xA92,0x971,0x972,0x420,0x0};
 
 // ----------------------------------------------------------------------
 // draws the menu frame
 void menuDrawFrame( void )
 {
 	unsigned char x1=0, x2=15;
-	unsigned short cA=0x0EE, cB=0x00E;
-	blendColourBox( &x1, &x1, &x2, &x2, &cA, &cB, &cB, &cA );
+	blendColourBox( &x1, &x1, &x2, &x2, &LIGHTBLUE, &BLUE, &BLUE, &LIGHTBLUE );
 }
 
 // ----------------------------------------------------------------------
@@ -67,12 +52,12 @@ void menuDrawJoinArrows( unsigned char* playerList )
 	
 	// player 1 (always green)
 	unsigned char x1=12, y1=14, x2=14;
-	unsigned short cA=0x0E0;
-	line( &x1, &y1, &x2, &y1, &cA );
+	line( &x1, &y1, &x2, &y1, &GREEN );
 	x1=13; y1=15;
-	dot( &x1, &y1, &cA );
+	dot( &x1, &y1, &GREEN );
 
 	// player 2
+	unsigned short cA;
 	x1=1; y1=1; x2=3;
 	if( (*playerList)&0x01 ) cA = 0x0E0; else cA = 0xE00;
 	line( &x1, &y1, &x2, &y1, &cA );
@@ -99,8 +84,7 @@ void menuDrawJoinArrows( unsigned char* playerList )
 void menuClearIcon( void )
 {
 	unsigned char x1=3, x2=12;
-	unsigned short cA=0;
-	fillBox( &x1, &x1, &x2, &x2, &cA );
+	fillBox( &x1, &x1, &x2, &x2, &BLACK );
 }
 
 // ----------------------------------------------------------------------
@@ -121,7 +105,7 @@ void menuDrawSnakeIcon( void )
 	{
 		for( unsigned char x = 3; x != 13; x++ )
 		{
-			dot( &x, &y, &snake[index] );
+			dot( &x, &y, &snakeIcon[index] );
 			index++;
 		}
 	}
@@ -160,19 +144,35 @@ void menuUpdateIcon( unsigned char* selected )
 }
 
 // ----------------------------------------------------------------------
+// initialises some values for the menu
+void initMenu( void )
+{
+	Menu.selected  = 0;
+}
+
+// ----------------------------------------------------------------------
 // load menu
 void loadMenu( unsigned char* frameBuffer )
 {
 
 	// initial state
-	Menu.state = MENU_STATE_PRESS_START;
-	Menu.toggleArrow = 0;
+	Menu.state = MENU_STATE_SELECT_GAME;
 
-	// reset player list
+	// set refresh rate
+	setRefreshRate( 50 );
+
+	// reset values
+	Menu.toggleArrow = 0;
 	Menu.playerList = 0;
 
-	// slow refresh rate
-	setRefreshRate( 50 );
+	// draw current game
+	cls();
+	menuDrawFrame();
+	menuDrawRightArrow(0);
+	menuDrawLeftArrow(0);
+	menuDrawJoinArrows( &Menu.playerList );
+	menuUpdateIcon( &Menu.selected );
+	send();
 }
 
 // ----------------------------------------------------------------------
@@ -180,22 +180,12 @@ void loadMenu( unsigned char* frameBuffer )
 void processMenuLoop( void )
 {
 
-	// toggle arrow
-	Menu.toggleArrow = 1-Menu.toggleArrow;
+	// toggle
+	Menu.toggleArrow = 1 - Menu.toggleArrow;
 
 	// draw different menu screens
 	switch( Menu.state )
 	{
-
-		// press start
-		case MENU_STATE_PRESS_START :
-
-			// draw start arrow
-			cls();
-			menuDrawStartArrow( Menu.toggleArrow );
-			send();
-
-			break;
 
 		// select game
 		case MENU_STATE_SELECT_GAME :
@@ -224,29 +214,6 @@ void processMenuInput( void )
 	// draw different menu screens
 	switch( Menu.state )
 	{
-
-		// press start
-		case MENU_STATE_PRESS_START :
-
-			// start is pressed
-			if( player1ButtonFire() )
-			{
-
-				// switch states
-				Menu.selected = MENU_SELECT_COLOUR_DEMO;
-				Menu.state = MENU_STATE_SELECT_GAME;
-
-				// draw first game
-				cls();
-				menuDrawColourDemoIcon();
-				menuDrawFrame();
-				menuDrawRightArrow(0);
-				menuDrawLeftArrow(0);
-				menuDrawJoinArrows( &Menu.playerList );
-				send();
-			}
-
-			break;
 
 		// select game
 		case MENU_STATE_SELECT_GAME :

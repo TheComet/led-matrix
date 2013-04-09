@@ -27,6 +27,7 @@ void loadColourDemo( unsigned char* frameBuffer )
 // process colour demo loop
 void processColourDemoLoop( void )
 {
+	endGame(); // remove this
 }
 
 // ----------------------------------------------------------------------
