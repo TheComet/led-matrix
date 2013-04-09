@@ -130,8 +130,6 @@ void drawFrameBuffer( void )
 	unsigned short cD = 0x0E0, cC = 0;
 
 	// create read and write masks
-	unsigned char readMask = (1 << GameOfLife.bufferOffset);
-	unsigned char writeMask = (2 >> GameOfLife.bufferOffset);
 	unsigned char index=0;
 
 	// render pixels
@@ -139,16 +137,15 @@ void drawFrameBuffer( void )
 	{
 		for( unsigned char y = 0; y != 16; y++ )
 		{
-			unsigned char stored = GameOfLife.frameBuffer[index];
-			index++;
-			if( stored & readMask != 0 )
+			if( GameOfLife.frameBuffer[index] & (1 << GameOfLife.bufferOffset) != 0 )
 			{
-				if( stored & writeMask == 0 )
+				if( GameOfLife.frameBuffer[index] & (2 >> GameOfLife.bufferOffset) == 0 )
 					dot( &x, &y, &cD );
 			}else{
-				if( stored & writeMask != 0 )
+				if( GameOfLife.frameBuffer[index] & (2 >> GameOfLife.bufferOffset) != 0 )
 					dot( &x, &y, &cC );
 			}
+			index++;
 		}
 	}
 }
