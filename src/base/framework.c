@@ -57,20 +57,32 @@ void pollPorts( void )
 	FrameWork.player[2].buttonState = MAP_PLAYER3_BUTTON;
 	FrameWork.player[3].buttonState = MAP_PLAYER4_BUTTON;
 
-	// process positive edges and save old states
+	// add start menu button to 6th bit
+	if( FrameWork.player[0].buttonState & (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN) )
+		FrameWork.player[0].buttonState |= MAP_PLAYER_BUTTON_MENU;
+	if( FrameWork.player[1].buttonState & (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN) )
+		FrameWork.player[1].buttonState |= MAP_PLAYER_BUTTON_MENU;
+	if( FrameWork.player[2].buttonState & (MAP_PLAYER3_BUTTON_UP | MAP_PLAYER3_BUTTON_DOWN) )
+		FrameWork.player[2].buttonState |= MAP_PLAYER_BUTTON_MENU;
+	if( FrameWork.player[3].buttonState & (MAP_PLAYER4_BUTTON_UP | MAP_PLAYER4_BUTTON_DOWN) )
+		FrameWork.player[3].buttonState |= MAP_PLAYER_BUTTON_MENU;
+
+	// process buttons
 	unsigned char updateFlag = 0;
 	for( unsigned char i = 0; i != 4; i++ )
 	{
+		
+		// process positive edges and save old states
 		FrameWork.player[i].buttonPositiveEdge = ((~FrameWork.player[i].oldButtonState) & FrameWork.player[i].buttonState);
 		FrameWork.player[i].oldButtonState = FrameWork.player[i].buttonState;
 		if( FrameWork.player[i].buttonPositiveEdge ) updateFlag = 1;
 
-		// change
+		// change random seed as long as buttons are being pressed
 		if( FrameWork.player[i].buttonState&0x1F )
 			FrameWork.randomSeed++;
 	}
 
-	// update any inputs
+	// update any input loops
 	if( updateFlag ) frameWorkUpdateInputLoop();
 
 }
@@ -142,24 +154,28 @@ extern inline unsigned char player1ButtonLeft ( void ){ return FrameWork.player[
 extern inline unsigned char player1ButtonRight( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_RIGHT; }
 extern inline unsigned char player1ButtonUp   ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_UP;    }
 extern inline unsigned char player1ButtonDown ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_DOWN;  }
+extern inline unsigned char player1ButtonMenu ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 extern inline unsigned char player2ButtonFire ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_FIRE;  }
 extern inline unsigned char player2ButtonLeft ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_LEFT;  }
 extern inline unsigned char player2ButtonRight( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_RIGHT; }
 extern inline unsigned char player2ButtonUp   ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_UP;    }
 extern inline unsigned char player2ButtonDown ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_DOWN;  }
+extern inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 extern inline unsigned char player3ButtonFire ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_FIRE;  }
 extern inline unsigned char player3ButtonLeft ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_LEFT;  }
 extern inline unsigned char player3ButtonRight( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_RIGHT; }
 extern inline unsigned char player3ButtonUp   ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_UP;    }
 extern inline unsigned char player3ButtonDown ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_DOWN;  }
+extern inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 extern inline unsigned char player4ButtonFire ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_FIRE;  }
 extern inline unsigned char player4ButtonLeft ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_LEFT;  }
 extern inline unsigned char player4ButtonRight( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_RIGHT; }
 extern inline unsigned char player4ButtonUp   ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_UP;    }
 extern inline unsigned char player4ButtonDown ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_DOWN;  }
+extern inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 // ----------------------------------------------------------------------
 // call update loop of current game running - passes the process on to
