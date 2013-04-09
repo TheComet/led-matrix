@@ -42,6 +42,7 @@ void loadGameOfLife( unsigned char* frameBuffer );
 void processGameOfLifeLoop( void );
 void processGameOfLifeInput( void );
 void randomizeFrameBuffer( void );
+void prepareFrameBufferForEditing( void );
 void drawFrameBuffer( const unsigned short* colour, unsigned char forceDraw );
 
 #endif // _GAMEOFLIFE_H_

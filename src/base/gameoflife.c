@@ -24,6 +24,9 @@ void loadGameOfLife( unsigned char* frameBuffer )
 	// set initial state
 	GameOfLife.state = GAMEOFLIFE_STATE_PLAY;
 	GameOfLife.bufferOffset = 0;
+	GameOfLife.cursor.x = 7;
+	GameOfLife.cursor.y = 7;
+	GameOfLife.oldCursor = GameOfLife.cursor;
 
 	// set refresh rate
 	setRefreshRate( 128 );
@@ -53,8 +56,8 @@ void processGameOfLifeLoop( void )
 				{
 
 					// create read and write masks
-					unsigned char readMask = (0x02 >> GameOfLife.bufferOffset);
-					unsigned char writeMask = (0x01 << GameOfLife.bufferOffset);
+					unsigned char readMask = (0x01 << GameOfLife.bufferOffset);
+					unsigned char writeMask = (0x02 >> GameOfLife.bufferOffset);
 
 					// count adjacent cells
 					unsigned char count = 0;
@@ -83,12 +86,12 @@ void processGameOfLifeLoop( void )
 				}
 			}
 
+			// flip buffers
+			GameOfLife.bufferOffset = 1 - GameOfLife.bufferOffset;
+
 			// draw buffer
 			drawFrameBuffer( &GREEN, 0 );
 			send();
-
-			// flip buffers
-			GameOfLife.bufferOffset = 1 - GameOfLife.bufferOffset;
 
 			break;
 
@@ -108,32 +111,6 @@ void processGameOfLifeLoop( void )
 // process game of life input
 void processGameOfLifeInput( void )
 {
-	
-	// switch modes
-	if( player1ButtonFire() )
-	{
-		switch( GameOfLife.state )
-		{
-
-			// switching to edit mode
-			case GAMEOFLIFE_STATE_PLAY :
-				GameOfLife.bufferOffset = 0; // edit mode always in buffer 0
-				drawFrameBuffer( &BLUE, 1 ); // force re-drawing of all pixels in a different colour
-				GameOfLife.state = GAMEOFLIFE_STATE_EDIT;
-				break;
-
-			// switching to play mode
-			case GAMEOFLIFE_STATE_EDIT :
-				drawFrameBuffer( &GREEN, 1 ); // force re-drawing of all pixels in a different colour
-				GameOfLife.state = GAMEOFLIFE_STATE_PLAY;
-				break;
-
-			default: break;
-		}
-	}
-
-	// end game with menu button
-	if( player1ButtonMenu() ) endGame();
 
 	// state dependant input
 	switch( GameOfLife.state )
@@ -149,9 +126,38 @@ void processGameOfLifeInput( void )
 			if( player1ButtonRight() ) GameOfLife.cursor.x++;
 
 			// update cursor graphic
-			if( (*(GameOfLife.frameBuffer + GameOfLife.oldCursor.y + (GameOfLife.oldCursor.x*16) )) & 0x02 )
-				dot( &GameOfLife.oldCursor.x, &GameOfLife.oldCursor.x, &ZERO );
-			
+			if( (*(GameOfLife.frameBuffer + GameOfLife.oldCursor.y + (GameOfLife.oldCursor.x*16) )) & 0x01 )
+				dot( &GameOfLife.oldCursor.x, &GameOfLife.oldCursor.y, &BLUE );
+			else
+				dot( &GameOfLife.oldCursor.x, &GameOfLife.oldCursor.y, &BLACK );
+			dot( &GameOfLife.cursor.x, &GameOfLife.cursor.y, &WHITE );
+			send();
+			GameOfLife.oldCursor = GameOfLife.cursor;
+
+			// resume simulation
+			if( player1ButtonMenu() )
+			{
+				drawFrameBuffer( &GREEN, 1 ); // force re-drawing of all pixels in a different colour
+				GameOfLife.state = GAMEOFLIFE_STATE_PLAY;
+			}
+
+			break;
+
+		// during play
+		case GAMEOFLIFE_STATE_PLAY :
+
+			// switch to editing mode
+			if( player1ButtonFire() )
+			{
+				prepareFrameBufferForEditing();
+				GameOfLife.bufferOffset = 0; // edit mode always in buffer 0
+				drawFrameBuffer( &BLUE, 1 ); // force re-drawing of all pixels in a different colour
+				dot( &GameOfLife.cursor.x, &GameOfLife.cursor.y, &WHITE );
+				GameOfLife.state = GAMEOFLIFE_STATE_EDIT;
+			}
+
+			// end game with menu button
+			if( player1ButtonMenu() ) endGame();
 
 			break;
 
@@ -165,7 +171,20 @@ void randomizeFrameBuffer( void )
 {
 	unsigned char x = 0;
 	do{
-		*(GameOfLife.frameBuffer+x) = ((rnd() >> 4)&0x02);
+		*(GameOfLife.frameBuffer+x) = ((rnd() >> 4)&0x01);
+		x++;
+	}while( x != 0 );
+}
+
+// ----------------------------------------------------------------------
+// transfers the current data into buffer 0 for editing
+void prepareFrameBufferForEditing( void )
+{
+
+	// make sure data is only in buffer 0
+	unsigned char x = 0;
+	do{
+		if( (*(GameOfLife.frameBuffer+x)) & (0x01 << GameOfLife.bufferOffset) ) (*(GameOfLife.frameBuffer+x)) = 0x01;
 		x++;
 	}while( x != 0 );
 }

@@ -7,6 +7,7 @@
 #include "uart.h"
 #include "framework.h"
 #include "common.h"
+#include "menu.h"
 
 // ------------------------------------------------------------------------------------------------------------------
 // call this to initialise the device
