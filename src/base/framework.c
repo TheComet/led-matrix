@@ -14,7 +14,7 @@
 #include "colourdemo.h"
 #include "gameoflife.h"
 
-struct FrameWork_t FrameWork;
+static struct FrameWork_t FrameWork;
 
 // ----------------------------------------------------------------------
 // initialise framework

@@ -75,7 +75,7 @@ void _write_to_buffer( unsigned char* data )
 // which lasts until the buffer is empty
 void send( void )
 {
-	if( UART.isSending == 0 )
+	if( UART.isSending == 0 && UART.bufferReadPtr != UART.bufferWritePtr )
 	{
 		UART.isSending = 1;
 		UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
@@ -303,9 +303,6 @@ void setBlendMode( unsigned char blendMode )
 #pragma vector=USCIAB1RX_VECTOR
 __interrupt void USCI1RX_ISR(void)
 {
-
-	// reset timeout
-	TAR = 0x00;
 	
 	// increase and wrap pointer if it's the same as sent data
 	if( UART.buffer[ UART.bufferReadPtr ] == UCA1RXBUF )

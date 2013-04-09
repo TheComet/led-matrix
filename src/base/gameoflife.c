@@ -53,8 +53,8 @@ void processGameOfLifeLoop( void )
 				{
 
 					// create read and write masks
-					unsigned char readMask = (2 >> GameOfLife.bufferOffset);
-					unsigned char writeMask = (1 << GameOfLife.bufferOffset);
+					unsigned char readMask = (0x02 >> GameOfLife.bufferOffset);
+					unsigned char writeMask = (0x01 << GameOfLife.bufferOffset);
 
 					// count adjacent cells
 					unsigned char count = 0;
@@ -79,7 +79,6 @@ void processGameOfLifeLoop( void )
 
 						// has 3 neighbours, new cell is born
 						if( count == 3 ) (*(GameOfLife.frameBuffer + y + (x*16))) |= writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) &= ~writeMask;
-
 					}
 				}
 			}
@@ -96,10 +95,12 @@ void processGameOfLifeLoop( void )
 		// edit mode
 		case GAMEOFLIFE_STATE_EDIT :
 
+			// 
+
 			break;
 
 		// error
-		default : GameOfLife.state = GAMEOFLIFE_STATE_PLAY; break;
+		default : break;
 	}
 }
 
@@ -129,23 +130,21 @@ void drawFrameBuffer( void )
 	// colours
 	unsigned short cD = 0x0E0, cC = 0;
 
-	// create read and write masks
-	unsigned char index=0;
-
 	// render pixels
-	for( unsigned char x = 0; x != 16; x++ )
+	unsigned char x, y;
+	for( x = 0; x != 16; x++ )
 	{
-		for( unsigned char y = 0; y != 16; y++ )
+		for( y = 0; y != 16; y++ )
 		{
-			if( GameOfLife.frameBuffer[index] & (1 << GameOfLife.bufferOffset) != 0 )
+			unsigned char buffer = (*(GameOfLife.frameBuffer+y+(x*16)));
+			if( buffer & (0x01 << GameOfLife.bufferOffset) )
 			{
-				if( GameOfLife.frameBuffer[index] & (2 >> GameOfLife.bufferOffset) == 0 )
+				if( (buffer & (0x02 >> GameOfLife.bufferOffset)) == 0 )
 					dot( &x, &y, &cD );
 			}else{
-				if( GameOfLife.frameBuffer[index] & (2 >> GameOfLife.bufferOffset) != 0 )
+				if( buffer & (0x02 >> GameOfLife.bufferOffset) )
 					dot( &x, &y, &cC );
 			}
-			index++;
 		}
 	}
 }
