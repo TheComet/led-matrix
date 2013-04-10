@@ -38,8 +38,8 @@ void drawButtonHelp( void )
 	         y1=0x05;          y2=0x06; fillBox( &x1, &y1, &x2, &y2, &BLUE );
 
 	// draw changing buttons
-	x1=0x07; y1=0x01; x2=0x08; y2=0x02; if( StartUpScreen.toggle ) fillBox( &x1, &y1, &x2, &y2, &BLUE ); else fillBox( &x1, &y1, &x2, &y2, &RED );
-	         y1=0x03;          y2=0x04; if( StartUpScreen.toggle ) fillBox( &x1, &y1, &x2, &y2, &BLUE ); else fillBox( &x1, &y1, &x2, &y2, &RED );
+	x1=0x07; y1=0x01; x2=0x08; y2=0x02; if( StartUpScreen.toggle ) fillBox( &x1, &y1, &x2, &y2, &BLUE ); else fillBox( &x1, &y1, &x2, &y2, &YELLOW );
+	         y1=0x03;          y2=0x04; if( StartUpScreen.toggle ) fillBox( &x1, &y1, &x2, &y2, &BLUE ); else fillBox( &x1, &y1, &x2, &y2, &YELLOW );
 }
 
 // ----------------------------------------------------------------------

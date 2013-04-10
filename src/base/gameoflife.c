@@ -125,14 +125,33 @@ void processGameOfLifeInput( void )
 			if( player1ButtonLeft() ) GameOfLife.cursor.x--;
 			if( player1ButtonRight() ) GameOfLife.cursor.x++;
 
-			// update cursor graphic
+			// cursor limits
+			GameOfLife.cursor.x &= 0x0F;
+			GameOfLife.cursor.y &= 0x0F;
+
+			// edit cells
+			if( player1ButtonFire() )
+			{
+
+				// update frame buffer and draw new cursor
+				if( (*(GameOfLife.frameBuffer + GameOfLife.cursor.y + (GameOfLife.cursor.x*16) )) & 0x01 )
+					(*(GameOfLife.frameBuffer + GameOfLife.cursor.y + (GameOfLife.cursor.x*16) )) = 0x00;
+				else
+					(*(GameOfLife.frameBuffer + GameOfLife.cursor.y + (GameOfLife.cursor.x*16) )) = 0x01;
+			}
+
+			// remove old cursor
 			if( (*(GameOfLife.frameBuffer + GameOfLife.oldCursor.y + (GameOfLife.oldCursor.x*16) )) & 0x01 )
 				dot( &GameOfLife.oldCursor.x, &GameOfLife.oldCursor.y, &BLUE );
 			else
 				dot( &GameOfLife.oldCursor.x, &GameOfLife.oldCursor.y, &BLACK );
-			dot( &GameOfLife.cursor.x, &GameOfLife.cursor.y, &WHITE );
-			send();
 			GameOfLife.oldCursor = GameOfLife.cursor;
+
+			// draw new cursor
+			if( (*(GameOfLife.frameBuffer + GameOfLife.cursor.y + (GameOfLife.cursor.x*16) )) & 0x01 )
+				dot( &GameOfLife.cursor.x, &GameOfLife.cursor.y, &YELLOW );
+			else
+				dot( &GameOfLife.cursor.x, &GameOfLife.cursor.y, &WHITE );
 
 			// resume simulation
 			if( player1ButtonMenu() )
@@ -140,6 +159,9 @@ void processGameOfLifeInput( void )
 				drawFrameBuffer( &GREEN, 1 ); // force re-drawing of all pixels in a different colour
 				GameOfLife.state = GAMEOFLIFE_STATE_PLAY;
 			}
+
+			// send graphic changes to display
+			send();
 
 			break;
 
@@ -184,7 +206,10 @@ void prepareFrameBufferForEditing( void )
 	// make sure data is only in buffer 0
 	unsigned char x = 0;
 	do{
-		if( (*(GameOfLife.frameBuffer+x)) & (0x01 << GameOfLife.bufferOffset) ) (*(GameOfLife.frameBuffer+x)) = 0x01;
+		if( (*(GameOfLife.frameBuffer+x)) & (0x01 << GameOfLife.bufferOffset) )
+			(*(GameOfLife.frameBuffer+x)) = 0x01;
+		else
+			(*(GameOfLife.frameBuffer+x)) = 0x00;
 		x++;
 	}while( x != 0 );
 }
