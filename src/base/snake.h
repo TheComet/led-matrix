@@ -30,7 +30,7 @@ enum Snake_Direction_e
 // Function prototypes
 // ----------------------------------------------------------------------
 
-void loadSnake( unsigned char* frameBuffer );
+void loadSnake( unsigned char* frameBuffer, unsigned char* playerCount );
 void processSnakeLoop( void );
 void processSnakeInput( void );
 

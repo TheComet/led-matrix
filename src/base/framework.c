@@ -123,23 +123,26 @@ unsigned char rnd( void )
 
 // ----------------------------------------------------------------------
 // starts the colour demo
-void startColourDemo( void )
+void startColourDemo( unsigned char* playerCount )
 {
 	FrameWork.state = FRAMEWORK_STATE_LOAD_COLOUR_DEMO;
+	FrameWork.playerCount = playerCount;
 }
 
 // ----------------------------------------------------------------------
 // starts snake
-void startSnake( void )
+void startSnake( unsigned char* playerCount )
 {
 	FrameWork.state = FRAMEWORK_STATE_LOAD_SNAKE;
+	FrameWork.playerCount = playerCount;
 }
 
 // ----------------------------------------------------------------------
 // starts the game of life
-void startGameOfLife( void )
+void startGameOfLife( unsigned char* playerCount )
 {
 	FrameWork.state = FRAMEWORK_STATE_LOAD_GAME_OF_LIFE;
+	FrameWork.playerCount = playerCount;
 }
 
 // ----------------------------------------------------------------------
@@ -181,6 +184,20 @@ extern inline unsigned char player4ButtonDown ( void ){ return FrameWork.player[
 extern inline unsigned char player4ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
 
 // ----------------------------------------------------------------------
+// sinus
+extern inline signed char sin( unsigned short angle )
+{
+	angle /= 12;
+	wrap( &angle, 30 );
+	return sinus[ angle ];
+}
+
+extern inline void wrap( unsigned short* value, unsigned char wrap )
+{
+	while( (*value) >= wrap ){ (*value) -= wrap; }
+}
+
+// ----------------------------------------------------------------------
 // call update loop of current game running - passes the process on to
 // the current "main loop" using a state machine for different modes
 // this allows expandability for more games/demos in the future
@@ -209,7 +226,7 @@ void frameWorkUpdateProcessLoop( void )
 
 		// snake
 		case FRAMEWORK_STATE_LOAD_SNAKE :
-			loadSnake( &FrameWork.frameBuffer[0] );
+			loadSnake( &FrameWork.frameBuffer[0], FrameWork.playerCount );
 			FrameWork.state = FRAMEWORK_STATE_SNAKE;
 			break;
 		case FRAMEWORK_STATE_SNAKE :
@@ -218,7 +235,7 @@ void frameWorkUpdateProcessLoop( void )
 
 		// colour demo
 		case FRAMEWORK_STATE_LOAD_COLOUR_DEMO :
-			loadColourDemo( &FrameWork.frameBuffer[0] );
+			loadColourDemo( &FrameWork.frameBuffer[0], FrameWork.playerCount );
 			FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;
 			break;
 		case FRAMEWORK_STATE_COLOUR_DEMO :
@@ -227,7 +244,7 @@ void frameWorkUpdateProcessLoop( void )
 
 		// game of life
 		case FRAMEWORK_STATE_LOAD_GAME_OF_LIFE :
-			loadGameOfLife( &FrameWork.frameBuffer[0] );
+			loadGameOfLife( &FrameWork.frameBuffer[0], FrameWork.playerCount );
 			FrameWork.state = FRAMEWORK_STATE_GAME_OF_LIFE;
 			break;
 		case FRAMEWORK_STATE_GAME_OF_LIFE :

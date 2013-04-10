@@ -23,8 +23,11 @@ static const unsigned short PURPLE    = 0x70E;
 static const unsigned short ORANGE    = 0xE70;
 
 // states
-#define ZERO BLACK
+#define ZERO 0
 #define ONE 1
+
+// sin() lookup table
+static const signed char sinus[30] = { 0x0,0x1A,0x33,0x4A,0x5E,0x6D,0x78,0x7E,0x7E,0x78,0x6D,0x5E,0x4A,0x33,0x1A,0x0,0xE6,0xCD,0xB6,0xA2,0x93,0x88,0x82,0x82,0x88,0x93,0xA2,0xB6,0xCD,0xE6 };
 
 // ----------------------------------------------------------------------
 // Structs
@@ -48,6 +51,7 @@ struct FrameWork_t
 	unsigned char frameBuffer[256];
 	unsigned short randomSeed;
 	unsigned char menuButtonFlags;
+	unsigned char* playerCount;
 };
 
 // ----------------------------------------------------------------------
@@ -82,9 +86,9 @@ void setRefreshRate( unsigned char refresh );
 void clearFrameBuffer( unsigned char* frameBuffer );
 unsigned char rnd( void );
 
-void startColourDemo( void );
-void startSnake( void );
-void startGameOfLife( void );
+void startColourDemo( unsigned char* playerCount );
+void startSnake( unsigned char* playerCount );
+void startGameOfLife( unsigned char* playerCount );
 void endGame( void );
 
 extern inline unsigned char player1ButtonFire( void );
@@ -114,5 +118,8 @@ extern inline unsigned char player4ButtonRight( void );
 extern inline unsigned char player4ButtonUp( void );
 extern inline unsigned char player4ButtonDown( void );
 extern inline unsigned char player4ButtonMenu( void );
+
+extern inline signed char sin( unsigned short angle );
+extern inline void wrap( unsigned short* value, unsigned char wrap );
 
 #endif // _FRAMEWORK_H_

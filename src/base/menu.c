@@ -251,9 +251,9 @@ void processMenuInput( void )
 			{
 				switch( Menu.selected )
 				{
-					case MENU_SELECT_COLOUR_DEMO    : startColourDemo();           break;
-					case MENU_SELECT_SNAKE          : startSnake();                break;
-					case MENU_SELECT_GAME_OF_LIFE   : startGameOfLife();           break;
+					case MENU_SELECT_COLOUR_DEMO    : startColourDemo( &Menu.playerList );           break;
+					case MENU_SELECT_SNAKE          : startSnake( &Menu.playerList );                break;
+					case MENU_SELECT_GAME_OF_LIFE   : startGameOfLife( &Menu.playerList );           break;
 					default : break;
 				}
 			}
