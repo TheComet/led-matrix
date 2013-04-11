@@ -142,6 +142,16 @@ void menuDrawGameOfLifeIcon( void )
 #ifdef GAME_ENABLE_TRON
 void menuDrawTronIcon( void )
 {
+	unsigned char x1=4, y1=12, x2=4, y2=4;
+	line( &x1, &y1, &x2, &y2, &RED );
+	x1=7; y1=4;
+	line( &x2, &y2, &x1, &y2, &RED );
+	x2=7; y2=6;
+	line( &x1, &y1, &x2, &y2, &RED );
+	x1=12; y1=8; x2=6; y2=8;
+	line( &x1, &y1, &x2, &y2, &GREEN );
+	x1=3; x2=12;
+	box( &x1, &x1, &x2, &x2, &PURPLE );
 }
 #endif
 
@@ -158,6 +168,10 @@ void menuDrawSpaceInvadersIcon( void )
 #ifdef GAME_ENABLE_TETRIS
 void menuDrawTetrisIcon( void )
 {
+	unsigned char x1=5, y1=4, x2=7, y2=9;
+	fillBox( &x1, &y1, &x2, &y2, &WHITE );
+	x1=8; y1=7; x2=10; y2=12;
+	fillBox( &x1, &y1, &x2, &y2, &WHITE );
 }
 #endif
 
