@@ -105,7 +105,8 @@ void processGameOfLifeLoop( void )
 		
 		// single player mode
 		case GAMEOFLIFE_STATE_PLAY_SINGLE :
-
+computeNextCycle();
+/*
 			// loop through all cells
 			for( x = 0; x != 16; x++ )
 			{
@@ -148,79 +149,14 @@ void processGameOfLifeLoop( void )
 
 			// draw buffer
 			drawFrameBuffer();
-			send();
+			send();*/
 
 			break;
 
 		// multi player mode
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
 
-			// loop through all cells
-			for( x = 0; x != 16; x++ )
-			{
-				for( y = 0; y != 16; y++ )
-				{
 
-					// count adjacent cells and determine which player can claim it
-					unsigned char count[4] = {0,0,0,0};
-					unsigned char i, totalCount = 0;
-					for( i = 0; i != 4; i++ )
-					{
-						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x*16)            )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x-1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x-1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x-1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (x*16)            )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x+1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x+1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
-						totalCount += count[i];
-					}
-
-					// current cell is alive
-					if( (*(GameOfLife.frameBuffer + y + (x*16))) & (0x55<<GameOfLife.bufferOffset) )
-					{
-
-						// less than 2 neighbours or more than 3 neighbours kills it
-						if( totalCount < 2 || totalCount > 3 )	(*(GameOfLife.frameBuffer + y + (x*16))) &= ~(0xAA>>GameOfLife.bufferOffset); else (*(GameOfLife.frameBuffer + y + (x*16))) |= (( (*(GameOfLife.frameBuffer + y + (x*16))) & (0x55<<GameOfLife.bufferOffset) ) << (0x01>>GameOfLife.bufferOffset));
-
-					// current cell is dead
-					}else{
-
-						// has 3 neighbours, new cell is born
-						if( totalCount == 3 )
-						{
-
-							// determine who it belongs to
-							unsigned char i;
-							for( i = 0; i != 4; i++ )
-							{
-								if( count[i] == 2 ) break;
-							}
-
-							// rare case of 3 players surrounding cell - do nothing
-							if( i != 4 )
-							{
-
-								// set cell
-								(*(GameOfLife.frameBuffer + y + (x*16))) |= ((0x01<<(i*2))<<GameOfLife.bufferOffset);
-							}
-
-						// clear cell
-						}else{
-							 *(GameOfLife.frameBuffer + y + (x*16)) &= ~(0xAA>>GameOfLife.bufferOffset);
-						}
-					}
-
-				}
-			}
-
-			// flip buffers
-			GameOfLife.bufferOffset = 1 - GameOfLife.bufferOffset;
-
-			// draw buffer
-			drawFrameBuffer();
-			send();
 
 			break;
 
@@ -314,7 +250,7 @@ void processGameOfLifeInput( void )
 
 		// during multi play
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
-/*
+
 			// loop through each player
 			for( unsigned char i = 0; i != 4; i++ )
 			{
@@ -353,7 +289,7 @@ void processGameOfLifeInput( void )
 				else
 					dot( &GameOfLife.player[i].cursor.x, &GameOfLife.player[i].cursor.y, &WHITE );
 
-			}*/
+			}
 
 			// end game with menu button
 			if( player1ButtonMenu() ) endGame();
@@ -465,4 +401,78 @@ void drawFrameBuffer( void )
 
 		}
 	}
+}
+
+// ----------------------------------------------------------------------
+// computes next cycle of evolution
+void computeNextCycle( void )
+{
+
+	// loop through all cells
+	unsigned char x, y;
+	for( x = 0; x != 16; x++ )
+	{
+		for( y = 0; y != 16; y++ )
+		{
+
+			// count adjacent cells and determine which player can claim it
+			unsigned char count[4] = {0,0,0,0};
+			unsigned char i, totalCount = 0;
+			for( i = 0; i != 4; i++ )
+			{
+				if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)<<4) )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x*16)            )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x-1)&0x0F)<<4) )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x-1)&0x0F)<<4) )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x-1)&0x0F)<<4) )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (x*16)            )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x+1)&0x0F)<<4) )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x+1)&0x0F)<<4) )) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) count[i]++;
+				totalCount += count[i];
+			}
+
+			// current cell is alive
+			if( (*(GameOfLife.frameBuffer + y + (x<<4))) & (0x55<<GameOfLife.bufferOffset) )
+			{
+
+				// less than 2 neighbours or more than 3 neighbours kills it
+				if( totalCount < 2 || totalCount > 3 )	(*(GameOfLife.frameBuffer + y + (x<<4))) &= (0x55<<GameOfLife.bufferOffset); else (*(GameOfLife.frameBuffer + y + (x*16))) |= (( (*(GameOfLife.frameBuffer + y + (x<<4))) & (0x55<<GameOfLife.bufferOffset) ) << (1>>GameOfLife.bufferOffset));
+
+			// current cell is dead
+			}else{
+
+				// has 3 neighbours, new cell is born
+				if( totalCount == 3 )
+				{
+
+					// determine who it belongs to
+					unsigned char i;
+					for( i = 0; i != 4; i++ )
+					{
+						if( count[i] > 1 ) break;
+					}
+
+					// rare case of 3 players surrounding cell - do nothing
+					if( i != 4 )
+					{
+
+						// set cell
+						(*(GameOfLife.frameBuffer + y + (x<<4))) |= ((2<<(i<<1))>>GameOfLife.bufferOffset);
+					}
+
+				// clear cell
+				}else{
+					 *(GameOfLife.frameBuffer + y + (x<<4)) &= (0x55<<GameOfLife.bufferOffset);
+				}
+			}
+		}
+	}
+
+	// flip buffers
+	GameOfLife.bufferOffset = 1 - GameOfLife.bufferOffset;
+
+	// draw buffer
+	drawFrameBuffer();
+	send();
+
 }

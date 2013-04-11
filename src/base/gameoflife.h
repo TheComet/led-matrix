@@ -52,5 +52,6 @@ void randomizeFrameBuffer( void );
 void drawFrameBufferNoCheck( void );
 void drawFrameBuffer( void );
 void drawFrameBufferCustom( const unsigned short* colour1, const unsigned short* colour2, const unsigned short* colour3, const unsigned short* colour4 );
+void computeNextCycle( void );
 
 #endif // _GAMEOFLIFE_H_
