@@ -7,7 +7,6 @@
 // ----------------------------------------------------------------------
 
 #include "menu.h"
-#include "common.h"
 #include "uart.h"
 #include "framework.h"
 

@@ -24,7 +24,8 @@ void initFrameWork( void )
 	FrameWork.updateCounter = 0;
 	FrameWork.updateDivider = 1;
 	FrameWork.updateFlag = 0;
-	FrameWork.state = FRAMEWORK_STATE_LOAD_START_UP_SCREEN;
+	FrameWork.state = FRAMEWORK_STATE_START_UP_SCREEN;
+	loadStartUpScreen();
 }
 
 // ----------------------------------------------------------------------
@@ -59,7 +60,7 @@ void pollPorts( void )
 	FrameWork.player[2].buttonState = MAP_PLAYER3_BUTTON;
 	FrameWork.player[3].buttonState = MAP_PLAYER4_BUTTON;
 
-	// add start menu button to 6th bit
+	// add menu button to 6th bit
 	if( (FrameWork.player[0].buttonState & (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN)) == (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN) )
 		FrameWork.player[0].buttonState |= MAP_PLAYER_BUTTON_MENU;
 	if( (FrameWork.player[1].buttonState & (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN)) == (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN) )
@@ -68,6 +69,16 @@ void pollPorts( void )
 		FrameWork.player[2].buttonState |= MAP_PLAYER_BUTTON_MENU;
 	if( (FrameWork.player[3].buttonState & (MAP_PLAYER4_BUTTON_UP | MAP_PLAYER4_BUTTON_DOWN)) == (MAP_PLAYER4_BUTTON_UP | MAP_PLAYER4_BUTTON_DOWN) )
 		FrameWork.player[3].buttonState |= MAP_PLAYER_BUTTON_MENU;
+
+	// add clear button to 7th bit
+	if( (FrameWork.player[0].buttonState & (MAP_PLAYER1_BUTTON_LEFT | MAP_PLAYER1_BUTTON_RIGHT)) == (MAP_PLAYER1_BUTTON_LEFT | MAP_PLAYER1_BUTTON_RIGHT) )
+		FrameWork.player[0].buttonState |= MAP_PLAYER_BUTTON_CLEAR;
+	if( (FrameWork.player[1].buttonState & (MAP_PLAYER2_BUTTON_LEFT | MAP_PLAYER2_BUTTON_RIGHT)) == (MAP_PLAYER2_BUTTON_LEFT | MAP_PLAYER2_BUTTON_RIGHT) )
+		FrameWork.player[1].buttonState |= MAP_PLAYER_BUTTON_CLEAR;
+	if( (FrameWork.player[2].buttonState & (MAP_PLAYER3_BUTTON_LEFT | MAP_PLAYER3_BUTTON_RIGHT)) == (MAP_PLAYER3_BUTTON_LEFT | MAP_PLAYER3_BUTTON_RIGHT) )
+		FrameWork.player[2].buttonState |= MAP_PLAYER_BUTTON_CLEAR;
+	if( (FrameWork.player[3].buttonState & (MAP_PLAYER4_BUTTON_LEFT | MAP_PLAYER4_BUTTON_RIGHT)) == (MAP_PLAYER4_BUTTON_LEFT | MAP_PLAYER4_BUTTON_RIGHT) )
+		FrameWork.player[3].buttonState |= MAP_PLAYER_BUTTON_CLEAR;
 
 	// process buttons
 	unsigned char updateFlag = 0;
@@ -134,7 +145,7 @@ void startColourDemo( unsigned char* playerCount )
 void startSnake( unsigned char* playerCount )
 {
 	loadSnake( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_LOAD_SNAKE;
+	FrameWork.state = FRAMEWORK_STATE_SNAKE;
 }
 
 // ----------------------------------------------------------------------
@@ -142,7 +153,7 @@ void startSnake( unsigned char* playerCount )
 void startGameOfLife( unsigned char* playerCount )
 {
 	loadGameOfLife( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_LOAD_GAME_OF_LIFE;
+	FrameWork.state = FRAMEWORK_STATE_GAME_OF_LIFE;
 }
 
 // ----------------------------------------------------------------------
@@ -162,6 +173,7 @@ extern inline unsigned char player1ButtonRight( void ){ return FrameWork.player[
 extern inline unsigned char player1ButtonUp   ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_UP;    }
 extern inline unsigned char player1ButtonDown ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_DOWN;  }
 extern inline unsigned char player1ButtonMenu ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+extern inline unsigned char player1ButtonClear( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
 extern inline unsigned char player2ButtonFire ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_FIRE;  }
 extern inline unsigned char player2ButtonLeft ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_LEFT;  }
@@ -169,6 +181,7 @@ extern inline unsigned char player2ButtonRight( void ){ return FrameWork.player[
 extern inline unsigned char player2ButtonUp   ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_UP;    }
 extern inline unsigned char player2ButtonDown ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_DOWN;  }
 extern inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+extern inline unsigned char player2ButtonClear( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
 extern inline unsigned char player3ButtonFire ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_FIRE;  }
 extern inline unsigned char player3ButtonLeft ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_LEFT;  }
@@ -176,6 +189,7 @@ extern inline unsigned char player3ButtonRight( void ){ return FrameWork.player[
 extern inline unsigned char player3ButtonUp   ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_UP;    }
 extern inline unsigned char player3ButtonDown ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_DOWN;  }
 extern inline unsigned char player3ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+extern inline unsigned char player3ButtonClear( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
 extern inline unsigned char player4ButtonFire ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_FIRE;  }
 extern inline unsigned char player4ButtonLeft ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_LEFT;  }
@@ -183,6 +197,7 @@ extern inline unsigned char player4ButtonRight( void ){ return FrameWork.player[
 extern inline unsigned char player4ButtonUp   ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_UP;    }
 extern inline unsigned char player4ButtonDown ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_DOWN;  }
 extern inline unsigned char player4ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+extern inline unsigned char player4ButtonClear( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
 // ----------------------------------------------------------------------
 // sinus
@@ -193,6 +208,8 @@ extern inline signed char sin( unsigned short angle )
 	return sinus[ angle ];
 }
 
+// ----------------------------------------------------------------------
+// wraps a value between 0 and <wrap>
 extern inline void wrap( unsigned short* value, unsigned char wrap )
 {
 	while( (*value) >= wrap ){ (*value) -= wrap; }

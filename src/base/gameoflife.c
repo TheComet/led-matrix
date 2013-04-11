@@ -194,8 +194,13 @@ void processGameOfLifeLoop( void )
 								if( count[i] == 2 ) break;
 							}
 
-							// set cell
-							(*(GameOfLife.frameBuffer + y + (x*16))) |= ((0x01<<(i*2))<<GameOfLife.bufferOffset);
+							// rare case of 3 players surrounding cell - do nothing
+							if( i != 4 )
+							{
+
+								// set cell
+								(*(GameOfLife.frameBuffer + y + (x*16))) |= ((0x01<<(i*2))<<GameOfLife.bufferOffset);
+							}
 
 						// clear cell
 						}else{

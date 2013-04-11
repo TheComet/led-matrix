@@ -97,6 +97,7 @@ extern inline unsigned char player1ButtonRight( void );
 extern inline unsigned char player1ButtonUp( void );
 extern inline unsigned char player1ButtonDown( void );
 extern inline unsigned char player1ButtonMenu( void );
+extern inline unsigned char player1ButtonClear( void );
 
 extern inline unsigned char player2ButtonFire( void );
 extern inline unsigned char player2ButtonLeft( void );
@@ -104,6 +105,7 @@ extern inline unsigned char player2ButtonRight( void );
 extern inline unsigned char player2ButtonUp( void );
 extern inline unsigned char player2ButtonDown( void );
 extern inline unsigned char player2ButtonMenu( void );
+extern inline unsigned char player2ButtonClear( void );
 
 extern inline unsigned char player3ButtonFire( void );
 extern inline unsigned char player3ButtonLeft( void );
@@ -111,6 +113,7 @@ extern inline unsigned char player3ButtonRight( void );
 extern inline unsigned char player3ButtonUp( void );
 extern inline unsigned char player3ButtonDown( void );
 extern inline unsigned char player3ButtonMenu( void );
+extern inline unsigned char player3ButtonClear( void );
 
 extern inline unsigned char player4ButtonFire( void );
 extern inline unsigned char player4ButtonLeft( void );
@@ -118,5 +121,6 @@ extern inline unsigned char player4ButtonRight( void );
 extern inline unsigned char player4ButtonUp( void );
 extern inline unsigned char player4ButtonDown( void );
 extern inline unsigned char player4ButtonMenu( void );
+extern inline unsigned char player4ButtonClear( void );
 
 #endif // _FRAMEWORK_H_

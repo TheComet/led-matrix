@@ -38,8 +38,7 @@ enum GameOfLife_States_e
 {
 	GAMEOFLIFE_STATE_PLAY_SINGLE,
 	GAMEOFLIFE_STATE_EDIT_SINGLE,
-	GAMEOFLIFE_STATE_PLAY_MULTI,
-	GAMEOFLIFE_STATE_EDIT_MULTI
+	GAMEOFLIFE_STATE_PLAY_MULTI
 };
 
 // ----------------------------------------------------------------------

@@ -23,6 +23,7 @@
 
 // map virtual buttons
 #define MAP_PLAYER_BUTTON_MENU     0x20
+#define MAP_PLAYER_BUTTON_CLEAR    0x40
 
 // map player buttons
 #define MAP_PLAYER1_BUTTON_FIRE    0x01
