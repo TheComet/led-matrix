@@ -9,6 +9,7 @@
 #include "menu.h"
 #include "uart.h"
 #include "framework.h"
+#include "gameenable.h"
 
 static struct Menu_t Menu;
 
@@ -90,15 +91,18 @@ void menuClearIcon( void )
 
 // ----------------------------------------------------------------------
 // draws the colour demo icon
+#ifdef GAME_ENABLE_COLOUR_DEMO
 void menuDrawColourDemoIcon( void )
 {
 	unsigned char x1=3, x2=12;
 	unsigned short cA=0xE00, cB=0x0E0, cC=0x00E, cD=0xEE0;
 	blendColourFillBox( &x1, &x1, &x2, &x2, &cA, &cB, &cC, &cD );
 }
+#endif
 
 // ----------------------------------------------------------------------
 // draws the snake icon
+#ifdef GAME_ENABLE_SNAKE
 void menuDrawSnakeIcon( void )
 {
 	unsigned char x, y, index = 0;
@@ -111,9 +115,11 @@ void menuDrawSnakeIcon( void )
 		}
 	}
 }
+#endif
 
 // ----------------------------------------------------------------------
 // draws game of life icon
+#ifdef GAME_ENABLE_GAME_OF_LIFE
 void menuDrawGameOfLifeIcon( void )
 {
 	unsigned char x, y, i;
@@ -129,6 +135,31 @@ void menuDrawGameOfLifeIcon( void )
 	}
 		
 }
+#endif
+
+// ----------------------------------------------------------------------
+// draws the tron icon
+#ifdef GAME_ENABLE_TRON
+void menuDrawTronIcon( void )
+{
+}
+#endif
+
+// ----------------------------------------------------------------------
+// draws the space invaders icon
+#ifdef GAME_ENABLE_SPACE_INVADERS
+void menuDrawSpaceInvadersIcon( void )
+{
+}
+#endif
+
+// ----------------------------------------------------------------------
+// draws the tetris icon
+#ifdef GAME_ENABLE_TETRIS
+void menuDrawTetrisIcon( void )
+{
+}
+#endif
 
 // ----------------------------------------------------------------------
 // updates the icon
@@ -137,9 +168,25 @@ void menuUpdateIcon( unsigned char* selected )
 	menuClearIcon();
 	menuDrawLeftArrow(0);
 	menuDrawRightArrow(0);
-	if( *selected == MENU_SELECT_COLOUR_DEMO )  { menuDrawColourDemoIcon(); return; }
-	if( *selected == MENU_SELECT_SNAKE )        { menuDrawSnakeIcon();      return; }
-	if( *selected == MENU_SELECT_GAME_OF_LIFE ) { menuDrawGameOfLifeIcon(); return; }
+#ifdef GAME_ENABLE_COLOUR_DEMO
+	if( *selected == MENU_SELECT_COLOUR_DEMO )    { menuDrawColourDemoIcon();    return; }
+#endif
+#ifdef GAME_ENABLE_SNAKE
+	if( *selected == MENU_SELECT_SNAKE )          { menuDrawSnakeIcon();         return; }
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
+	if( *selected == MENU_SELECT_GAME_OF_LIFE )   { menuDrawGameOfLifeIcon();    return; }
+#endif
+#ifdef GAME_ENABLE_TRON
+	if( *selected == MENU_SELECT_TRON )           { menuDrawTronIcon();          return; }
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+	if( *selected == MENU_SELECT_SPACE_INVADERS ) { menuDrawSpaceInvadersIcon(); return; }
+#endif
+#ifdef GAME_ENABLE_TETRIS
+	if( *selected == MENU_SELECT_TETRIS )         { menuDrawTetrisIcon();        return; }
+#endif
+
 	return;
 }
 
@@ -148,6 +195,7 @@ void menuUpdateIcon( unsigned char* selected )
 void initMenu( void )
 {
 	Menu.selected  = 0;
+	Menu.gameCount = getGameCount();
 }
 
 // ----------------------------------------------------------------------
@@ -192,7 +240,7 @@ void processMenuLoop( void )
 
 			// control left and right arrow blinking
 			if( Menu.selected ) menuDrawLeftArrow( Menu.toggleArrow );
-			if( Menu.selected < GAME_COUNT ) menuDrawRightArrow( Menu.toggleArrow );
+			if( Menu.selected < Menu.gameCount ) menuDrawRightArrow( Menu.toggleArrow );
 			send();
 
 			break;
@@ -233,7 +281,7 @@ void processMenuInput( void )
 			}
 
 			// select next game
-			if( player1ButtonRight() && Menu.selected < GAME_COUNT )
+			if( player1ButtonRight() && Menu.selected < Menu.gameCount )
 			{
 				Menu.selected++;
 
@@ -251,9 +299,27 @@ void processMenuInput( void )
 			{
 				switch( Menu.selected )
 				{
+
+					// start various games
+				#ifdef GAME_ENABLE_COLOUR_DEMO
 					case MENU_SELECT_COLOUR_DEMO    : startColourDemo( &Menu.playerList );           break;
+				#endif
+				#ifdef GAME_ENABLE_SNAKE
 					case MENU_SELECT_SNAKE          : startSnake( &Menu.playerList );                break;
+				#endif
+				#ifdef GAME_ENABLE_GAME_OF_LIFE
 					case MENU_SELECT_GAME_OF_LIFE   : startGameOfLife( &Menu.playerList );           break;
+				#endif
+				#ifdef GAME_ENABLE_TRON
+					case MENU_SELECT_TRON           : startTron( &Menu.playerList );                 break;
+				#endif
+				#ifdef GAME_ENABLE_SPACE_INVADERS
+					case MENU_SELECT_SPACE_INVADERS : startSpaceInvaders( &Menu.playerList );        break;
+				#endif
+				#ifdef GAME_ENABLE_TETRIS
+					case MENU_SELECT_TETRIS	        : startTetris( &Menu.playerList );               break;
+				#endif
+
 					default : break;
 				}
 			}

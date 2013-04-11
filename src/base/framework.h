@@ -5,6 +5,8 @@
 #ifndef _FRAMEWORK_H_
 	#define _FRAMEWORK_H_
 
+#include "gameenable.h"
+
 // ----------------------------------------------------------------------
 // global constants
 // ----------------------------------------------------------------------
@@ -60,11 +62,26 @@ struct FrameWork_t
 // states
 enum FrameWork_State_e
 {
-	FRAMEWORK_STATE_MENU,
-	FRAMEWORK_STATE_START_UP_SCREEN,
+#ifdef GAME_ENABLE_SNAKE
 	FRAMEWORK_STATE_SNAKE,
+#endif
+#ifdef GAME_ENABLE_COLOUR_DEMO
 	FRAMEWORK_STATE_COLOUR_DEMO,
-	FRAMEWORK_STATE_GAME_OF_LIFE
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
+	FRAMEWORK_STATE_GAME_OF_LIFE,
+#endif
+#ifdef GAME_ENABLE_TRON
+	FRAMEWORK_STATE_TRON,
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+	FRAMEWORK_STATE_SPACE_INVADERS,
+#endif
+#ifdef GAME_ENABLE_TETRIS
+	FRAMEWORK_STATE_TETRIS,
+#endif
+	FRAMEWORK_STATE_MENU,
+	FRAMEWORK_STATE_START_UP_SCREEN
 };
 
 // ----------------------------------------------------------------------
@@ -78,9 +95,24 @@ void frameWorkUpdateProcessLoop( void );
 void frameWorkUpdateInputLoop( void );
 
 // change applications
+#ifdef GAME_ENABLE_COLOUR_DEMO
 void startColourDemo( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_SNAKE
 void startSnake( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
 void startGameOfLife( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_TRON
+void startTron( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+void startSpaceInvaders( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_TETRIS
+void startTetris( unsigned char* playerCount );
+#endif
 void endGame( void );
 
 // misc
