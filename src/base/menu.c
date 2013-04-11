@@ -27,7 +27,8 @@ void menuDrawFrame( void )
 // draws the left and right game selection arrows
 void menuDrawLeftArrow( unsigned char clear )
 {
-	for( unsigned char i = 0; i != 2; i++ )
+	unsigned char i;
+	for( i = 0; i != 2; i++ )
 	{
 		unsigned char x1=i, y1=7-i, y2=8+i;
 		unsigned short cA=0xEE0*clear;
@@ -36,7 +37,8 @@ void menuDrawLeftArrow( unsigned char clear )
 }
 void menuDrawRightArrow( unsigned char clear )
 {
-	for( unsigned char i = 0; i != 2; i++ )
+	unsigned char i;
+	for( i = 0; i != 2; i++ )
 	{
 		unsigned char x1=15-i, y1=7-i, x2=15-i, y2=8+i;
 		unsigned short cA=0xEE0*clear;
@@ -99,10 +101,10 @@ void menuDrawColourDemoIcon( void )
 // draws the snake icon
 void menuDrawSnakeIcon( void )
 {
-	unsigned char index = 0;
-	for( unsigned char y = 3; y != 13; y++ )
+	unsigned char x, y, index = 0;
+	for( y = 3; y != 13; y++ )
 	{
-		for( unsigned char x = 3; x != 13; x++ )
+		for( x = 3; x != 13; x++ )
 		{
 			dot( &x, &y, &snakeIcon[index] );
 			index++;
@@ -114,9 +116,8 @@ void menuDrawSnakeIcon( void )
 // draws game of life icon
 void menuDrawGameOfLifeIcon( void )
 {
-	unsigned short cA = 0x260;
-	unsigned char x, y;
-	for( unsigned char i = 0; i != 40; i++ )
+	unsigned char x, y, i;
+	for( i = 0; i != 40; i++ )
 	{
 		x = rnd() & 0x0F;
 		y = rnd() & 0x0F;
@@ -124,7 +125,7 @@ void menuDrawGameOfLifeIcon( void )
 		if( x > 12 ) x = 3+(x-12);
 		if( y < 3 ) y = 3;
 		if( y > 12 ) y = 3+(y-12);
-		dot( &x, &y, &cA );
+		dot( &x, &y, &GREEN );
 	}
 		
 }

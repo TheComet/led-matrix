@@ -24,7 +24,8 @@ void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
 	clearFrameBuffer( frameBuffer );
 
 	// set player cursor positions
-	for( unsigned char i = 0; i != 4; i++ )
+	unsigned char i;
+	for( i = 0; i != 4; i++ )
 	{
 		GameOfLife.player[i].cursor.x = 7;
 		GameOfLife.player[i].cursor.y = 7;
@@ -56,19 +57,19 @@ void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
 		// player 3
 		if( (*playerCount) & 0x02 )
 		{
-			*(GameOfLife.frameBuffer+7+(12*16)) = 0x10;
-			*(GameOfLife.frameBuffer+7+(13*16)) = 0x10;
-			*(GameOfLife.frameBuffer+8+(12*16)) = 0x10;
-			*(GameOfLife.frameBuffer+8+(13*16)) = 0x10;
+			*(GameOfLife.frameBuffer+7+(2*16)) = 0x40;
+			*(GameOfLife.frameBuffer+7+(3*16)) = 0x40;
+			*(GameOfLife.frameBuffer+8+(2*16)) = 0x40;
+			*(GameOfLife.frameBuffer+8+(3*16)) = 0x40;
 		}
 
 		// player 4
 		if( (*playerCount) & 0x04 )
 		{
-			*(GameOfLife.frameBuffer+7+(2*16)) = 0x40;
-			*(GameOfLife.frameBuffer+7+(3*16)) = 0x40;
-			*(GameOfLife.frameBuffer+8+(2*16)) = 0x40;
-			*(GameOfLife.frameBuffer+8+(3*16)) = 0x40;
+			*(GameOfLife.frameBuffer+7+(12*16)) = 0x10;
+			*(GameOfLife.frameBuffer+7+(13*16)) = 0x10;
+			*(GameOfLife.frameBuffer+8+(12*16)) = 0x10;
+			*(GameOfLife.frameBuffer+8+(13*16)) = 0x10;
 		}
 
 	// single player specific settinsg
@@ -82,7 +83,7 @@ void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
 	}
 
 	// set refresh rate
-	setRefreshRate( 128 );
+	setRefreshRate( 64 );
 
 	// initialise screen
 	cls();
@@ -95,6 +96,9 @@ void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
 void processGameOfLifeLoop( void )
 {
 
+	// local variables
+	unsigned char x, y;
+
 	// states
 	switch( GameOfLife.state )
 	{
@@ -103,9 +107,9 @@ void processGameOfLifeLoop( void )
 		case GAMEOFLIFE_STATE_PLAY_SINGLE :
 
 			// loop through all cells
-			for( unsigned char x = 0; x != 16; x++ )
+			for( x = 0; x != 16; x++ )
 			{
-				for( unsigned char y = 0; y != 16; y++ )
+				for( y = 0; y != 16; y++ )
 				{
 
 					// create read and write masks
@@ -152,15 +156,15 @@ void processGameOfLifeLoop( void )
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
 
 			// loop through all cells
-			for( unsigned char x = 0; x != 16; x++ )
+			for( x = 0; x != 16; x++ )
 			{
-				for( unsigned char y = 0; y != 16; y++ )
+				for( y = 0; y != 16; y++ )
 				{
 
 					// count adjacent cells and determine which player can claim it
 					unsigned char count[4] = {0,0,0,0};
-					unsigned char totalCount = 0;
-					for( unsigned char i = 0; i != 4; i++ )
+					unsigned char i, totalCount = 0;
+					for( i = 0; i != 4; i++ )
 					{
 						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)*16) )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
 						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x*16)            )) & ((0x01<<(i*2))<<GameOfLife.bufferOffset) ) count[i]++;
@@ -310,18 +314,46 @@ void processGameOfLifeInput( void )
 
 		// during multi play
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
-
+/*
 			// loop through each player
 			for( unsigned char i = 0; i != 4; i++ )
 			{
 
-				// move cursor of each player
+				// move cursor
 				if( playerButtonLeft(i) ) GameOfLife.player[i].cursor.x--;
 				if( playerButtonRight(i) ) GameOfLife.player[i].cursor.x++;
 				if( playerButtonUp(i) ) GameOfLife.player[i].cursor.y--;
 				if( playerButtonDown(i) ) GameOfLife.player[i].cursor.y++;
 
-			}
+				// cursor limits
+				GameOfLife.player[i].cursor.x &= 0x0F;
+				GameOfLife.player[i].cursor.y &= 0x0F;
+
+				// edit cells
+				if( playerButtonFire(i) )
+				{
+
+					// update frame buffer and draw new cursor
+					if( (*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
+						(*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) = 0x00;
+					else
+						(*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) = (0x01 << GameOfLife.bufferOffset);
+				}
+
+				// remove old cursor
+				if( (*(GameOfLife.frameBuffer + GameOfLife.player[i].oldCursor.y + (GameOfLife.player[i].oldCursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
+					dot( &GameOfLife.player[i].oldCursor.x, &GameOfLife.player[i].oldCursor.y, &BLUE );
+				else
+					dot( &GameOfLife.player[i].oldCursor.x, &GameOfLife.player[i].oldCursor.y, &BLACK );
+				GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
+
+				// draw new cursor
+				if( (*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
+					dot( &GameOfLife.player[i].cursor.x, &GameOfLife.player[i].cursor.y, &YELLOW );
+				else
+					dot( &GameOfLife.player[i].cursor.x, &GameOfLife.player[i].cursor.y, &WHITE );
+
+			}*/
 
 			// end game with menu button
 			if( player1ButtonMenu() ) endGame();
@@ -349,9 +381,10 @@ void drawFrameBufferNoCheck()
 {
 
 	// render pixels
-	for( unsigned char x = 0; x != 16; x++ )
+	unsigned char x, y;
+	for( x = 0; x != 16; x++ )
 	{
-		for( unsigned char y = 0; y != 16; y++ )
+		for( y = 0; y != 16; y++ )
 		{
 			unsigned char buffer = (*(GameOfLife.frameBuffer+y+(x*16)));
 			if( buffer & (0x01 << GameOfLife.bufferOffset ) ) dot( &x, &y, &GREEN );
@@ -367,10 +400,12 @@ void drawFrameBufferNoCheck()
 // renders entire frame buffer with out checks and custom colours
 void drawFrameBufferCustom( const unsigned short* colour1, const unsigned short* colour2, const unsigned short* colour3, const unsigned short* colour4 )
 {
+
 	// render pixels
-	for( unsigned char x = 0; x != 16; x++ )
+	unsigned char x, y;
+	for( x = 0; x != 16; x++ )
 	{
-		for( unsigned char y = 0; y != 16; y++ )
+		for( y = 0; y != 16; y++ )
 		{
 			unsigned char buffer = (*(GameOfLife.frameBuffer+y+(x*16)));
 			if( buffer & (0x01 << GameOfLife.bufferOffset ) ) dot( &x, &y, colour1 );
@@ -388,9 +423,10 @@ void drawFrameBuffer( void )
 {
 
 	// render pixels
-	for( unsigned char x = 0; x != 16; x++ )
+	unsigned char x, y;
+	for( x = 0; x != 16; x++ )
 	{
-		for( unsigned char y = 0; y != 16; y++ )
+		for( y = 0; y != 16; y++ )
 		{
 
 			// get buffer content

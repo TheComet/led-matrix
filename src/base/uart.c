@@ -42,7 +42,7 @@ unsigned char _buffer_overflow( void )
 
 // ----------------------------------------------------------------------
 // increases a buffer pointer by 1 and wraps
-void _increase_buffer_pointer( unsigned short* ptr )
+void _increase_buffer_pointer( volatile unsigned short* ptr )
 {
 	(*ptr)++;
 	if( (*ptr) == UART_BUFFER_SIZE )
@@ -60,8 +60,10 @@ void _write_to_buffer( unsigned char* data )
 		if( UART.isSending == 0 ) send();
 	}
 
-	// write
-	UART.buffer[ UART.bufferWritePtr ] = *data;
+	// write to buffer
+	volatile unsigned char* ptr = UART.buffer;
+	ptr += UART.bufferWritePtr;
+	*ptr = *data;
 
 	// increase pointer
 	_increase_buffer_pointer( &UART.bufferWritePtr );
@@ -75,7 +77,9 @@ void _write_to_buffer( unsigned char* data )
 // which lasts until the buffer is empty
 void send( void )
 {
-	if( UART.isSending == 0 && UART.bufferReadPtr != UART.bufferWritePtr )
+	unsigned short temp = UART.bufferReadPtr;
+	temp = ( temp != UART.bufferWritePtr );
+	if( UART.isSending == 0 && temp )
 	{
 		UART.isSending = 1;
 		UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
@@ -305,13 +309,17 @@ __interrupt void USCI1RX_ISR(void)
 {
 	
 	// increase and wrap pointer if it's the same as sent data
-	if( UART.buffer[ UART.bufferReadPtr ] == UCA1RXBUF )
+	volatile unsigned char* temp = UART.buffer;
+	temp += UART.bufferReadPtr;
+	unsigned char buf = UCA1RXBUF;
+	if( *temp == buf )
 	{
 		_increase_buffer_pointer( &UART.bufferReadPtr );
 	}
 
 	// send next block of data, if any
-	if( UART.bufferReadPtr != UART.bufferWritePtr )
+	unsigned short tempReadPtr = UART.bufferReadPtr;
+	if( tempReadPtr != UART.bufferWritePtr )
 	{
 
 		// send data

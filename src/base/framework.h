@@ -44,9 +44,9 @@ struct FrameWork_Buttons_t
 struct FrameWork_t
 {
 	struct FrameWork_Buttons_t player[4];
-	unsigned char updateDivider;
-	unsigned char updateCounter;
-	unsigned char updateFlag;
+	volatile unsigned char updateDivider;
+	volatile unsigned char updateCounter;
+	volatile unsigned char updateFlag;
 	unsigned char state;
 	unsigned char frameBuffer[256];
 	unsigned short randomSeed;

@@ -18,10 +18,10 @@
 // structs
 struct UART_t
 {
-	unsigned short bufferReadPtr;
-	unsigned short bufferWritePtr;
-	unsigned char buffer[ UART_BUFFER_SIZE ];
-	unsigned char isSending;
+	volatile unsigned short bufferReadPtr;
+	volatile unsigned short bufferWritePtr;
+	volatile unsigned char buffer[ UART_BUFFER_SIZE ];
+	volatile unsigned char isSending;
 };
 
 // ----------------------------------------------------------------------
@@ -64,7 +64,7 @@ enum commandList_e
 
 void initUART( void );
 unsigned char _buffer_overflow( void );
-void _increase_buffer_pointer( unsigned short* ptr );
+void _increase_buffer_pointer( volatile unsigned short* ptr );
 void _write_to_buffer( unsigned char* data );
 void send( void );
 void cls( void );

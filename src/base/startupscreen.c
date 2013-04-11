@@ -18,7 +18,8 @@ void drawStartArrow( void )
 {
 
 	// draw arrow
-	for( unsigned char i = 0; i != 5; i++ )
+	unsigned char i;
+	for( i = 0; i != 5; i++ )
 	{
 		unsigned char x1=7-i, y1=15-StartUpScreen.toggle-i, x2=8+i;
 		unsigned short cA=(0x00E|((i<<4)*3));
