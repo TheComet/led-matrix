@@ -271,7 +271,13 @@ void processGameOfLifeInput( void )
 				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
 
 			// clear frame buffer with clear button
-			if( player1ButtonClear() ) clearFrameBuffer( GameOfLife.frameBuffer );
+			if( player1ButtonClear() )
+			{
+				clearFrameBuffer( GameOfLife.frameBuffer );
+				drawFrameBufferNoCheck();
+				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
+				send();
+			}
 
 			// resume simulation
 			if( player1ButtonMenu() )
@@ -304,6 +310,18 @@ void processGameOfLifeInput( void )
 
 		// during multi play
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
+
+			// loop through each player
+			for( unsigned char i = 0; i != 4; i++ )
+			{
+
+				// move cursor of each player
+				if( playerButtonLeft(i) ) GameOfLife.player[i].cursor.x--;
+				if( playerButtonRight(i) ) GameOfLife.player[i].cursor.x++;
+				if( playerButtonUp(i) ) GameOfLife.player[i].cursor.y--;
+				if( playerButtonDown(i) ) GameOfLife.player[i].cursor.y++;
+
+			}
 
 			// end game with menu button
 			if( player1ButtonMenu() ) endGame();

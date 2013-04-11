@@ -200,6 +200,100 @@ extern inline unsigned char player4ButtonMenu ( void ){ return FrameWork.player[
 extern inline unsigned char player4ButtonClear( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
 // ----------------------------------------------------------------------
+// general player input for "fire"
+unsigned char playerButtonFire( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_FIRE; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_FIRE; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_FIRE; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_FIRE; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "left"
+unsigned char playerButtonLeft( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_LEFT; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_LEFT; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_LEFT; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_LEFT; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "right"
+unsigned char playerButtonRight( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_RIGHT; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_RIGHT; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_RIGHT; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_RIGHT; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "up"
+unsigned char playerButtonUp( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_UP; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_UP; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_UP; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_UP; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "down"
+unsigned char playerButtonDown( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_DOWN; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_DOWN; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_DOWN; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_DOWN; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "menu"
+extern inline unsigned char playerButtonMenu( unsigned char playerID )
+{
+	return FrameWork.player[playerID].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "clear"
+extern inline unsigned char playerButtonClear( unsigned char playerID )
+{
+	return FrameWork.player[playerID].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;
+}
+
+// ----------------------------------------------------------------------
 // sinus
 extern inline signed char sin( unsigned short angle )
 {

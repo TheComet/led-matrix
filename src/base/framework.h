@@ -90,7 +90,7 @@ unsigned char rnd( void );
 extern inline signed char sin( unsigned short angle );
 extern inline void wrap( unsigned short* value, unsigned char wrap );
 
-// player input
+// player specific input
 extern inline unsigned char player1ButtonFire( void );
 extern inline unsigned char player1ButtonLeft( void );
 extern inline unsigned char player1ButtonRight( void );
@@ -122,5 +122,14 @@ extern inline unsigned char player4ButtonUp( void );
 extern inline unsigned char player4ButtonDown( void );
 extern inline unsigned char player4ButtonMenu( void );
 extern inline unsigned char player4ButtonClear( void );
+
+// player general input
+unsigned char playerButtonFire( unsigned char playerID );
+unsigned char playerButtonLeft( unsigned char playerID );
+unsigned char playerButtonRight( unsigned char playerID );
+unsigned char playerButtonUp( unsigned char playerID );
+unsigned char playerButtonDown( unsigned char playerID );
+extern inline unsigned char playerButtonMenu( unsigned char playerID );
+extern inline unsigned char playerButtonClear( unsigned char playerID );
 
 #endif // _FRAMEWORK_H_
