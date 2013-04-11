@@ -51,7 +51,6 @@ struct FrameWork_t
 	unsigned char frameBuffer[256];
 	unsigned short randomSeed;
 	unsigned char menuButtonFlags;
-	unsigned char* playerCount;
 };
 
 // ----------------------------------------------------------------------
@@ -61,15 +60,10 @@ struct FrameWork_t
 // states
 enum FrameWork_State_e
 {
-	FRAMEWORK_STATE_LOAD_MENU,
 	FRAMEWORK_STATE_MENU,
-	FRAMEWORK_STATE_LOAD_START_UP_SCREEN,
 	FRAMEWORK_STATE_START_UP_SCREEN,
-	FRAMEWORK_STATE_LOAD_SNAKE,
 	FRAMEWORK_STATE_SNAKE,
-	FRAMEWORK_STATE_LOAD_COLOUR_DEMO,
 	FRAMEWORK_STATE_COLOUR_DEMO,
-	FRAMEWORK_STATE_LOAD_GAME_OF_LIFE,
 	FRAMEWORK_STATE_GAME_OF_LIFE
 };
 
@@ -82,15 +76,21 @@ void startFrameWork( void );
 void pollPorts( void );
 void frameWorkUpdateProcessLoop( void );
 void frameWorkUpdateInputLoop( void );
-void setRefreshRate( unsigned char refresh );
-void clearFrameBuffer( unsigned char* frameBuffer );
-unsigned char rnd( void );
 
+// change applications
 void startColourDemo( unsigned char* playerCount );
 void startSnake( unsigned char* playerCount );
 void startGameOfLife( unsigned char* playerCount );
 void endGame( void );
 
+// misc
+void setRefreshRate( unsigned char refresh );
+void clearFrameBuffer( unsigned char* frameBuffer );
+unsigned char rnd( void );
+extern inline signed char sin( unsigned short angle );
+extern inline void wrap( unsigned short* value, unsigned char wrap );
+
+// player input
 extern inline unsigned char player1ButtonFire( void );
 extern inline unsigned char player1ButtonLeft( void );
 extern inline unsigned char player1ButtonRight( void );
@@ -118,8 +118,5 @@ extern inline unsigned char player4ButtonRight( void );
 extern inline unsigned char player4ButtonUp( void );
 extern inline unsigned char player4ButtonDown( void );
 extern inline unsigned char player4ButtonMenu( void );
-
-extern inline signed char sin( unsigned short angle );
-extern inline void wrap( unsigned short* value, unsigned char wrap );
 
 #endif // _FRAMEWORK_H_

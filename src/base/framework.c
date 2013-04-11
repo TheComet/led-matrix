@@ -62,11 +62,11 @@ void pollPorts( void )
 	// add start menu button to 6th bit
 	if( (FrameWork.player[0].buttonState & (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN)) == (MAP_PLAYER1_BUTTON_UP | MAP_PLAYER1_BUTTON_DOWN) )
 		FrameWork.player[0].buttonState |= MAP_PLAYER_BUTTON_MENU;
-	if( FrameWork.player[1].buttonState & (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN) )
+	if( (FrameWork.player[1].buttonState & (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN)) == (MAP_PLAYER2_BUTTON_UP | MAP_PLAYER2_BUTTON_DOWN) )
 		FrameWork.player[1].buttonState |= MAP_PLAYER_BUTTON_MENU;
-	if( FrameWork.player[2].buttonState & (MAP_PLAYER3_BUTTON_UP | MAP_PLAYER3_BUTTON_DOWN) )
+	if( (FrameWork.player[2].buttonState & (MAP_PLAYER3_BUTTON_UP | MAP_PLAYER3_BUTTON_DOWN)) == (MAP_PLAYER3_BUTTON_UP | MAP_PLAYER3_BUTTON_DOWN) )
 		FrameWork.player[2].buttonState |= MAP_PLAYER_BUTTON_MENU;
-	if( FrameWork.player[3].buttonState & (MAP_PLAYER4_BUTTON_UP | MAP_PLAYER4_BUTTON_DOWN) )
+	if( (FrameWork.player[3].buttonState & (MAP_PLAYER4_BUTTON_UP | MAP_PLAYER4_BUTTON_DOWN)) == (MAP_PLAYER4_BUTTON_UP | MAP_PLAYER4_BUTTON_DOWN) )
 		FrameWork.player[3].buttonState |= MAP_PLAYER_BUTTON_MENU;
 
 	// process buttons
@@ -125,31 +125,32 @@ unsigned char rnd( void )
 // starts the colour demo
 void startColourDemo( unsigned char* playerCount )
 {
-	FrameWork.state = FRAMEWORK_STATE_LOAD_COLOUR_DEMO;
-	FrameWork.playerCount = playerCount;
+	loadColourDemo( FrameWork.frameBuffer, playerCount );
+	FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;
 }
 
 // ----------------------------------------------------------------------
 // starts snake
 void startSnake( unsigned char* playerCount )
 {
+	loadSnake( FrameWork.frameBuffer, playerCount );
 	FrameWork.state = FRAMEWORK_STATE_LOAD_SNAKE;
-	FrameWork.playerCount = playerCount;
 }
 
 // ----------------------------------------------------------------------
 // starts the game of life
 void startGameOfLife( unsigned char* playerCount )
 {
+	loadGameOfLife( FrameWork.frameBuffer, playerCount );
 	FrameWork.state = FRAMEWORK_STATE_LOAD_GAME_OF_LIFE;
-	FrameWork.playerCount = playerCount;
 }
 
 // ----------------------------------------------------------------------
 // end the game
 void endGame( void )
 {
-	FrameWork.state = FRAMEWORK_STATE_LOAD_MENU;
+	loadMenu( FrameWork.frameBuffer );
+	FrameWork.state = FRAMEWORK_STATE_MENU;
 }
 
 // ----------------------------------------------------------------------
@@ -206,53 +207,17 @@ void frameWorkUpdateProcessLoop( void )
 	switch( FrameWork.state )
 	{
 
-		// main menu
-		case FRAMEWORK_STATE_LOAD_MENU :
-			loadMenu( &FrameWork.frameBuffer[0] );
-			FrameWork.state = FRAMEWORK_STATE_MENU;
-			break;
-		case FRAMEWORK_STATE_MENU :
-			processMenuLoop();
-			break;
-
-		// start up screen
-		case FRAMEWORK_STATE_LOAD_START_UP_SCREEN :
-			loadStartUpScreen();
-			FrameWork.state = FRAMEWORK_STATE_START_UP_SCREEN;
-			break;
-		case FRAMEWORK_STATE_START_UP_SCREEN :
-			processStartUpScreenLoop();
-			break;
-
-		// snake
-		case FRAMEWORK_STATE_LOAD_SNAKE :
-			loadSnake( &FrameWork.frameBuffer[0], FrameWork.playerCount );
-			FrameWork.state = FRAMEWORK_STATE_SNAKE;
-			break;
-		case FRAMEWORK_STATE_SNAKE :
-			processSnakeLoop();
-			break;
-
-		// colour demo
-		case FRAMEWORK_STATE_LOAD_COLOUR_DEMO :
-			loadColourDemo( &FrameWork.frameBuffer[0], FrameWork.playerCount );
-			FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;
-			break;
-		case FRAMEWORK_STATE_COLOUR_DEMO :
-			processColourDemoLoop();
-			break;
-
-		// game of life
-		case FRAMEWORK_STATE_LOAD_GAME_OF_LIFE :
-			loadGameOfLife( &FrameWork.frameBuffer[0], FrameWork.playerCount );
-			FrameWork.state = FRAMEWORK_STATE_GAME_OF_LIFE;
-			break;
-		case FRAMEWORK_STATE_GAME_OF_LIFE :
-			processGameOfLifeLoop();
-			break;
+		// all games
+		case FRAMEWORK_STATE_MENU : processMenuLoop();                         break;
+		case FRAMEWORK_STATE_START_UP_SCREEN : processStartUpScreenLoop();     break;
+		case FRAMEWORK_STATE_SNAKE : processSnakeLoop();                       break;
+		case FRAMEWORK_STATE_COLOUR_DEMO : processColourDemoLoop();            break;
+		case FRAMEWORK_STATE_GAME_OF_LIFE : processGameOfLifeLoop();           break;
 
 		// error, reset to main menu
-		default: FrameWork.state = FRAMEWORK_STATE_LOAD_MENU; break;
+		default:
+			FrameWork.state = FRAMEWORK_STATE_MENU;
+			break;
 	}
 }
 
