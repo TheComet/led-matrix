@@ -270,6 +270,9 @@ void processGameOfLifeInput( void )
 			else
 				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
 
+			// clear frame buffer with clear button
+			if( player1ButtonClear() ) clearFrameBuffer( GameOfLife.frameBuffer );
+
 			// resume simulation
 			if( player1ButtonMenu() )
 			{
