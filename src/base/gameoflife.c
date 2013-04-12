@@ -60,19 +60,19 @@ void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
 		// player 3
 		if( (*playerCount) & 0x02 )
 		{
-			*(GameOfLife.frameBuffer+7+(2*16)) = 0x40;
-			*(GameOfLife.frameBuffer+7+(3*16)) = 0x40;
-			*(GameOfLife.frameBuffer+8+(2*16)) = 0x40;
-			*(GameOfLife.frameBuffer+8+(3*16)) = 0x40;
+			*(GameOfLife.frameBuffer+7+(2*16)) = 0x10;
+			*(GameOfLife.frameBuffer+7+(3*16)) = 0x10;
+			*(GameOfLife.frameBuffer+8+(2*16)) = 0x10;
+			*(GameOfLife.frameBuffer+8+(3*16)) = 0x10;
 		}
 
 		// player 4
 		if( (*playerCount) & 0x04 )
 		{
-			*(GameOfLife.frameBuffer+7+(12*16)) = 0x10;
-			*(GameOfLife.frameBuffer+7+(13*16)) = 0x10;
-			*(GameOfLife.frameBuffer+8+(12*16)) = 0x10;
-			*(GameOfLife.frameBuffer+8+(13*16)) = 0x10;
+			*(GameOfLife.frameBuffer+7+(12*16)) = 0x40;
+			*(GameOfLife.frameBuffer+7+(13*16)) = 0x40;
+			*(GameOfLife.frameBuffer+8+(12*16)) = 0x40;
+			*(GameOfLife.frameBuffer+8+(13*16)) = 0x40;
 		}
 
 	// single player specific settinsg
@@ -254,9 +254,8 @@ void processGameOfLifeInput( void )
 							if( playerButtonRight(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
 
 							// set colours
-							cursorColour = LIGHTGREEN;
-							cursorSelectColour = BLUEGREEN;
-							cellColour = GREEN;
+							cursorColour = BLUEGREEN;
+							cursorSelectColour = LIGHTGREEN;
 							break;
 						case 1 :
 
@@ -269,7 +268,6 @@ void processGameOfLifeInput( void )
 							// set colours
 							cursorColour = PURPLE;
 							cursorSelectColour = ORANGE;
-							cellColour = RED;
 							break;
 						case 2 :
 
@@ -280,9 +278,8 @@ void processGameOfLifeInput( void )
 							if( playerButtonRight(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
 
 							// set colours
-							cursorColour = LIGHTBLUE;
-							cursorSelectColour = PINK;
-							cellColour = BLUE;
+							cursorColour = PINK;
+							cursorSelectColour = LIGHTBULE;
 							break;
 						case 3 :
 
@@ -295,11 +292,21 @@ void processGameOfLifeInput( void )
 							// set colours
 							cursorColour = LIGHTYELLOW;
 							cursorSelectColour = WHITE;
-							cellColour = YELLOW;
 							break;
 						default: break;
 					}
 
+					// find cell colour under old cursor
+					cellColour = BLACK;
+					bufferPtr = GameOfLife.frameBuffer + (*oldCursorY) + ((*oldCursorX)<<4);
+					if( (*bufferPtr) & (0x55<<GameOfLife.bufferOffset) )
+					{
+						if( (*bufferPtr) & (0x01<<GameOfLife.bufferOffset) ) cellColour = GREEN;
+						if( (*bufferPtr) & (0x04<<GameOfLife.bufferOffset) ) cellColour = RED;
+						if( (*bufferPtr) & (0x10<<GameOfLife.bufferOffset) ) cellColour = BLUE;
+						if( (*bufferPtr) & (0x40<<GameOfLife.bufferOffset) ) cellColour = YELLOW;
+					}
+					
 					// get buffer
 					bufferPtr = (GameOfLife.frameBuffer + (*cursorY) + ((*cursorX)<<4));
 
@@ -318,17 +325,14 @@ void processGameOfLifeInput( void )
 					}
 
 					// remove old cursor
-					if( (*(GameOfLife.frameBuffer + (*oldCursorY) + ((*oldCursorX)<<4))) & readMask )
-						dot( oldCursorX, oldCursorY, &cellColour );
-					else
-						dot( oldCursorX, oldCursorY, &BLACK );
+					dot( oldCursorX, oldCursorY, &cellColour );
 					GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
 
 					// draw new cursors
 					if( (*bufferPtr) & readMask )
-						dot( cursorX, cursorY, &cursorColour );
-					else
 						dot( cursorX, cursorY, &cursorSelectColour );
+					else
+						dot( cursorX, cursorY, &cursorColour );
 
 				}
 			}
