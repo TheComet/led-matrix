@@ -136,6 +136,7 @@ void clearFrameBuffer( unsigned char* frameBuffer );
 unsigned char rnd( void );
 extern inline signed char sin( unsigned short angle );
 extern inline void wrap( unsigned short* value, unsigned char wrap );
+extern inline unsigned char sqrt( unsigned short value );
 
 // player specific input
 extern inline unsigned char player1ButtonFire( void );
