@@ -19,6 +19,7 @@ struct GameOfLife_Player_t
 {
 	struct GameOfLife_Cursor_t cursor;
 	struct GameOfLife_Cursor_t oldCursor;
+	unsigned char cellsPlaced;
 };
 
 struct GameOfLife_t
@@ -38,7 +39,9 @@ enum GameOfLife_States_e
 {
 	GAMEOFLIFE_STATE_PLAY_SINGLE,
 	GAMEOFLIFE_STATE_EDIT_SINGLE,
-	GAMEOFLIFE_STATE_PLAY_MULTI
+	GAMEOFLIFE_STATE_PLAY_MULTI,
+	GAMEOFLIFE_STATE_WINNER,
+	GAMEOFLIFE_STATE_WINNER2
 };
 
 // ----------------------------------------------------------------------

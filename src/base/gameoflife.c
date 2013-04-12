@@ -26,13 +26,19 @@ void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
 	GameOfLife.playerCount = playerCount;
 	clearFrameBuffer( frameBuffer );
 
-	// set player cursor positions
+	// set player data
 	unsigned char i;
 	for( i = 0; i != 4; i++ )
 	{
 		GameOfLife.player[i].cursor.x = 7;
 		GameOfLife.player[i].cursor.y = 7;
-		GameOfLife.player[i].oldCursor = GameOfLife.player[0].cursor;
+		GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
+		if( ((*playerCount) & (1<<(i-1))) || i == 0 )
+		{
+			GameOfLife.player[i].cellsPlaced = 2;
+		}else{
+			GameOfLife.player[i].cellsPlaced = 0;
+		}
 	}
 
 	// multi-player specific settings
@@ -118,6 +124,11 @@ void processGameOfLifeLoop( void )
 
 			break;
 
+		// winner
+		case GAMEOFLIFE_STATE_WINNER :
+
+			break;
+
 		default : break;
 	}
 }
@@ -137,6 +148,7 @@ void processGameOfLifeInput( void )
 	unsigned short cursorColour;
 	unsigned short cursorSelectColour;
 	unsigned short cellColour;
+	unsigned char i;
 
 	// state dependant input
 	switch( GameOfLife.state )
@@ -229,11 +241,11 @@ void processGameOfLifeInput( void )
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
 
 			// loop through each player
-			for( unsigned char i = 0; i != 4; i++ )
+			for( i = 0; i != 4; i++ )
 			{
 
-				// only active players
-				if( ((*GameOfLife.playerCount) & (1<<(i-1))) || i == 0 )
+				// only active players and players that are able to place
+				if( (((*GameOfLife.playerCount) & (1<<(i-1))) || i == 0) && GameOfLife.player[i].cellsPlaced )
 				{
 
 					// for speed reasons, get pointers to player data
@@ -279,7 +291,7 @@ void processGameOfLifeInput( void )
 
 							// set colours
 							cursorColour = PINK;
-							cursorSelectColour = LIGHTBULE;
+							cursorSelectColour = LIGHTBLUE;
 							break;
 						case 3 :
 
@@ -317,6 +329,9 @@ void processGameOfLifeInput( void )
 					if( playerButtonFire(i) )
 					{
 
+						// decrement cells placed
+						GameOfLife.player[i].cellsPlaced--;
+
 						// update frame buffer
 						if( (*bufferPtr) & readMask )
 							(*bufferPtr) &= ~readMask;
@@ -329,16 +344,84 @@ void processGameOfLifeInput( void )
 					GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
 
 					// draw new cursors
-					if( (*bufferPtr) & readMask )
-						dot( cursorX, cursorY, &cursorSelectColour );
-					else
-						dot( cursorX, cursorY, &cursorColour );
+					if( GameOfLife.player[i].cellsPlaced )
+					{
+						if( (*bufferPtr) & readMask )
+							dot( cursorX, cursorY, &cursorSelectColour );
+						else
+							dot( cursorX, cursorY, &cursorColour );
+
+					// player has placed all cells for this round, remove cursor
+					}else{
+						cellColour = BLACK;
+						if( (*bufferPtr) & (0x55<<GameOfLife.bufferOffset) )
+						{
+							if( (*bufferPtr) & (0x01<<GameOfLife.bufferOffset) ) cellColour = GREEN;
+							if( (*bufferPtr) & (0x04<<GameOfLife.bufferOffset) ) cellColour = RED;
+							if( (*bufferPtr) & (0x10<<GameOfLife.bufferOffset) ) cellColour = BLUE;
+							if( (*bufferPtr) & (0x40<<GameOfLife.bufferOffset) ) cellColour = YELLOW;
+						}
+						dot( cursorX, cursorY, &cellColour );
+					}
 
 				}
 			}
 
+			// check if any players have any cells left
+			unsigned char x;
+			for( i = 0; i != 4; i++ )
+			{
+				if( GameOfLife.player[i].cellsPlaced ) break;
+
+			// time to update
+			} if( i == 4 )
+			{
+
+				// compute next frame
+				computeNextCycle();
+
+				// reset player cell counters
+				for( i = 0; i != 4; i++ )
+				{
+					if( ((*GameOfLife.playerCount) & (1<<(i-1)) ) || i == 0 )
+					{
+
+						// check if player has any more cells left on the field
+						x = 0;
+						do{
+							if( (*(GameOfLife.frameBuffer+x)) & ((1<<(i<<1))<<GameOfLife.bufferOffset) ) break;
+							x++;
+						}while( x != 0 );
+						if( x != 0 ) GameOfLife.player[i].cellsPlaced = 2;
+					}
+				}
+
+				// only one more player active
+				x = 0;
+				for( i = 0; i != 4; i++ )
+				{
+					if( GameOfLife.player[i].cellsPlaced ) x++;
+				} if( x == 1 ) GameOfLife.state = GAMEOFLIFE_STATE_WINNER;
+			}
+
 			// update display
 			send();
+
+			// end game with menu button
+			if( player1ButtonMenu() ) endGame();
+
+			break;
+
+		// winner state
+		case GAMEOFLIFE_STATE_WINNER :
+
+			// end game with menu button
+			if( player1ButtonMenu() ) endGame();
+
+			break;
+
+		// winner state
+		case GAMEOFLIFE_STATE_WINNER2 :
 
 			// end game with menu button
 			if( player1ButtonMenu() ) endGame();
