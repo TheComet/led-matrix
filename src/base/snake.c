@@ -9,6 +9,9 @@
 #include "snake.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_SNAKE
 
 static struct Snake_t Snake;
 
@@ -80,3 +83,4 @@ void processSnakeInput( void )
 	// end game with menu button
 	if( player1ButtonMenu() ) endGame();
 }
+#endif // GAME_ENABLE_SNAKE

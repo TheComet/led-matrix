@@ -6,10 +6,10 @@
 // Include files
 // ----------------------------------------------------------------------
 
-#include "gameenable.h"
 #include "tetris.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
 
 #ifdef GAME_ENABLE_TETRIS
 
@@ -33,5 +33,4 @@ void processTetrisLoop( void )
 void processTetrisInput( void )
 {
 }
-
 #endif // GAME_ENABLE_TETRIS

@@ -6,10 +6,10 @@
 // Include files
 // ----------------------------------------------------------------------
 
-#include "gameenable.h"
 #include "tron.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
 
 #ifdef GAME_ENABLE_TRON
 
@@ -33,5 +33,4 @@ void processTronLoop( void )
 void processTronInput( void )
 {
 }
-
 #endif // GAME_ENABLE_TRON

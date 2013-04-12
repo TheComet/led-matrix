@@ -9,6 +9,9 @@
 #include "gameoflife.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_GAME_OF_LIFE
 
 static struct GameOfLife_t GameOfLife;
 
@@ -492,3 +495,4 @@ void computeNextCycle( void )
 	send();
 
 }
+#endif // GAME_ENABLE_GAME_OF_LIFE

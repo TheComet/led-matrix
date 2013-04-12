@@ -9,6 +9,11 @@
 #include "burgler.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_BURGLER
+
+static struct Burgler_t Burgler;
 
 // ----------------------------------------------------------------------
 // load burgler
@@ -27,3 +32,4 @@ void processBurglerLoop( void )
 void processBurglerInput( void )
 {
 }
+#endif // GAME_ENABLE_BURGLER

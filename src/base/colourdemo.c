@@ -9,6 +9,9 @@
 #include "colourdemo.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_COLOUR_DEMO
 
 static struct ColourDemo_t ColourDemo;
 
@@ -48,3 +51,4 @@ void processColourDemoInput( void )
 	// exit game
 	if( player1ButtonMenu() ) endGame();
 }
+#endif // GAME_ENABLE_COLOUR_DEMO

@@ -6,10 +6,10 @@
 // Include files
 // ----------------------------------------------------------------------
 
-#include "gameenable.h"
 #include "spaceinvaders.h"
 #include "framework.h"
 #include "uart.h"
+#include "gameenable.h"
 
 #ifdef GAME_ENABLE_SPACE_INVADERS
 
@@ -33,5 +33,4 @@ void processSpaceInvadersLoop( void )
 void processSpaceInvadersInput( void )
 {
 }
-
 #endif // GAME_ENABLE_SPACE_INVADERS

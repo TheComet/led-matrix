@@ -16,7 +16,7 @@
 //#define GAME_ENABLE_TETRIS
 //#define GAME_ENABLE_SPACE_INVADERS
 //#define GAME_ENABLE_PONG
-#define GAME_ENABLE_BURGLER
+//#define GAME_ENABLE_BURGLER
 
 // ----------------------------------------------------------------------
 // Will count the commented games so the menu knows

@@ -7,6 +7,9 @@
 // ----------------------------------------------------------------------
 
 #include "pong.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_PONG
 
 struct Pong_t Pong;
 
@@ -27,3 +30,4 @@ void processPongLoop( void )
 void processPongInput( void )
 {
 }
+#endif // GAME_ENABLE_PONG
