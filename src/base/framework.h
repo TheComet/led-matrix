@@ -12,17 +12,20 @@
 // ----------------------------------------------------------------------
 
 // common colours
-static const unsigned short BLACK     = 0x000;
-static const unsigned short WHITE     = 0xEEE;
-static const unsigned short RED       = 0xE00;
-static const unsigned short GREEN     = 0x0E0;
-static const unsigned short BLUE      = 0x00E;
-static const unsigned short YELLOW    = 0xEE0;
-static const unsigned short MAGENTA   = 0xE0E;
-static const unsigned short LIGHTBLUE = 0x0EE;
-static const unsigned short PINK      = 0xE07;
-static const unsigned short PURPLE    = 0x70E;
-static const unsigned short ORANGE    = 0xE70;
+static const unsigned short BLACK      = 0x000;
+static const unsigned short WHITE      = 0xEEE;
+static const unsigned short RED        = 0xE00;
+static const unsigned short GREEN      = 0x0E0;
+static const unsigned short BLUE       = 0x00E;
+static const unsigned short YELLOW     = 0xEE0;
+static const unsigned short MAGENTA    = 0xE0E;
+static const unsigned short LIGHTBLUE  = 0x0EE;
+static const unsigned short PINK       = 0xE07;
+static const unsigned short PURPLE     = 0x70E;
+static const unsigned short ORANGE     = 0xE70;
+static const unsigned short LIGHTGREEN = 0x7E0;
+static const unsigned short BLUEGREEN  = 0x0E7;
+static const unsigned short LIGHTYELLOW= 0xEE7;
 
 // states
 #define ZERO 0

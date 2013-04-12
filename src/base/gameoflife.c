@@ -105,58 +105,16 @@ void processGameOfLifeLoop( void )
 		
 		// single player mode
 		case GAMEOFLIFE_STATE_PLAY_SINGLE :
-computeNextCycle();
-/*
-			// loop through all cells
-			for( unsigned char x = 0; x != 16; x++ )
-			{
-				for( unsigned char y = 0; y != 16; y++ )
-				{
 
-					// create read and write masks
-					unsigned char readMask = (0x01 << GameOfLife.bufferOffset);
-					unsigned char writeMask = (0x02 >> GameOfLife.bufferOffset);
+			// simulate continuously
+			computeNextCycle();
 
-					// count adjacent cells
-					unsigned char count = 0;
-					if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)*16) )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x*16)            )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x-1)&0x0F)*16) )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x-1)&0x0F)*16) )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x-1)&0x0F)*16) )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (x*16)            )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x+1)&0x0F)*16) )) & readMask ) count++;
-					if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x+1)&0x0F)*16) )) & readMask ) count++;
-
-					// current cell is alive
-					if( (*(GameOfLife.frameBuffer + y + (x*16))) & readMask )
-					{
-
-						// less than 2 neighbours or more than 3 neighbours kills it
-						if( count < 2 || count > 3 ) (*(GameOfLife.frameBuffer + y + (x*16))) &= ~writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) |= writeMask;
-
-					// current cell is dead
-					}else{
-
-						// has 3 neighbours, new cell is born
-						if( count == 3 ) (*(GameOfLife.frameBuffer + y + (x*16))) |= writeMask; else *(GameOfLife.frameBuffer + y + (x*16)) &= ~writeMask;
-					}
-				}
-			}
-
-			// flip buffers
-			GameOfLife.bufferOffset = 1 - GameOfLife.bufferOffset;
-
-			// draw buffer
-			drawFrameBuffer();
-			send();
-
-			break;*/
+			break;
 
 		// multi player mode
 		case GAMEOFLIFE_STATE_PLAY_MULTI :
 
-
+			// everything happens in the input state
 
 			break;
 
@@ -169,6 +127,17 @@ computeNextCycle();
 void processGameOfLifeInput( void )
 {
 
+	// local variables
+	unsigned char* bufferPtr;
+	unsigned char readMask;
+	unsigned char* cursorX;
+	unsigned char* cursorY;
+	unsigned char* oldCursorX;
+	unsigned char* oldCursorY;
+	unsigned short cursorColour;
+	unsigned short cursorSelectColour;
+	unsigned short cellColour;
+
 	// state dependant input
 	switch( GameOfLife.state )
 	{
@@ -176,46 +145,54 @@ void processGameOfLifeInput( void )
 		// edit mode
 		case GAMEOFLIFE_STATE_EDIT_SINGLE :
 
-			// move cursor with up, down, left, right
-			if( player1ButtonUp() ) GameOfLife.player[0].cursor.y--;
-			if( player1ButtonDown() ) GameOfLife.player[0].cursor.y++;
-			if( player1ButtonLeft() ) GameOfLife.player[0].cursor.x--;
-			if( player1ButtonRight() ) GameOfLife.player[0].cursor.x++;
+			// for speed reasons, get pointers to player data
+			cursorX = &GameOfLife.player[0].cursor.x;
+			cursorY = &GameOfLife.player[0].cursor.y;
+			oldCursorX = &GameOfLife.player[0].oldCursor.x;
+			oldCursorY = &GameOfLife.player[0].oldCursor.y;
 
-			// cursor limits
-			GameOfLife.player[0].cursor.x &= 0x0F;
-			GameOfLife.player[0].cursor.y &= 0x0F;
+			// move cursor with up, down, left, right
+			if( player1ButtonUp() ) (*cursorY) = (((*cursorY)-1)&0x0F);
+			if( player1ButtonDown() ) (*cursorY) = (((*cursorY)+1)&0x0F);
+			if( player1ButtonLeft() ) (*cursorX) = (((*cursorX)-1)&0x0F);
+			if( player1ButtonRight() ) (*cursorX) = (((*cursorX)+1)&0x0F);
+
+			// get buffer
+			bufferPtr = (GameOfLife.frameBuffer + (*cursorY) + ((*cursorX)<<4));
+
+			// get read mask
+			readMask = (0x01<<GameOfLife.bufferOffset);
 
 			// edit cells
 			if( player1ButtonFire() )
 			{
 
 				// update frame buffer and draw new cursor
-				if( (*(GameOfLife.frameBuffer + GameOfLife.player[0].cursor.y + (GameOfLife.player[0].cursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
-					(*(GameOfLife.frameBuffer + GameOfLife.player[0].cursor.y + (GameOfLife.player[0].cursor.x*16) )) = 0x00;
+				if( (*bufferPtr) & readMask )
+					(*bufferPtr) = 0x00;
 				else
-					(*(GameOfLife.frameBuffer + GameOfLife.player[0].cursor.y + (GameOfLife.player[0].cursor.x*16) )) = (0x01 << GameOfLife.bufferOffset);
+					(*bufferPtr) = readMask;
 			}
 
 			// remove old cursor
-			if( (*(GameOfLife.frameBuffer + GameOfLife.player[0].oldCursor.y + (GameOfLife.player[0].oldCursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
-				dot( &GameOfLife.player[0].oldCursor.x, &GameOfLife.player[0].oldCursor.y, &BLUE );
+			if( (*(GameOfLife.frameBuffer + (*oldCursorY) + ((*oldCursorX)<<4))) & readMask )
+				dot( oldCursorX, oldCursorY, &BLUE );
 			else
-				dot( &GameOfLife.player[0].oldCursor.x, &GameOfLife.player[0].oldCursor.y, &BLACK );
+				dot( oldCursorX, oldCursorY, &BLACK );
 			GameOfLife.player[0].oldCursor = GameOfLife.player[0].cursor;
 
 			// draw new cursor
-			if( (*(GameOfLife.frameBuffer + GameOfLife.player[0].cursor.y + (GameOfLife.player[0].cursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
-				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &YELLOW );
+			if( (*bufferPtr) & readMask )
+				dot( cursorX, cursorY, &YELLOW );
 			else
-				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
+				dot( cursorX, cursorY, &WHITE );
 
 			// clear frame buffer with clear button
 			if( player1ButtonClear() )
 			{
 				clearFrameBuffer( GameOfLife.frameBuffer );
 				drawFrameBufferNoCheck();
-				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
+				dot( cursorX, cursorY, &WHITE );
 				send();
 			}
 
@@ -255,41 +232,109 @@ void processGameOfLifeInput( void )
 			for( unsigned char i = 0; i != 4; i++ )
 			{
 
-				// move cursor
-				if( playerButtonLeft(i) ) GameOfLife.player[i].cursor.x--;
-				if( playerButtonRight(i) ) GameOfLife.player[i].cursor.x++;
-				if( playerButtonUp(i) ) GameOfLife.player[i].cursor.y--;
-				if( playerButtonDown(i) ) GameOfLife.player[i].cursor.y++;
-
-				// cursor limits
-				GameOfLife.player[i].cursor.x &= 0x0F;
-				GameOfLife.player[i].cursor.y &= 0x0F;
-
-				// edit cells
-				if( playerButtonFire(i) )
+				// only active players
+				if( ((*GameOfLife.playerCount) & (1<<(i-1))) || i == 0 )
 				{
 
-					// update frame buffer and draw new cursor
-					if( (*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
-						(*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) = 0x00;
+					// for speed reasons, get pointers to player data
+					cursorX = &GameOfLife.player[i].cursor.x;
+					cursorY = &GameOfLife.player[i].cursor.y;
+					oldCursorX = &GameOfLife.player[i].oldCursor.x;
+					oldCursorY = &GameOfLife.player[i].oldCursor.y;
+
+					// player specific actions
+					switch( i )
+					{
+						case 0 :
+
+							// move cursor with up, down, left, right
+							if( playerButtonUp(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
+							if( playerButtonDown(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
+							if( playerButtonLeft(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
+							if( playerButtonRight(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
+
+							// set colours
+							cursorColour = LIGHTGREEN;
+							cursorSelectColour = BLUEGREEN;
+							cellColour = GREEN;
+							break;
+						case 1 :
+
+							// move cursor with up, down, left, right
+							if( playerButtonUp(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
+							if( playerButtonDown(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
+							if( playerButtonLeft(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
+							if( playerButtonRight(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
+
+							// set colours
+							cursorColour = PURPLE;
+							cursorSelectColour = ORANGE;
+							cellColour = RED;
+							break;
+						case 2 :
+
+							// move cursor with up, down, left, right
+							if( playerButtonUp(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
+							if( playerButtonDown(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
+							if( playerButtonLeft(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
+							if( playerButtonRight(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
+
+							// set colours
+							cursorColour = LIGHTBLUE;
+							cursorSelectColour = PINK;
+							cellColour = BLUE;
+							break;
+						case 3 :
+
+							// move cursor with up, down, left, right
+							if( playerButtonUp(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
+							if( playerButtonDown(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
+							if( playerButtonLeft(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
+							if( playerButtonRight(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
+
+							// set colours
+							cursorColour = LIGHTYELLOW;
+							cursorSelectColour = WHITE;
+							cellColour = YELLOW;
+							break;
+						default: break;
+					}
+
+					// get buffer
+					bufferPtr = (GameOfLife.frameBuffer + (*cursorY) + ((*cursorX)<<4));
+
+					// get read mask
+					readMask = ((1<<(i<<1))<<GameOfLife.bufferOffset);
+
+					// edit cells
+					if( playerButtonFire(i) )
+					{
+
+						// update frame buffer
+						if( (*bufferPtr) & readMask )
+							(*bufferPtr) &= ~readMask;
+						else
+							(*bufferPtr) |= readMask;
+					}
+
+					// remove old cursor
+					if( (*(GameOfLife.frameBuffer + (*oldCursorY) + ((*oldCursorX)<<4))) & readMask )
+						dot( oldCursorX, oldCursorY, &cellColour );
 					else
-						(*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) = (0x01 << GameOfLife.bufferOffset);
+						dot( oldCursorX, oldCursorY, &BLACK );
+					GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
+
+					// draw new cursors
+					if( (*bufferPtr) & readMask )
+						dot( cursorX, cursorY, &cursorColour );
+					else
+						dot( cursorX, cursorY, &cursorSelectColour );
+
 				}
-
-				// remove old cursor
-				if( (*(GameOfLife.frameBuffer + GameOfLife.player[i].oldCursor.y + (GameOfLife.player[i].oldCursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
-					dot( &GameOfLife.player[i].oldCursor.x, &GameOfLife.player[i].oldCursor.y, &BLUE );
-				else
-					dot( &GameOfLife.player[i].oldCursor.x, &GameOfLife.player[i].oldCursor.y, &BLACK );
-				GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
-
-				// draw new cursor
-				if( (*(GameOfLife.frameBuffer + GameOfLife.player[i].cursor.y + (GameOfLife.player[i].cursor.x*16) )) & (0x01 << GameOfLife.bufferOffset) )
-					dot( &GameOfLife.player[i].cursor.x, &GameOfLife.player[i].cursor.y, &YELLOW );
-				else
-					dot( &GameOfLife.player[i].cursor.x, &GameOfLife.player[i].cursor.y, &WHITE );
-
 			}
+
+			// update display
+			send();
 
 			// end game with menu button
 			if( player1ButtonMenu() ) endGame();
@@ -360,7 +405,7 @@ void drawFrameBuffer( void )
 {
 
 	// render pixels
-	register unsigned char x, y;
+	unsigned char x, y;
 	unsigned char buffer;
 	for( x = 0; x != 16; x++ )
 	{
