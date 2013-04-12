@@ -355,18 +355,20 @@ void drawFrameBufferCustom( const unsigned short* colour1, const unsigned short*
 
 // ----------------------------------------------------------------------
 // draws the buffer for all players
+// optimized to only update the pixels that have changed
 void drawFrameBuffer( void )
 {
 
 	// render pixels
-	unsigned char x, y;
+	register unsigned char x, y;
+	unsigned char buffer;
 	for( x = 0; x != 16; x++ )
 	{
 		for( y = 0; y != 16; y++ )
 		{
 
 			// get buffer content
-			unsigned char buffer = (*(GameOfLife.frameBuffer+y+(x<<4)));
+			buffer = (*(GameOfLife.frameBuffer+y+(x<<4)));
 
 			// player 1 - draw new pixels
 			if( (buffer & (0x01 << GameOfLife.bufferOffset)) )
@@ -409,10 +411,10 @@ void computeNextCycle( void )
 {
 
 	// local variables
-	unsigned char totalCount, count, playerCount[4];
+	register unsigned char count;
 	unsigned char readMask;
-	unsigned char i, x, y;
-	unsigned char* buffer;
+	register unsigned char i, x, y;
+	unsigned char* bufferPtr;
 
 	// loop through all cells
 	for( x = 0; x != 16; x++ )
@@ -420,67 +422,77 @@ void computeNextCycle( void )
 		for( y = 0; y != 16; y++ )
 		{
 
-			// count adjacent cells and determine which player can claim it
-			totalCount = 0;
-			for( i = 0; i != 4; i++ )
-			{
-				readMask = ((1<<(i<<1))<<GameOfLife.bufferOffset);
-				count = 0;
-				if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)<<4) )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x<<4)            )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x-1)&0x0F)<<4) )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x-1)&0x0F)<<4) )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x-1)&0x0F)<<4) )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (x<<4)            )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x+1)&0x0F)<<4) )) & readMask ) count++;
-				if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x+1)&0x0F)<<4) )) & readMask ) count++;
-				playerCount[i] = count;
-				totalCount += count;
-			}
-
 			// create read mask
 			readMask = (0x55 << GameOfLife.bufferOffset);
 
+			// count adjacent cells (general for all players)
+			count = 0;
+			if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)<<4) )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x<<4)            )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x-1)&0x0F)<<4) )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x-1)&0x0F)<<4) )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x-1)&0x0F)<<4) )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (x<<4)            )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x+1)&0x0F)<<4) )) & readMask ) count++;
+			if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x+1)&0x0F)<<4) )) & readMask ) count++;
+
+			// get buffer pointer
+			bufferPtr = (GameOfLife.frameBuffer + y + (x<<4));
+
 			// current cell is alive
-			buffer = (GameOfLife.frameBuffer + y + (x<<4));
-			if( (*buffer) & readMask )
+			if( (*bufferPtr) & readMask )
 			{
 
 				// less than 2 neighbours or more than 3 neighbours kills it
-				if( totalCount < 2 || totalCount > 3 )
+				if( count < 2 || count > 3 )
 				{
-					(*buffer) &= readMask;
+					(*bufferPtr) &= readMask;
+
+				// cell remains alive
 				}else{
-					(*buffer) &= readMask;
-					if( GameOfLife.bufferOffset ) (*buffer) >>= 1; else (*buffer) <<= 1;
+					if( GameOfLife.bufferOffset ) (*bufferPtr) |= (((*bufferPtr) & readMask)>>1); else (*bufferPtr) |= (((*bufferPtr) & readMask)<<1);
 				}
 
 			// current cell is dead
 			}else{
 
 				// has 3 neighbours, new cell is born
-				if( totalCount == 3 )
+				if( count == 3 )
 				{
 
-					// determine who it belongs to
+					// determine who it belongs to by counting who has the most adjacent cells
 					for( i = 0; i != 4; i++ )
 					{
-						if( playerCount[i] > 1 ) break;
+
+						// counts surrounding cells of current player
+						count = 0;
+						readMask = (1<<(i<<1))<<GameOfLife.bufferOffset;
+						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x+1)&0x0F)<<4) )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (x<<4)            )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + ((y+1)&0x0F) + (((x-1)&0x0F)<<4) )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x-1)&0x0F)<<4) )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x-1)&0x0F)<<4) )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (x<<4)            )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + ((y-1)&0x0F) + (((x+1)&0x0F)<<4) )) & readMask ) count++;
+						if( (*(GameOfLife.frameBuffer + (y&0x0F)     + (((x+1)&0x0F)<<4) )) & readMask ) count++;
+
+						// more than one cell and we have found our winner
+						if( count > 1 ) break;
 					}
 
-					// rare case where 3 players surround 1 cell - do nothing
+					// rare case where 3 players surround the same cell - cell remains dead
 					if( i == 4 )
 					{
-						(*buffer) &= readMask;
-
-					// cell is alive
+						(*bufferPtr) &= (0x55<<GameOfLife.bufferOffset);
+					
+					// spawn cell
 					}else{
-						(*buffer) |= ((1<<(i<<1))<<(1>>GameOfLife.bufferOffset));
+						(*bufferPtr) |= ((1<<(i<<1)) << (1>>GameOfLife.bufferOffset));;
 					}
 
-				// doesn't have 3 neighbours, destroy cell
+				// cell remains dead
 				}else{
-					(*buffer) &= readMask;
+					(*bufferPtr) &= readMask;
 				}
 			}
 
