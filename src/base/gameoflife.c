@@ -466,55 +466,20 @@ void computeNextCycle( void )
 					}
 
 					// rare case where 3 players surround 1 cell - do nothing
-					if( i != 4 )
+					if( i == 4 )
 					{
+						(*buffer) &= readMask;
+
+					// cell is alive
+					}else{
 						(*buffer) |= ((1<<(i<<1))<<(1>>GameOfLife.bufferOffset));
 					}
 
-//NOTE explicitly delete target
-
-				// clear cell
+				// doesn't have 3 neighbours, destroy cell
 				}else{
 					(*buffer) &= readMask;
 				}
 			}
-
-/*
-
-			// current cell is alive
-			if( (*(GameOfLife.frameBuffer + y + (x<<4))) & (0x55<<GameOfLife.bufferOffset) )
-			{
-
-				// less than 2 neighbours or more than 3 neighbours kills it
-				if( totalCount < 2 || totalCount > 3 )	(*(GameOfLife.frameBuffer + y + (x<<4))) &= (0x55<<GameOfLife.bufferOffset); else (*(GameOfLife.frameBuffer + y + (x*16))) |= (( (*(GameOfLife.frameBuffer + y + (x<<4))) & (0x55<<GameOfLife.bufferOffset) ) << (1>>GameOfLife.bufferOffset));
-
-			// current cell is dead
-			}else{
-
-				// has 3 neighbours, new cell is born
-				if( totalCount == 3 )
-				{
-
-					// determine who it belongs to
-					unsigned char i;
-					for( i = 0; i != 4; i++ )
-					{
-						if( count[i] > 1 ) break;
-					}
-
-					// rare case of 3 players surrounding cell - do nothing
-					if( i != 4 )
-					{
-
-						// set cell
-						(*(GameOfLife.frameBuffer + y + (x<<4))) |= ((2<<(i<<1))>>GameOfLife.bufferOffset);
-					}
-
-				// clear cell
-				}else{
-					 *(GameOfLife.frameBuffer + y + (x<<4)) &= (0x55<<GameOfLife.bufferOffset);
-				}
-			}*/
 
 		}
 	}

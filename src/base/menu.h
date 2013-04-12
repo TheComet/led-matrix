@@ -51,6 +51,12 @@ enum Menu_Games_e
 #ifdef GAME_ENABLE_TETRIS
 	MENU_SELECT_TETRIS,
 #endif
+#ifdef GAME_ENABLE_PONG
+	MENU_SELECT_PONG,
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	MENU_SELECT_BURGLER,
+#endif
 };
 
 // ----------------------------------------------------------------------
@@ -87,6 +93,11 @@ void menuDrawSpaceInvadersIcon( void );
 #ifdef GAME_ENABLE_TETRIS
 void menuDrawTetrisIcon( void );
 #endif
-
+#ifdef GAME_ENABLE_PONG
+void menuDrawPongIcon( void );
+#endif
+#ifdef GAME_ENABLE_BURGLER
+void menuDrawBurglerIcon( void );
+#endif
 
 #endif // _MENU_H_

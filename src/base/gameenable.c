@@ -31,5 +31,11 @@ unsigned char getGameCount( void )
 #ifdef GAME_ENABLE_TETRIS
 	gameCount++;
 #endif
+#ifdef GAME_ENABLE_PONG
+	gameCount++;
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	gameCount++;
+#endif
 	return gameCount-1;
 }

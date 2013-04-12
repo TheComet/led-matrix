@@ -31,6 +31,12 @@
 #ifdef GAME_ENABLE_TETRIS
 	#include "tetris.h"
 #endif
+#ifdef GAME_ENABLE_PONG
+	#include "pong.h"
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	#include "burgler.h"
+#endif
 
 static struct FrameWork_t FrameWork;
 
@@ -206,6 +212,26 @@ void startTetris( unsigned char* playerCount )
 {
 	loadTetris( FrameWork.frameBuffer, playerCount );
 	FrameWork.state = FRAMEWORK_STATE_TETRIS;
+}
+#endif
+
+// ----------------------------------------------------------------------
+// starts pong
+#ifdef GAME_ENABLE_PONG
+void startPong( unsigned char* playerCount )
+{
+	loadPong( FrameWork.frameBuffer, playerCount );
+	FrameWork.state = FRAMEWORK_STATE_PONG;
+}
+#endif
+
+// ----------------------------------------------------------------------
+// starts burgler
+#ifdef GAME_ENABLE_BURGLER
+void startBurgler( unsigned char* playerCount )
+{
+	loadBurgler( FrameWork.frameBuffer, playerCount );
+	FrameWork.state = FRAMEWORK_STATE_BURGLER;
 }
 #endif
 
@@ -394,6 +420,12 @@ void frameWorkUpdateProcessLoop( void )
 	#ifdef GAME_ENABLE_TETRIS
 		case FRAMEWORK_STATE_TETRIS          : processTetrisLoop();             break;
 	#endif
+	#ifdef GAME_ENABLE_PONG
+		case FRAMEWORK_STATE_PONG            : processPongLoop();               break;
+	#endif
+	#ifdef GAME_ENABLE_BURGLER
+		case FRAMEWORK_STATE_BURGLER         : processBurglerLoop();            break;
+	#endif
 
 		// error, reset to main menu
 		default:
@@ -433,6 +465,12 @@ void frameWorkUpdateInputLoop( void )
 	#endif
 	#ifdef GAME_ENABLE_TETRIS
 		case FRAMEWORK_STATE_TETRIS          : processTetrisInput();             break;
+	#endif
+	#ifdef GAME_ENABLE_PONG
+		case FRAMEWORK_STATE_PONG            : processPongInput();               break;
+	#endif
+	#ifdef GAME_ENABLE_BURGLER
+		case FRAMEWORK_STATE_BURGLER         : processBurglerInput();            break;
 	#endif
 
 		default: break;

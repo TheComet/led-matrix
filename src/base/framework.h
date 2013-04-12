@@ -80,6 +80,12 @@ enum FrameWork_State_e
 #ifdef GAME_ENABLE_TETRIS
 	FRAMEWORK_STATE_TETRIS,
 #endif
+#ifdef GAME_ENABLE_PONG
+	FRAMEWORK_STATE_PONG,
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	FRAMEWORK_STATE_BURGLER,
+#endif
 	FRAMEWORK_STATE_MENU,
 	FRAMEWORK_STATE_START_UP_SCREEN
 };
@@ -112,6 +118,12 @@ void startSpaceInvaders( unsigned char* playerCount );
 #endif
 #ifdef GAME_ENABLE_TETRIS
 void startTetris( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_PONG
+void startPong( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_BURGLER
+void startBurgler( unsigned char* playerCount );
 #endif
 void endGame( void );
 

@@ -178,6 +178,20 @@ void menuDrawTetrisIcon( void )
 #endif
 
 // ----------------------------------------------------------------------
+#ifdef GAME_ENABLE_PONG
+void menuDrawPongIcon( void )
+{
+}
+#endif
+
+// ----------------------------------------------------------------------
+#ifdef GAME_ENABLE_BURGLER
+void menuDrawBurglerIcon( void )
+{
+}
+#endif
+
+// ----------------------------------------------------------------------
 // updates the icon
 void menuUpdateIcon( unsigned char* selected )
 {
@@ -201,6 +215,12 @@ void menuUpdateIcon( unsigned char* selected )
 #endif
 #ifdef GAME_ENABLE_TETRIS
 	if( *selected == MENU_SELECT_TETRIS )         { menuDrawTetrisIcon();        return; }
+#endif
+#ifdef GAME_ENABLE_PONG
+	if( *selected == MENU_SELECT_PONG )           { menuDrawPongIcon();          return; }
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	if( *selected == MENU_SELECT_BURGLER )        { menuDrawBurglerIcon();       return; }
 #endif
 
 	return;
@@ -334,6 +354,12 @@ void processMenuInput( void )
 				#endif
 				#ifdef GAME_ENABLE_TETRIS
 					case MENU_SELECT_TETRIS	        : startTetris( &Menu.playerList );               break;
+				#endif
+				#ifdef GAME_ENABLE_PONG
+					case MENU_SELECT_PONG           : startPong( &Menu.playerList );                 break;
+				#endif
+				#ifdef GAME_ENABLE_BURGLER
+					case MENU_SELECT_BURGLER        : startBurgler( &Menu.playerList );              break;
 				#endif
 
 					default : break;
