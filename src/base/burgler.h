@@ -11,7 +11,7 @@
 
 struct Burgler_t
 {
-	unsigned char* frameBuffer;
+	unsigned short* frameBuffer;
 	unsigned char* playerCount;
 };
 
@@ -19,7 +19,7 @@ struct Burgler_t
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadBurgler( unsigned char* frameBuffer, unsigned char* playerCount );
+void loadBurgler( unsigned short* frameBuffer, unsigned char* playerCount );
 void processBurglerLoop( void );
 void processBurglerInput( void );
 

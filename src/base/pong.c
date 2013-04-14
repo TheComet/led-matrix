@@ -15,7 +15,7 @@ struct Pong_t Pong;
 
 // ----------------------------------------------------------------------
 // load pong
-void loadPong( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadPong( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 }
 

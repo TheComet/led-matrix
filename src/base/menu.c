@@ -236,7 +236,7 @@ void initMenu( void )
 
 // ----------------------------------------------------------------------
 // load menu
-void loadMenu( unsigned char* frameBuffer )
+void loadMenu( unsigned short* frameBuffer )
 {
 
 	// initial state

@@ -11,7 +11,7 @@
 
 struct Tetris_t
 {
-	unsigned char* frameBuffer;
+	unsigned short* frameBuffer;
 	unsigned char* playerCount;
 };
 
@@ -19,7 +19,7 @@ struct Tetris_t
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadTetris( unsigned char* frameBuffer, unsigned char* playerCount );
+void loadTetris( unsigned short* frameBuffer, unsigned char* playerCount );
 void processTetrisLoop( void );
 void processTetrisInput( void );
 

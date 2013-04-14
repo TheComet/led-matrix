@@ -133,7 +133,7 @@ void setRefreshRate( unsigned char refresh )
 
 // ----------------------------------------------------------------------
 // clears a frame buffer
-void clearFrameBuffer( unsigned char* frameBuffer )
+void clearFrameBuffer( unsigned short* frameBuffer )
 {
 	unsigned char x = 0;
 	do{
@@ -207,7 +207,7 @@ void startSpaceInvaders( unsigned char* playerCount )
 
 // ----------------------------------------------------------------------
 // starts tetris
-#ifdef GAME_ENABLE_TRON
+#ifdef GAME_ENABLE_TETRIS
 void startTetris( unsigned char* playerCount )
 {
 	loadTetris( FrameWork.frameBuffer, playerCount );
@@ -390,33 +390,36 @@ inline void wrap( unsigned short* value, unsigned char wrap )
 
 // ----------------------------------------------------------------------
 // square root
-inline unsigned char sqrt( unsigned short value )
+unsigned char sqrt( unsigned short* value )
 {
 
-	// first guess
-	register unsigned char result = 0x80;
-	unsigned char currentBitMask = 0x80;
+        // prepare first guess
+        register unsigned char result;
+        register unsigned char currentBitMask;
+        if( 0x4000 > *value )
+        {
+            result = 0;
+            currentBitMask = 0x40;
+        }else{
+            currentBitMask = 0x80;
+        }
 
-	// loop through all 7 bits in result
-	for( unsigned char i = 6; i != 0xFF; i-- )
-	{
+        // loop through all 8 bits in result
+        while( currentBitMask )
+        {
 
-		// if squared result is smaller than value, add new bit
-		if( result*result < value )
-		{
-			currentBitMask = (1<<i);
-			result |= currentBitMask;
+                // add next bit
+                result |= currentBitMask;
 
-		// if squared result is larger than value, shift that bit right
-		}else{
-			result &= ~currentBitMask;
-			currentBitMask = (1<<i);
-			result |= currentBitMask;
-		}
-	}
+                // if squared result is larger than value, remove bit again
+                if( result*result > *value ) result ^= currentBitMask;
 
-	// return result
-	return result;
+                // select next bit
+                currentBitMask >>= 1;
+        }
+
+        // return result
+        return result;
 }
 
 // ----------------------------------------------------------------------
@@ -513,6 +516,9 @@ void frameWorkUpdateInputLoop( void )
 #pragma vector=TIMERA0_VECTOR
 __interrupt void Timer_A( void )
 {
+
+	// call UART timeout update (for resend)
+	UARTUpdateTimeOut();
 
 	// divide update rate
 	unsigned char temp = (FrameWork.updateCounter++);

@@ -22,6 +22,7 @@ struct UART_t
 	volatile unsigned short bufferWritePtr;
 	volatile unsigned char buffer[ UART_BUFFER_SIZE ];
 	volatile unsigned char isSending;
+	volatile unsigned char timeOut;
 };
 
 // ----------------------------------------------------------------------
@@ -66,6 +67,7 @@ void initUART( void );
 unsigned char _buffer_overflow( void );
 void _increase_buffer_pointer( volatile unsigned short* ptr );
 void _write_to_buffer( unsigned char* data );
+void UARTUpdateTimeOut( void );
 void send( void );
 void cls( void );
 void dot( unsigned char* x, unsigned char* y, const unsigned short* rgb );

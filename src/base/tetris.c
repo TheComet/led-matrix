@@ -17,7 +17,7 @@ static struct Tetris_t Tetris;
 
 // ----------------------------------------------------------------------
 // load tetris
-void loadTetris( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadTetris( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 }
 

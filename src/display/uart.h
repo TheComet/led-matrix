@@ -121,6 +121,7 @@ struct UART_t
 extern struct UART_t UART;
 
 // function prototypes
-void processCommand( void );
+unsigned char processCommand( void );
+unsigned char error( void );
 
 #endif // _UART_H_

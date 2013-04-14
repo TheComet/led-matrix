@@ -24,7 +24,7 @@ struct GameOfLife_Player_t
 
 struct GameOfLife_t
 {
-	unsigned char* frameBuffer;
+	unsigned short* frameBuffer;
 	unsigned char state;
 	unsigned char bufferOffset;
 	struct GameOfLife_Player_t player[4];
@@ -48,7 +48,7 @@ enum GameOfLife_States_e
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount );
+void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount );
 void processGameOfLifeLoop( void );
 void processGameOfLifeInput( void );
 void randomizeFrameBuffer( void );

@@ -17,7 +17,7 @@ static struct Snake_t Snake;
 
 // ----------------------------------------------------------------------
 // load snake
-void loadSnake( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadSnake( unsigned short* frameBuffer, unsigned char* playerCount )
 {
   
   // player 1  Start Position

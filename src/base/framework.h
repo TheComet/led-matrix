@@ -53,7 +53,7 @@ struct FrameWork_t
 	volatile unsigned char updateCounter;
 	volatile unsigned char updateFlag;
 	unsigned char state;
-	unsigned char frameBuffer[256];
+	unsigned short frameBuffer[256];
 	unsigned short randomSeed;
 	unsigned char menuButtonFlags;
 };
@@ -132,11 +132,11 @@ void endGame( void );
 
 // misc
 void setRefreshRate( unsigned char refresh );
-void clearFrameBuffer( unsigned char* frameBuffer );
+void clearFrameBuffer( unsigned short* frameBuffer );
 unsigned char rnd( void );
 extern inline signed char sin( unsigned short angle );
 extern inline void wrap( unsigned short* value, unsigned char wrap );
-extern inline unsigned char sqrt( unsigned short value );
+unsigned char sqrt( unsigned short* value );
 
 // player specific input
 extern inline unsigned char player1ButtonFire( void );

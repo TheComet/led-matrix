@@ -17,7 +17,7 @@ static struct Burgler_t Burgler;
 
 // ----------------------------------------------------------------------
 // load burgler
-void loadBurgler( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadBurgler( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 }
 

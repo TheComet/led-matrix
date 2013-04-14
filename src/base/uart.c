@@ -16,6 +16,7 @@ void initUART( void )
 	UART.bufferWritePtr = 0;
 	UART.bufferReadPtr = 0;
 	UART.isSending = 0;
+	UART.timeOut = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -57,7 +58,7 @@ void _write_to_buffer( unsigned char* data )
 	// overflow? force sending
 	while( _buffer_overflow() == 1 )
 	{
-		if( UART.isSending == 0 ) send();
+		send();
 	}
 
 	// write to buffer
@@ -73,6 +74,32 @@ void _write_to_buffer( unsigned char* data )
 }
 
 // ----------------------------------------------------------------------
+// called by the framework's interrupt routine
+// this is used to determine if the display is taking too long to reply
+void UARTUpdateTimeOut( void )
+{
+
+	// check if timeout has occured
+	UART.timeOut++;
+	if( UART.timeOut == 32 )
+	{
+		UART.timeOut = 0;
+
+		// check if there is still data to be sent
+		unsigned short temp = UART.bufferReadPtr;
+		temp = ( temp != UART.bufferWritePtr );
+		if( UART.isSending == 0 && temp )
+		{
+
+			// force resend
+			UART.isSending = 1;
+			UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
+			
+		}
+	}
+}
+
+// ----------------------------------------------------------------------
 // initiates sending the buffer - this causes a chain reaction
 // which lasts until the buffer is empty
 void send( void )
@@ -82,6 +109,7 @@ void send( void )
 	if( UART.isSending == 0 && temp )
 	{
 		UART.isSending = 1;
+		UART.timeOut = 0;
 		UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
 	}
 }
@@ -307,7 +335,7 @@ void setBlendMode( unsigned char blendMode )
 #pragma vector=USCIAB1RX_VECTOR
 __interrupt void USCI1RX_ISR(void)
 {
-	
+
 	// increase and wrap pointer if it's the same as sent data
 	volatile unsigned char* temp = UART.buffer;
 	temp += UART.bufferReadPtr;
@@ -318,11 +346,12 @@ __interrupt void USCI1RX_ISR(void)
 	}
 
 	// send next block of data, if any
-	unsigned short tempReadPtr = UART.bufferReadPtr;
-	if( tempReadPtr != UART.bufferWritePtr )
+	unsigned short tempWritePtr = UART.bufferWritePtr;
+	if( tempWritePtr != UART.bufferReadPtr )
 	{
 
 		// send data
+		UART.timeOut = 0;
 		UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
 
 	// buffer is empty

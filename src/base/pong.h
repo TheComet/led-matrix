@@ -11,7 +11,7 @@
 
 struct Pong_t
 {
-	unsigned char* frameBuffer;
+	unsigned short* frameBuffer;
 	unsigned char* playerCount;
 };
 
@@ -19,7 +19,7 @@ struct Pong_t
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadPong( unsigned char* frameBuffer, unsigned char* playerCount );
+void loadPong( unsigned short* frameBuffer, unsigned char* playerCount );
 void processPongLoop( void );
 void processPongInput( void );
 

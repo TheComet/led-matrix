@@ -17,7 +17,7 @@ static struct GameOfLife_t GameOfLife;
 
 // ----------------------------------------------------------------------
 // load game of life
-void loadGameOfLife( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 
 	// get frame buffer and player count
@@ -139,7 +139,7 @@ void processGameOfLifeInput( void )
 {
 
 	// local variables
-	unsigned char* bufferPtr;
+	unsigned short* bufferPtr;
 	unsigned char readMask;
 	unsigned char* cursorX;
 	unsigned char* cursorY;
@@ -546,7 +546,7 @@ void computeNextCycle( void )
 	register unsigned char count;
 	unsigned char readMask;
 	register unsigned char i, x, y;
-	unsigned char* bufferPtr;
+	unsigned short* bufferPtr;
 
 	// loop through all cells
 	for( x = 0; x != 16; x++ )

@@ -11,7 +11,7 @@
 
 struct SpaceInvaders_t
 {
-	unsigned char* frameBuffer;
+	unsigned short* frameBuffer;
 	unsigned char* playerCount;
 };
 
@@ -19,7 +19,7 @@ struct SpaceInvaders_t
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadSpaceInvaders( unsigned char* frameBuffer, unsigned char* playerCount );
+void loadSpaceInvaders( unsigned short* frameBuffer, unsigned char* playerCount );
 void processSpaceInvadersLoop( void );
 void processSpaceInvadersInput( void );
 

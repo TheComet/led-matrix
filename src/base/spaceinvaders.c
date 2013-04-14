@@ -17,7 +17,7 @@ static struct SpaceInvaders_t SpaceInvaders;
 
 // ----------------------------------------------------------------------
 // load tron
-void loadSpaceInvaders( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadSpaceInvaders( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 }
 

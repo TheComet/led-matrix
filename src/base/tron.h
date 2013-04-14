@@ -11,7 +11,7 @@
 
 struct Tron_t
 {
-	unsigned char* frameBuffer;
+	unsigned short* frameBuffer;
 	unsigned char* playerCount;
 };
 
@@ -19,7 +19,7 @@ struct Tron_t
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadTron( unsigned char* frameBuffer, unsigned char* playerCount );
+void loadTron( unsigned short* frameBuffer, unsigned char* playerCount );
 void processTronLoop( void );
 void processTronInput( void );
 

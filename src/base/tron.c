@@ -17,7 +17,7 @@ static struct Tron_t Tron;
 
 // ----------------------------------------------------------------------
 // load tron
-void loadTron( unsigned char* frameBuffer, unsigned char* playerCount )
+void loadTron( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 }
 
