@@ -52,9 +52,9 @@ void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount );
 void processGameOfLifeLoop( void );
 void processGameOfLifeInput( void );
 void randomizeFrameBuffer( void );
-void drawFrameBufferNoCheck( void );
-void drawFrameBuffer( void );
-void drawFrameBufferCustom( const unsigned short* colour1, const unsigned short* colour2, const unsigned short* colour3, const unsigned short* colour4 );
+void gameOfLifeDrawFrameBufferNoCheck( void );
+void gameOfLifeDrawFrameBuffer( void );
+void gameOfLifeDrawFrameBufferCustom( const unsigned short* colour1, const unsigned short* colour2, const unsigned short* colour3, const unsigned short* colour4 );
 void computeNextCycle( void );
 
 #endif // _GAMEOFLIFE_H_

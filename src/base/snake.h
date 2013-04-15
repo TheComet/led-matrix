@@ -6,28 +6,54 @@
 	#define _SNAKE_H_
 
 // ----------------------------------------------------------------------
+// Definitions
+// ----------------------------------------------------------------------
+
+// Offsets to the snake corner points for each player
+// The data is stored in the frame buffer
+#define SNAKE_CORNER_DATA_OFFSET_0 0
+#define SNAKE_CORNER_DATA_OFFSET_1 128
+#define SNAKE_CORNER_DATA_OFFSET_2 256
+#define SNAKE_CORNER_DATA_OFFSET_3 384
+
+// ----------------------------------------------------------------------
+// Enumerators
+// ----------------------------------------------------------------------
+
+enum Snake_Player_Direction_e
+{
+	SNAKE_PLAYER_DIRECTION_UP,
+	SNAKE_PLAYER_DIRECTION_DOWN,
+	SNAKE_PLAYER_DIRECTION_LEFT,
+	SNAKE_PLAYER_DIRECTION_RIGHT
+};
+
+// ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
 
-struct Snake_t
+struct Snake_Corner_Points_t
 {
- unsigned char Pos_X;
- unsigned char Pos_Y;
- unsigned char Pos_X_Hinten;
- unsigned char Pos_Y_Hinten;
- unsigned char Direction;
+	unsigned char* readPtr;
+	unsigned char* writePtr;
 };
 
-enum Snake_Direction_e
+struct Snake_Player_t
 {
-  SNAKE_DIRECTION_UP,
-  SNAKE_DIRECTION_DOWN,
-  SNAKE_DIRECTION_LEFT,
-  SNAKE_DIRECTION_RIGHT
+	struct Snake_Corner_Points_t cornerPoint;
+	unsigned char direction;
+	unsigned char alive;
+};
+
+struct Snake_t
+{
+	unsigned char* frameBuffer; // explicitly cast to (unsigned char*), so we have 512 bytes
+	unsigned char* playerCount;
+	struct Snake_Player_t player[4];
 };
 
 // ----------------------------------------------------------------------
-// Function prototypes
+// Function Prototypes
 // ----------------------------------------------------------------------
 
 void loadSnake( unsigned short* frameBuffer, unsigned char* playerCount );

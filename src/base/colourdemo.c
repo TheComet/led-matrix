@@ -100,7 +100,7 @@ void processColourDemoLoop( void )
 	}
 
 	// update display
-	drawFrameBuffer();
+	colourDemoDrawFrameBuffer();
 	send();
 }
 
@@ -115,7 +115,7 @@ void processColourDemoInput( void )
 
 // ----------------------------------------------------------------------
 // draws the frame buffer to the screen
-void drawFrameBuffer()
+void colourDemoDrawFrameBuffer()
 {
 	unsigned short* bufferPtr;
 	for( unsigned char x = 0; x != 16; x++ )

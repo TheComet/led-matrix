@@ -11,6 +11,7 @@
 #include "uart.h"
 #include "menu.h"
 #include "startupscreen.h"
+#include "gameenable.h"
 
 // added games
 #ifdef GAME_ENABLE_SNAKE

@@ -11,12 +11,23 @@
 
 struct Tron_t
 {
-	unsigned short* frameBuffer;
-	unsigned char* playerCount;
+ unsigned char Pos_X;
+ unsigned char Pos_Y;
+ unsigned char Pos_X_Hinten;
+ unsigned char Pos_Y_Hinten;
+ unsigned char Direction;
+};
+
+enum Tron_Direction_e
+{
+  TRON_DIRECTION_UP,
+  TRON_DIRECTION_DOWN,
+  TRON_DIRECTION_LEFT,
+  TRON_DIRECTION_RIGHT
 };
 
 // ----------------------------------------------------------------------
-// Function Prototypes
+// Function prototypes
 // ----------------------------------------------------------------------
 
 void loadTron( unsigned short* frameBuffer, unsigned char* playerCount );

@@ -6,6 +6,8 @@
 // Include Files
 // ----------------------------------------------------------------------
 
+#include "framework.h"
+#include "uart.h"
 #include "pong.h"
 #include "gameenable.h"
 
@@ -23,6 +25,7 @@ void loadPong( unsigned short* frameBuffer, unsigned char* playerCount )
 // process pong main loop
 void processPongLoop( void )
 {
+	endGame(); // remove this
 }
 
 // ----------------------------------------------------------------------

@@ -19,12 +19,19 @@ static struct Burgler_t Burgler;
 // load burgler
 void loadBurgler( unsigned short* frameBuffer, unsigned char* playerCount )
 {
+
+	// get frame buffer
+	Burgler.frameBuffer = frameBuffer;
+
+	// get players
+	Burgler.playerCount = playerCount;
 }
 
 // ----------------------------------------------------------------------
 // process burgler main loop
 void processBurglerLoop( void )
 {
+	endGame(); // remove this
 }
 
 // ----------------------------------------------------------------------

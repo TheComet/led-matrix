@@ -33,7 +33,7 @@ void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount )
 		GameOfLife.player[i].cursor.x = 7;
 		GameOfLife.player[i].cursor.y = 7;
 		GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
-		if( ((*playerCount) & (1<<(i-1))) || i == 0 )
+		if( ((*playerCount) & ((i<<1)>>1)) || i == 0 )
 		{
 			GameOfLife.player[i].cellsPlaced = 2;
 		}else{
@@ -96,7 +96,7 @@ void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount )
 
 	// initialise screen
 	cls();
-	drawFrameBuffer();
+	gameOfLifeDrawFrameBuffer();
 	send();
 }
 
@@ -203,7 +203,7 @@ void processGameOfLifeInput( void )
 			if( player1ButtonClear() )
 			{
 				clearFrameBuffer( GameOfLife.frameBuffer );
-				drawFrameBufferNoCheck();
+				gameOfLifeDrawFrameBufferNoCheck();
 				dot( cursorX, cursorY, &WHITE );
 				send();
 			}
@@ -211,7 +211,7 @@ void processGameOfLifeInput( void )
 			// resume simulation
 			if( player1ButtonMenu() )
 			{
-				drawFrameBufferNoCheck(); // force re-drawing of all pixels
+				gameOfLifeDrawFrameBufferNoCheck(); // force re-drawing of all pixels
 				GameOfLife.state = GAMEOFLIFE_STATE_PLAY_SINGLE;
 			}
 
@@ -226,7 +226,7 @@ void processGameOfLifeInput( void )
 			// switch to editing mode
 			if( player1ButtonFire() )
 			{
-				drawFrameBufferCustom( &BLUE, &RED, &GREEN, &YELLOW ); // force re-drawing of all pixels in a different colour
+				gameOfLifeDrawFrameBufferCustom( &BLUE, &RED, &GREEN, &YELLOW ); // force re-drawing of all pixels in a different colour
 				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
 				send();
 				GameOfLife.state = GAMEOFLIFE_STATE_EDIT_SINGLE;
@@ -445,7 +445,7 @@ void randomizeFrameBuffer( void )
 
 // ----------------------------------------------------------------------
 // draws entire buffer without checking for differences
-void drawFrameBufferNoCheck()
+void gameOfLifeDrawFrameBufferNoCheck()
 {
 
 	// render pixels
@@ -466,7 +466,7 @@ void drawFrameBufferNoCheck()
 
 // ----------------------------------------------------------------------
 // renders entire frame buffer with out checks and custom colours
-void drawFrameBufferCustom( const unsigned short* colour1, const unsigned short* colour2, const unsigned short* colour3, const unsigned short* colour4 )
+void gameOfLifeDrawFrameBufferCustom( const unsigned short* colour1, const unsigned short* colour2, const unsigned short* colour3, const unsigned short* colour4 )
 {
 
 	// render pixels
@@ -488,7 +488,7 @@ void drawFrameBufferCustom( const unsigned short* colour1, const unsigned short*
 // ----------------------------------------------------------------------
 // draws the buffer for all players
 // optimized to only update the pixels that have changed
-void drawFrameBuffer( void )
+void gameOfLifeDrawFrameBuffer( void )
 {
 
 	// render pixels
@@ -635,7 +635,7 @@ void computeNextCycle( void )
 	GameOfLife.bufferOffset = 1 - GameOfLife.bufferOffset;
 
 	// draw buffer
-	drawFrameBuffer();
+	gameOfLifeDrawFrameBuffer();
 	send();
 
 }

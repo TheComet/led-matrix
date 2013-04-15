@@ -9,8 +9,8 @@
 // Comment in the games you would like enabled
 // ----------------------------------------------------------------------
 
-#define GAME_ENABLE_COLOUR_DEMO
-//#define GAME_ENABLE_SNAKE
+//#define GAME_ENABLE_COLOUR_DEMO
+#define GAME_ENABLE_SNAKE
 //#define GAME_ENABLE_GAME_OF_LIFE
 //#define GAME_ENABLE_TRON
 //#define GAME_ENABLE_TETRIS

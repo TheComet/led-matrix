@@ -25,6 +25,6 @@ struct ColourDemo_t
 void loadColourDemo( unsigned short* frameBuffer, unsigned char* playerCount );
 void processColourDemoLoop( void );
 void processColourDemoInput( void );
-void drawFrameBuffer( void );
+void colourDemoDrawFrameBuffer( void );
 
 #endif // _COLOURDEMO_H_
