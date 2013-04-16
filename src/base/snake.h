@@ -16,6 +16,7 @@ struct Snake_t
  unsigned char Pos_X_Hinten;
  unsigned char Pos_Y_Hinten;
  unsigned char Direction;
+ unsigned char* frameBuffer;
 };
 
 enum Snake_Direction_e

@@ -28,7 +28,7 @@ void loadSnake( unsigned char* frameBuffer )
 	send();
 
 	// set refresh rate
-	setRefreshRate( 24 );
+	setRefreshRate( 42 );
 }
 
 // ----------------------------------------------------------------------
@@ -51,12 +51,13 @@ void processSnakeLoop( void )
       Snake.Pos_X ++;
     break;
     
-    
   }
+  
+    Snake.Pos_X &= 0x0F;
+    Snake.Pos_Y &= 0x0F;
    
         unsigned short colour = 0x00E, clearColour = 0;
         dot( &Snake.Pos_X, &Snake.Pos_Y, &colour);
-        dot( &Snake.Pos_X_Hinten, &Snake.Pos_Y_Hinten, &clearColour);
         send();       
 }
 
@@ -66,14 +67,14 @@ void processSnakeInput( void )
 {
  
          if (player1ButtonLeft())
-          Snake.Pos_X = Snake.Pos_X-1;
+          Snake.Direction = SNAKE_DIRECTION_LEFT;
         
         if (player1ButtonRight())
-          Snake.Pos_X = Snake.Pos_X+1;
+          Snake.Direction = SNAKE_DIRECTION_RIGHT;
         
         if (player1ButtonUp())
-          Snake.Pos_X = Snake.Pos_Y+1;        
+          Snake.Direction  = SNAKE_DIRECTION_UP;        
 
         if (player1ButtonDown())
-          Snake.Pos_X = Snake.Pos_Y-1;  
+          Snake.Direction  = SNAKE_DIRECTION_DOWN;  
 }
