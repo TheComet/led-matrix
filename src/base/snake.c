@@ -58,7 +58,7 @@ void processSnakeLoop( void )
 	unsigned char x, y;
 
 	// process players
-	for( unsigned char i = 0; i != 1; i++ )
+	for( unsigned char i = 0; i != 4; i++ )
 	{
 		if( ((*Snake.playerCount) & ((1<<i)>>1)) || i == 0 )
 		{

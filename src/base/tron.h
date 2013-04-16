@@ -9,13 +9,18 @@
 // Structs
 // ----------------------------------------------------------------------
 
+struct Tron_Player_t
+{
+	unsigned char Y;
+	unsigned char X;
+	unsigned char Direction;
+};
+
 struct Tron_t
 {
- unsigned char Pos_X;
- unsigned char Pos_Y;
- unsigned char Pos_X_Hinten;
- unsigned char Pos_Y_Hinten;
- unsigned char Direction;
+ struct Tron_Player_t Player[4];
+ unsigned char Speed;
+ unsigned short* frameBuffer; 
 };
 
 enum Tron_Direction_e

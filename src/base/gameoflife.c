@@ -33,7 +33,7 @@ void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount )
 		GameOfLife.player[i].cursor.x = 7;
 		GameOfLife.player[i].cursor.y = 7;
 		GameOfLife.player[i].oldCursor = GameOfLife.player[i].cursor;
-		if( ((*playerCount) & ((i<<1)>>1)) || i == 0 )
+		if( ((*playerCount) & (1<<(i-1))) || i == 0 )
 		{
 			GameOfLife.player[i].cellsPlaced = 2;
 		}else{
