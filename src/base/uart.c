@@ -7,7 +7,7 @@
 #include "common.h"
 
 // structs
-struct UART_t UART;
+static struct UART_t UART;
 
 // ----------------------------------------------------------------------
 // initialise UART
@@ -16,6 +16,7 @@ void initUART( void )
 	UART.bufferWritePtr = 0;
 	UART.bufferReadPtr = 0;
 	UART.isSending = 0;
+	UART.timeOut = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -42,7 +43,7 @@ unsigned char _buffer_overflow( void )
 
 // ----------------------------------------------------------------------
 // increases a buffer pointer by 1 and wraps
-void _increase_buffer_pointer( unsigned short* ptr )
+void _increase_buffer_pointer( volatile unsigned short* ptr )
 {
 	(*ptr)++;
 	if( (*ptr) == UART_BUFFER_SIZE )
@@ -57,11 +58,13 @@ void _write_to_buffer( unsigned char* data )
 	// overflow? force sending
 	while( _buffer_overflow() == 1 )
 	{
-		if( UART.isSending == 0 ) send();
+		send();
 	}
 
-	// write
-	UART.buffer[ UART.bufferWritePtr ] = *data;
+	// write to buffer
+	volatile unsigned char* ptr = UART.buffer;
+	ptr += UART.bufferWritePtr;
+	*ptr = *data;
 
 	// increase pointer
 	_increase_buffer_pointer( &UART.bufferWritePtr );
@@ -71,13 +74,42 @@ void _write_to_buffer( unsigned char* data )
 }
 
 // ----------------------------------------------------------------------
+// called by the framework's interrupt routine
+// this is used to determine if the display is taking too long to reply
+void UARTUpdateTimeOut( void )
+{
+
+	// check if timeout has occured
+	UART.timeOut++;
+	if( UART.timeOut == 32 )
+	{
+		UART.timeOut = 0;
+
+		// check if there is still data to be sent
+		unsigned short temp = UART.bufferReadPtr;
+		temp = ( temp != UART.bufferWritePtr );
+		if( UART.isSending == 0 && temp )
+		{
+
+			// force resend
+			UART.isSending = 1;
+			UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
+			
+		}
+	}
+}
+
+// ----------------------------------------------------------------------
 // initiates sending the buffer - this causes a chain reaction
 // which lasts until the buffer is empty
 void send( void )
 {
-	if( UART.isSending == 0 )
+	unsigned short temp = UART.bufferReadPtr;
+	temp = ( temp != UART.bufferWritePtr );
+	if( UART.isSending == 0 && temp )
 	{
 		UART.isSending = 1;
+		UART.timeOut = 0;
 		UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
 	}
 }
@@ -98,7 +130,7 @@ void cls( void )
 
 // ----------------------------------------------------------------------
 // dot
-void dot( unsigned char* x, unsigned char* y, unsigned short* rgb )
+void dot( unsigned char* x, unsigned char* y, const unsigned short* rgb )
 {
 
 	// write dot command to buffer
@@ -114,7 +146,7 @@ void dot( unsigned char* x, unsigned char* y, unsigned short* rgb )
 
 // ----------------------------------------------------------------------
 // blend colour box
-void blendColourBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* topLeftColour, unsigned short* bottomLeftColour, unsigned short* topRightColour, unsigned short* bottomRightColour )
+void blendColourBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* topLeftColour, const unsigned short* bottomLeftColour, const unsigned short* topRightColour, const unsigned short* bottomRightColour )
 {
 
 	// write command to buffer
@@ -135,7 +167,7 @@ void blendColourBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, un
 
 // ----------------------------------------------------------------------
 // blend colour fill box
-void blendColourFillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* topLeftColour, unsigned short* bottomLeftColour, unsigned short* topRightColour, unsigned short* bottomRightColour )
+void blendColourFillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* topLeftColour, const unsigned short* bottomLeftColour, const unsigned short* topRightColour, const unsigned short* bottomRightColour )
 {
 
 	// write command to buffer
@@ -156,7 +188,7 @@ void blendColourFillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2
 
 // ----------------------------------------------------------------------
 // box
-void box( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour )
+void box( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour )
 {
 
 	// write command to buffer
@@ -173,7 +205,7 @@ void box( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char
 
 // ----------------------------------------------------------------------
 // fill box
-void fillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour )
+void fillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour )
 {
 
 	// write command to buffer
@@ -190,7 +222,7 @@ void fillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned 
 
 // ----------------------------------------------------------------------
 // blend colour line
-void blendColourLine( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour1, unsigned short* colour2 )
+void blendColourLine( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour1, const unsigned short* colour2 )
 {
 
 	// write command to buffer
@@ -208,7 +240,7 @@ void blendColourLine( unsigned char* x1, unsigned char* y1, unsigned char* x2, u
 
 // ----------------------------------------------------------------------
 // line
-void line( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour )
+void line( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour )
 {
 
 	// write command to buffer
@@ -225,7 +257,7 @@ void line( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned cha
 
 // ----------------------------------------------------------------------
 // circle
-void circle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* colour )
+void circle( unsigned char* x, unsigned char* y, unsigned char* radius, const unsigned short* colour )
 {
 
 	// write command to buffer
@@ -242,7 +274,7 @@ void circle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned
 
 // ----------------------------------------------------------------------
 // fill circle
-void fillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* colour )
+void fillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, const unsigned short* colour )
 {
 
 	// write command to buffer
@@ -259,7 +291,7 @@ void fillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsi
 
 // ----------------------------------------------------------------------
 // blend colour fill circle
-void blendColourFillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* insideColour, unsigned short* outsideColour )
+void blendColourFillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, const unsigned short* insideColour, const unsigned short* outsideColour )
 {
 
 	// write command to buffer
@@ -304,20 +336,22 @@ void setBlendMode( unsigned char blendMode )
 __interrupt void USCI1RX_ISR(void)
 {
 
-	// reset timeout
-	TAR = 0x00;
-	
 	// increase and wrap pointer if it's the same as sent data
-	if( UART.buffer[ UART.bufferReadPtr ] == UCA1RXBUF )
+	volatile unsigned char* temp = UART.buffer;
+	temp += UART.bufferReadPtr;
+	unsigned char buf = UCA1RXBUF;
+	if( *temp == buf )
 	{
 		_increase_buffer_pointer( &UART.bufferReadPtr );
 	}
 
 	// send next block of data, if any
-	if( UART.bufferReadPtr != UART.bufferWritePtr )
+	unsigned short tempWritePtr = UART.bufferWritePtr;
+	if( tempWritePtr != UART.bufferReadPtr )
 	{
 
 		// send data
+		UART.timeOut = 0;
 		UCA1TXBUF = UART.buffer[ UART.bufferReadPtr ];
 
 	// buffer is empty

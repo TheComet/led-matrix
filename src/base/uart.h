@@ -18,10 +18,11 @@
 // structs
 struct UART_t
 {
-	unsigned short bufferReadPtr;
-	unsigned short bufferWritePtr;
-	unsigned char buffer[ UART_BUFFER_SIZE ];
-	unsigned char isSending;
+	volatile unsigned short bufferReadPtr;
+	volatile unsigned short bufferWritePtr;
+	volatile unsigned char buffer[ UART_BUFFER_SIZE ];
+	volatile unsigned char isSending;
+	volatile unsigned char timeOut;
 };
 
 // ----------------------------------------------------------------------
@@ -64,20 +65,21 @@ enum commandList_e
 
 void initUART( void );
 unsigned char _buffer_overflow( void );
-void _increase_buffer_pointer( unsigned short* ptr );
+void _increase_buffer_pointer( volatile unsigned short* ptr );
 void _write_to_buffer( unsigned char* data );
+void UARTUpdateTimeOut( void );
 void send( void );
 void cls( void );
-void dot( unsigned char* x, unsigned char* y, unsigned short* rgb );
-void blendColourBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* topLeftColour, unsigned short* bottomLeftColour, unsigned short* topRightColour, unsigned short* bottomRightColour );
-void blendColourFillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* topLeftColour, unsigned short* bottomLeftColour, unsigned short* topRightColour, unsigned short* bottomRightColour );
-void box( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour );
-void fillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour );
-void blendColourLine( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour1, unsigned short* colour2 );
-void line( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, unsigned short* colour );
-void circle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* colour );
-void fillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* colour );
-void blendColourFillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* insideColour, unsigned short* outsideColour );
+void dot( unsigned char* x, unsigned char* y, const unsigned short* rgb );
+void blendColourBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* topLeftColour, const unsigned short* bottomLeftColour, const unsigned short* topRightColour, const unsigned short* bottomRightColour );
+void blendColourFillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* topLeftColour, const unsigned short* bottomLeftColour, const unsigned short* topRightColour, const unsigned short* bottomRightColour );
+void box( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour );
+void fillBox( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour );
+void blendColourLine( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour1, const unsigned short* colour2 );
+void line( unsigned char* x1, unsigned char* y1, unsigned char* x2, unsigned char* y2, const unsigned short* colour );
+void circle( unsigned char* x, unsigned char* y, unsigned char* radius, const unsigned short* colour );
+void fillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, const unsigned short* colour );
+void blendColourFillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, const unsigned short* insideColour, const unsigned short* outsideColour );
 void setBlendMode( unsigned char blendMode );
 
 #endif // _UART_H_

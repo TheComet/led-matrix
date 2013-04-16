@@ -16,10 +16,14 @@
 // ----------------------------------------------------------------------
 
 // map player ports
-#define MAP_PLAYER1_BUTTON         ~(P1IN&0x1F)
-#define MAP_PLAYER3_BUTTON         ~(P2IN&0x1F)
-#define MAP_PLAYER2_BUTTON         ~(P3IN&0x1F)
-#define MAP_PLAYER4_BUTTON         ~(P4IN&0x1F)
+#define MAP_PLAYER1_BUTTON         (~P1IN)&0x1F
+#define MAP_PLAYER3_BUTTON         (~P2IN)&0x1F
+#define MAP_PLAYER2_BUTTON         (~P3IN)&0x1F
+#define MAP_PLAYER4_BUTTON         (~P4IN)&0x1F
+
+// map virtual buttons
+#define MAP_PLAYER_BUTTON_MENU     0x20
+#define MAP_PLAYER_BUTTON_CLEAR    0x40
 
 // map player buttons
 #define MAP_PLAYER1_BUTTON_FIRE    0x01

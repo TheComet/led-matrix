@@ -342,13 +342,19 @@ void dot( unsigned char* x, unsigned char* y, unsigned short* rgb )
 
 	// shift bit is set to one if x coordinate > 7 so the pixel is rendered to the other half of the display
 	unsigned char shift = (*x & 0x08) || 0;
-	unsigned char x_copy = *x & 0x07;
 
 	// get x coordinate
+	unsigned char x_copy = *x & 0x07;
 	unsigned char x_inverse = 7-x_copy;
 
 	// used to extract the data
-	unsigned char i, colour, pwm;
+	register unsigned char i;
+	unsigned char colour;
+	unsigned char pwm;
+
+	// get pointer to array, should be faster
+	volatile unsigned char* pixelArrayPtr = &pixelArray[x_copy][*y][0];
+	volatile unsigned char* pixelArrayInversePtr = &pixelArray[x_inverse][*y][0];
 
 	// disable interrupts during array manipulation
 	__bic_SR_register( GIE );
@@ -360,37 +366,37 @@ void dot( unsigned char* x, unsigned char* y, unsigned short* rgb )
 		unsigned char clr1 = 0xF5>>shift, clr2 = 0xDF>>shift;
 		for( i = 0; i != PWM_RESOLUTION; i++ )
 		{
-			pixelArray[x_copy][*y][i] &= clr1;
-			pixelArray[x_inverse][*y][i] &= clr2;
+			(*(pixelArrayPtr+i)) &= clr1;
+			(*(pixelArrayInversePtr+i)) &= clr2;
 		}
 	}
 
 	// extracts blue
 	pwm = (*rgb) & 0x000F;
 	colour = 0x02 >> shift;
-	if( drawUtils.blendMode != BLEND_MODE_REPLACE ) _process_blend_mode( &x_copy, y, &drawUtils.blendMode, &colour, &pwm );
+	if( drawUtils.blendMode != BLEND_MODE_REPLACE ) _process_blend_mode( pixelArrayPtr, &drawUtils.blendMode, &colour, &pwm );
 	for( i = 0; i != pwm; i++ )
 	{
-		pixelArray[x_copy][*y][i] |= colour;
+		(*(pixelArrayPtr+i)) |= colour;
 	}
 
 	// extracts green
 	unsigned char c_rgb = (*rgb)>>4;
 	pwm = c_rgb & 0x000F;
 	colour = 0x20 >> shift;
-	if( drawUtils.blendMode != BLEND_MODE_REPLACE ) _process_blend_mode( &x_inverse, y, &drawUtils.blendMode, &colour, &pwm );
+	if( drawUtils.blendMode != BLEND_MODE_REPLACE ) _process_blend_mode( pixelArrayInversePtr, &drawUtils.blendMode, &colour, &pwm );
 	for( i = 0; i != pwm; i++ )
 	{
-		pixelArray[x_inverse][*y][i] |= colour;
+		(*(pixelArrayInversePtr+i)) |= colour;
 	}
 
 	// extracts red
 	pwm = c_rgb >> 4;
 	colour = 0x08 >> shift;
-	if( drawUtils.blendMode != BLEND_MODE_REPLACE ) _process_blend_mode( &x_copy, y, &drawUtils.blendMode, &colour, &pwm );
+	if( drawUtils.blendMode != BLEND_MODE_REPLACE ) _process_blend_mode( pixelArrayPtr, &drawUtils.blendMode, &colour, &pwm );
 	for( i = 0; i != pwm; i++ )
 	{
-		pixelArray[x_copy][*y][i] |= colour;
+		(*(pixelArrayPtr+i)) |= colour;
 	}
 
 	// enable interrupts
@@ -401,15 +407,15 @@ void dot( unsigned char* x, unsigned char* y, unsigned short* rgb )
 }
 
 // ------------------------------------------------------------------------------------------------------------------
-// processes the colour according to the set blend mode
-void _process_blend_mode( unsigned char* x, unsigned char* y, unsigned char* blendMode, unsigned char* colour, unsigned char* pwm )
+// processes the colour according to the set blend mode, and changes the value of pwm accordingly
+inline void _process_blend_mode( volatile unsigned char* pixelArray, unsigned char* blendMode, unsigned char* colour, unsigned char* pwm )
 {
 
 	// get current pwm value in array
-	unsigned char current_pwm, c;
+	register unsigned char current_pwm, c;
 	for( current_pwm = 0; current_pwm != PWM_RESOLUTION; current_pwm++ )
 	{
-		c = (pixelArray[*x][*y][current_pwm] & (*colour));
+		c = ( (*(pixelArray+current_pwm)) & (*colour) );
 		if( c == 0 ) break;
 	}
 

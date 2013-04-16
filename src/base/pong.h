@@ -1,30 +1,26 @@
 // ----------------------------------------------------------------------
-// Colour Demo
+// Pong
 // ----------------------------------------------------------------------
 
-#ifndef _COLOURDEMO_H_
-	#define _COLOURDEMO_H_
+#ifndef _PONG_H_
+	#define _PONG_H_
 
 // ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
 
-struct ColourDemo_t
+struct Pong_t
 {
 	unsigned short* frameBuffer;
-	unsigned short angle;
-	unsigned char startR;
-	unsigned char startG;
-	unsigned char startB;
+	unsigned char* playerCount;
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadColourDemo( unsigned short* frameBuffer, unsigned char* playerCount );
-void processColourDemoLoop( void );
-void processColourDemoInput( void );
-void colourDemoDrawFrameBuffer( void );
+void loadPong( unsigned short* frameBuffer, unsigned char* playerCount );
+void processPongLoop( void );
+void processPongInput( void );
 
-#endif // _COLOURDEMO_H_
+#endif // _PONG_H_

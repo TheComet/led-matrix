@@ -1,30 +1,27 @@
 // ----------------------------------------------------------------------
-// Colour Demo
+// Start-Up Screen
 // ----------------------------------------------------------------------
 
-#ifndef _COLOURDEMO_H_
-	#define _COLOURDEMO_H_
+#ifndef _STARTUPSCREEN_H_
+	#define _STARTUPSCREEN_H_
 
 // ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
 
-struct ColourDemo_t
+struct StartUpScreen_t
 {
-	unsigned short* frameBuffer;
-	unsigned short angle;
-	unsigned char startR;
-	unsigned char startG;
-	unsigned char startB;
+	unsigned char toggle;
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadColourDemo( unsigned short* frameBuffer, unsigned char* playerCount );
-void processColourDemoLoop( void );
-void processColourDemoInput( void );
-void colourDemoDrawFrameBuffer( void );
+void drawStartArrow( void );
+void drawButtonHelp( void );
+void loadStartUpScreen( void );
+void processStartUpScreenLoop( void );
+void processStartUpScreenInput( void );
 
-#endif // _COLOURDEMO_H_
+#endif // _STARTUPSCREEN_H_

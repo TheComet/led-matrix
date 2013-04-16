@@ -16,7 +16,7 @@
 // ----------------------------------------------------------------------
 
 // PWM resolution
-#define PWM_RESOLUTION	0x0E
+#define PWM_RESOLUTION	0x0F
 
 // how many cycles to delay between shift register writes (is multiplied by inverse square root lookup table)
 #define PWM_DELAY_CYCLES 16

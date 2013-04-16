@@ -1,25 +1,36 @@
 // ----------------------------------------------------------------------
-// Include files
+// Pong
 // ----------------------------------------------------------------------
 
-#ifndef _MAIN_H_
-	#define _MAIN_H_
-
 // ----------------------------------------------------------------------
-// Include files
+// Include Files
 // ----------------------------------------------------------------------
 
-#include "common.h"
-#include "init.h"
-#include "uart.h"
 #include "framework.h"
+#include "uart.h"
+#include "pong.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_PONG
+
+struct Pong_t Pong;
 
 // ----------------------------------------------------------------------
-// definitions
-// ----------------------------------------------------------------------
+// load pong
+void loadPong( unsigned short* frameBuffer, unsigned char* playerCount )
+{
+}
 
 // ----------------------------------------------------------------------
-// global variables
-// ----------------------------------------------------------------------
+// process pong main loop
+void processPongLoop( void )
+{
+	endGame(); // remove this
+}
 
-#endif // _MAIN_H_
+// ----------------------------------------------------------------------
+// process pong input
+void processPongInput( void )
+{
+}
+#endif // GAME_ENABLE_PONG

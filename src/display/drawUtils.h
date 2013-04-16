@@ -35,6 +35,6 @@ void circle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned
 void fillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* colour );
 void blendColourFillCircle( unsigned char* x, unsigned char* y, unsigned char* radius, unsigned short* insideColour, unsigned short* outsideColour );
 void drawUtils_SetBlendMode( unsigned char blendMode );
-void _process_blend_mode( unsigned char* x, unsigned char* y, unsigned char* blendMode, unsigned char* colour, unsigned char* pwm );
+extern inline void _process_blend_mode( volatile unsigned char* pixelArray, unsigned char* blendMode, unsigned char* colour, unsigned char* pwm );
 
 #endif // _DRAWUTILS_H_

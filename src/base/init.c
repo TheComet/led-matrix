@@ -7,6 +7,7 @@
 #include "uart.h"
 #include "framework.h"
 #include "common.h"
+#include "menu.h"
 
 // ------------------------------------------------------------------------------------------------------------------
 // call this to initialise the device
@@ -18,6 +19,9 @@ void initDevice( void )
 
 	// setup clock
 	cfgSystemClock();
+
+	// wait, so other micro controller definately starts up before we start sending data
+	__delay_cycles( 200000 );
 
 	// configure timers
 	cfgTimerA();
@@ -36,6 +40,7 @@ void initDevice( void )
 	// initial values
 	initUART();
 	initFrameWork();
+	initMenu();
 
 	// enable global interrupts
 	__bis_SR_register( GIE );

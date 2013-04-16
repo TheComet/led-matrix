@@ -1,30 +1,26 @@
 // ----------------------------------------------------------------------
-// Colour Demo
+// Space Invaders
 // ----------------------------------------------------------------------
 
-#ifndef _COLOURDEMO_H_
-	#define _COLOURDEMO_H_
+#ifndef _SPACEINVADERS_H_
+	#define _SPACEINVADERS_H_
 
 // ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
 
-struct ColourDemo_t
+struct SpaceInvaders_t
 {
 	unsigned short* frameBuffer;
-	unsigned short angle;
-	unsigned char startR;
-	unsigned char startG;
-	unsigned char startB;
+	unsigned char* playerCount;
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadColourDemo( unsigned short* frameBuffer, unsigned char* playerCount );
-void processColourDemoLoop( void );
-void processColourDemoInput( void );
-void colourDemoDrawFrameBuffer( void );
+void loadSpaceInvaders( unsigned short* frameBuffer, unsigned char* playerCount );
+void processSpaceInvadersLoop( void );
+void processSpaceInvadersInput( void );
 
-#endif // _COLOURDEMO_H_
+#endif // _SPACEINVADERS_H_

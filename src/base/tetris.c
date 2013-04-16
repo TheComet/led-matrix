@@ -1,25 +1,36 @@
 // ----------------------------------------------------------------------
-// Include files
+// Tetris
 // ----------------------------------------------------------------------
-
-#ifndef _MAIN_H_
-	#define _MAIN_H_
 
 // ----------------------------------------------------------------------
 // Include files
 // ----------------------------------------------------------------------
 
-#include "common.h"
-#include "init.h"
-#include "uart.h"
+#include "tetris.h"
 #include "framework.h"
+#include "uart.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_TETRIS
+
+static struct Tetris_t Tetris;
 
 // ----------------------------------------------------------------------
-// definitions
-// ----------------------------------------------------------------------
+// load tetris
+void loadTetris( unsigned short* frameBuffer, unsigned char* playerCount )
+{
+}
 
 // ----------------------------------------------------------------------
-// global variables
-// ----------------------------------------------------------------------
+// process tetris loop
+void processTetrisLoop( void )
+{
+	endGame(); // remove this
+}
 
-#endif // _MAIN_H_
+// ----------------------------------------------------------------------
+// process tetris input
+void processTetrisInput( void )
+{
+}
+#endif // GAME_ENABLE_TETRIS

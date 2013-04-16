@@ -1,30 +1,26 @@
 // ----------------------------------------------------------------------
-// Colour Demo
+// Tetris
 // ----------------------------------------------------------------------
 
-#ifndef _COLOURDEMO_H_
-	#define _COLOURDEMO_H_
+#ifndef _TETRIS_H_
+	#define _TETRIS_H_
 
 // ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
 
-struct ColourDemo_t
+struct Tetris_t
 {
 	unsigned short* frameBuffer;
-	unsigned short angle;
-	unsigned char startR;
-	unsigned char startG;
-	unsigned char startB;
+	unsigned char* playerCount;
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadColourDemo( unsigned short* frameBuffer, unsigned char* playerCount );
-void processColourDemoLoop( void );
-void processColourDemoInput( void );
-void colourDemoDrawFrameBuffer( void );
+void loadTetris( unsigned short* frameBuffer, unsigned char* playerCount );
+void processTetrisLoop( void );
+void processTetrisInput( void );
 
-#endif // _COLOURDEMO_H_
+#endif // _TETRIS_H_

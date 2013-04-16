@@ -5,6 +5,8 @@
 #ifndef _MENU_H_
 	#define _MENU_H_
 
+#include "gameenable.h"
+
 // ----------------------------------------------------------------------
 // Structs
 // ----------------------------------------------------------------------
@@ -15,6 +17,7 @@ struct Menu_t
 	unsigned char toggleArrow;
 	unsigned char selected;
 	unsigned char playerList;
+	unsigned char gameCount;
 };
 
 // ----------------------------------------------------------------------
@@ -24,24 +27,44 @@ struct Menu_t
 // menu states
 enum Menu_State_e
 {
-	MENU_STATE_PRESS_START,
 	MENU_STATE_SELECT_GAME
 };
 
-// games/demos - specify game count-1
-#define GAME_COUNT 2
+// list of games
 enum Menu_Games_e
 {
+#ifdef GAME_ENABLE_COLOUR_DEMO
 	MENU_SELECT_COLOUR_DEMO,
+#endif
+#ifdef GAME_ENABLE_SNAKE
 	MENU_SELECT_SNAKE,
-	MENU_SELECT_GAME_OF_LIFE
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
+	MENU_SELECT_GAME_OF_LIFE,
+#endif
+#ifdef GAME_ENABLE_TRON
+	MENU_SELECT_TRON,
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+	MENU_SELECT_SPACE_INVADERS,
+#endif
+#ifdef GAME_ENABLE_TETRIS
+	MENU_SELECT_TETRIS,
+#endif
+#ifdef GAME_ENABLE_PONG
+	MENU_SELECT_PONG,
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	MENU_SELECT_BURGLER,
+#endif
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
-void loadMenu( unsigned char* frameBuffer );
+void initMenu( void );
+void loadMenu( unsigned short* frameBuffer );
 void processMenuLoop( void );
 void processMenuInput( void );
 void menuDrawFrame( void );
@@ -50,9 +73,31 @@ void menuDrawRightArrow( unsigned char clear );
 void menuDrawStartArrow( unsigned char offset );
 void menuDrawJoinArrows( unsigned char* playerList );
 void menuClearIcon( void );
-void menuDrawColourDemoIcon( void );
-void menuDrawSnakeIcon( void );
-void menuDrawGameOfLifeIcon( void );
 void menuUpdateIcon( unsigned char* selected );
+
+#ifdef GAME_ENABLE_COLOUR_DEMO
+void menuDrawColourDemoIcon( void );
+#endif
+#ifdef GAME_ENABLE_SNAKE
+void menuDrawSnakeIcon( void );
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
+void menuDrawGameOfLifeIcon( void );
+#endif
+#ifdef GAME_ENABLE_TRON
+void menuDrawTronIcon( void );
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+void menuDrawSpaceInvadersIcon( void );
+#endif
+#ifdef GAME_ENABLE_TETRIS
+void menuDrawTetrisIcon( void );
+#endif
+#ifdef GAME_ENABLE_PONG
+void menuDrawPongIcon( void );
+#endif
+#ifdef GAME_ENABLE_BURGLER
+void menuDrawBurglerIcon( void );
+#endif
 
 #endif // _MENU_H_
