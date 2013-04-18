@@ -48,6 +48,7 @@ void initFrameWork( void )
 	FrameWork.updateCounter = 0;
 	FrameWork.updateDivider = 1;
 	FrameWork.updateFlag = 0;
+	FrameWork.gamesRegistered = 0;
 	FrameWork.state = FRAMEWORK_STATE_START_UP_SCREEN;
 	loadStartUpScreen();
 }
@@ -122,6 +123,21 @@ void pollPorts( void )
 	// update any input loops
 	if( updateFlag ) frameWorkUpdateInputLoop();
 
+}
+
+// ----------------------------------------------------------------------
+// register a game with the framework
+void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction )
+{
+
+	// check for free slots
+	if( FrameWork.gamesRegistered+1 == MAX_GAMES ) return;
+
+	// register game
+	FrameWork.gamesRegistered++;
+	FrameWork.game[ FrameWork.gamesRegistered ].loadFunction = loadFunction;
+	FrameWork.game[ FrameWork.gamesRegistered ].processLoopFunction = processLoopFunction;
+	FrameWork.game[ FrameWork.gamesRegistered ].processInputFunction = processInputFunction;
 }
 
 // ----------------------------------------------------------------------

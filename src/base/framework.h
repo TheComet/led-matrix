@@ -38,6 +38,20 @@ static const signed char sinus[30] = { 0x0,0x1A,0x33,0x4A,0x5E,0x6D,0x78,0x7E,0x
 // Structs
 // ----------------------------------------------------------------------
 
+// for callback registration
+typedef void (*loadFunction_cb_t)(unsigned short* frameBuffer, unsigned char* userData);
+typedef void (*processLoopFunction_cb_t)(void);
+typedef void (*processInputFunction_cb_t)(void);
+typedef void (*drawMenuIconFunction_cb_t)(void);
+struct FrameWork_Registered_Games_t
+{
+	loadFunction_cb_t loadFunction;
+	processLoopFunction_cb_t processLoopFunction;
+	processInputFunction_cb_t processInputFunction;
+	drawMenuIconFunction_cb_t drawMenuIconFunction;
+};
+
+// for input
 struct FrameWork_Buttons_t
 {
 	unsigned char oldButtonState;
@@ -46,16 +60,27 @@ struct FrameWork_Buttons_t
 	unsigned char menuButtonTracker;
 };
 
+// Framework struct
 struct FrameWork_t
 {
+
+	// input
 	struct FrameWork_Buttons_t player[4];
+	unsigned char menuButtonFlags;
+
+	// game registration
+	struct FrameWork_Registered_Games_t game[MAX_GAMES];
+	unsigned char gamesRegistered;
+
+	// frame rate
 	volatile unsigned char updateDivider;
 	volatile unsigned char updateCounter;
 	volatile unsigned char updateFlag;
+
+	// misc
 	unsigned char state;
 	unsigned short frameBuffer[256];
 	unsigned short randomSeed;
-	unsigned char menuButtonFlags;
 };
 
 // ----------------------------------------------------------------------
@@ -97,11 +122,16 @@ enum FrameWork_State_e
 // Function Prototypes
 // ----------------------------------------------------------------------
 
+// framework specific functions, which shouldn't be called
+// by anything else other than the framework
 void initFrameWork( void );
 void startFrameWork( void );
 void pollPorts( void );
 void frameWorkUpdateProcessLoop( void );
 void frameWorkUpdateInputLoop( void );
+
+// used to register a game to the framework for callbacks
+void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction );
 
 // change applications
 #ifdef GAME_ENABLE_COLOUR_DEMO
