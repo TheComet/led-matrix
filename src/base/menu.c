@@ -91,6 +91,7 @@ void menuClearIcon( void )
 	fillBox( &x1, &x1, &x2, &x2, &BLACK );
 }
 
+/*
 // ----------------------------------------------------------------------
 // draws the colour demo icon
 #ifdef GAME_ENABLE_COLOUR_DEMO
@@ -190,41 +191,7 @@ void menuDrawBurglerIcon( void )
 {
 }
 #endif
-
-// ----------------------------------------------------------------------
-// updates the icon
-void menuUpdateIcon( unsigned char* selected )
-{
-	menuClearIcon();
-	menuDrawLeftArrow(0);
-	menuDrawRightArrow(0);
-#ifdef GAME_ENABLE_COLOUR_DEMO
-	if( *selected == MENU_SELECT_COLOUR_DEMO )    { menuDrawColourDemoIcon();    return; }
-#endif
-#ifdef GAME_ENABLE_SNAKE
-	if( *selected == MENU_SELECT_SNAKE )          { menuDrawSnakeIcon();         return; }
-#endif
-#ifdef GAME_ENABLE_GAME_OF_LIFE
-	if( *selected == MENU_SELECT_GAME_OF_LIFE )   { menuDrawGameOfLifeIcon();    return; }
-#endif
-#ifdef GAME_ENABLE_TRON
-	if( *selected == MENU_SELECT_TRON )           { menuDrawTronIcon();          return; }
-#endif
-#ifdef GAME_ENABLE_SPACE_INVADERS
-	if( *selected == MENU_SELECT_SPACE_INVADERS ) { menuDrawSpaceInvadersIcon(); return; }
-#endif
-#ifdef GAME_ENABLE_TETRIS
-	if( *selected == MENU_SELECT_TETRIS )         { menuDrawTetrisIcon();        return; }
-#endif
-#ifdef GAME_ENABLE_PONG
-	if( *selected == MENU_SELECT_PONG )           { menuDrawPongIcon();          return; }
-#endif
-#ifdef GAME_ENABLE_BURGLER
-	if( *selected == MENU_SELECT_BURGLER )        { menuDrawBurglerIcon();       return; }
-#endif
-
-	return;
-}
+*/
 
 // ----------------------------------------------------------------------
 // initialises some values for the menu
@@ -236,7 +203,7 @@ void initMenu( void )
 
 // ----------------------------------------------------------------------
 // load menu
-void loadMenu( unsigned short* frameBuffer )
+void loadMenu( void )
 {
 
 	// initial state
@@ -330,40 +297,10 @@ void processMenuInput( void )
 				send();
 			}
 
-			// select a game
+			// start a game
 			if( player1ButtonFire() )
 			{
-				switch( Menu.selected )
-				{
-
-					// start various games
-				#ifdef GAME_ENABLE_COLOUR_DEMO
-					case MENU_SELECT_COLOUR_DEMO    : startColourDemo( &Menu.playerList );           break;
-				#endif
-				#ifdef GAME_ENABLE_SNAKE
-					case MENU_SELECT_SNAKE          : startSnake( &Menu.playerList );                break;
-				#endif
-				#ifdef GAME_ENABLE_GAME_OF_LIFE
-					case MENU_SELECT_GAME_OF_LIFE   : startGameOfLife( &Menu.playerList );           break;
-				#endif
-				#ifdef GAME_ENABLE_TRON
-					case MENU_SELECT_TRON           : startTron( &Menu.playerList );                 break;
-				#endif
-				#ifdef GAME_ENABLE_SPACE_INVADERS
-					case MENU_SELECT_SPACE_INVADERS : startSpaceInvaders( &Menu.playerList );        break;
-				#endif
-				#ifdef GAME_ENABLE_TETRIS
-					case MENU_SELECT_TETRIS	        : startTetris( &Menu.playerList );               break;
-				#endif
-				#ifdef GAME_ENABLE_PONG
-					case MENU_SELECT_PONG           : startPong( &Menu.playerList );                 break;
-				#endif
-				#ifdef GAME_ENABLE_BURGLER
-					case MENU_SELECT_BURGLER        : startBurgler( &Menu.playerList );              break;
-				#endif
-
-					default : break;
-				}
+				startGame( &Menu.selected, &Menu.playerList );
 			}
 
 			break;

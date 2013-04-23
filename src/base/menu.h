@@ -64,7 +64,7 @@ enum Menu_Games_e
 // ----------------------------------------------------------------------
 
 void initMenu( void );
-void loadMenu( unsigned short* frameBuffer );
+void loadMenu( void );
 void processMenuLoop( void );
 void processMenuInput( void );
 void menuDrawFrame( void );
@@ -74,30 +74,5 @@ void menuDrawStartArrow( unsigned char offset );
 void menuDrawJoinArrows( unsigned char* playerList );
 void menuClearIcon( void );
 void menuUpdateIcon( unsigned char* selected );
-
-#ifdef GAME_ENABLE_COLOUR_DEMO
-void menuDrawColourDemoIcon( void );
-#endif
-#ifdef GAME_ENABLE_SNAKE
-void menuDrawSnakeIcon( void );
-#endif
-#ifdef GAME_ENABLE_GAME_OF_LIFE
-void menuDrawGameOfLifeIcon( void );
-#endif
-#ifdef GAME_ENABLE_TRON
-void menuDrawTronIcon( void );
-#endif
-#ifdef GAME_ENABLE_SPACE_INVADERS
-void menuDrawSpaceInvadersIcon( void );
-#endif
-#ifdef GAME_ENABLE_TETRIS
-void menuDrawTetrisIcon( void );
-#endif
-#ifdef GAME_ENABLE_PONG
-void menuDrawPongIcon( void );
-#endif
-#ifdef GAME_ENABLE_BURGLER
-void menuDrawBurglerIcon( void );
-#endif
 
 #endif // _MENU_H_
