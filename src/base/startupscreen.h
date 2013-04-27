@@ -20,7 +20,8 @@ struct StartUpScreen_t
 
 void drawStartArrow( void );
 void drawButtonHelp( void );
-void loadStartUpScreen( void );
+void drawStartUpScreenIconDummy( void );
+void loadStartUpScreen( unsigned short* frameBuffer, unsigned char* playerCount );
 void processStartUpScreenLoop( void );
 void processStartUpScreenInput( void );
 

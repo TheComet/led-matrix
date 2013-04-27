@@ -222,7 +222,7 @@ void loadMenu( void )
 	menuDrawRightArrow(0);
 	menuDrawLeftArrow(0);
 	menuDrawJoinArrows( &Menu.playerList );
-	menuUpdateIcon( &Menu.selected );
+	//menuUpdateIcon( &Menu.selected );
 	send();
 }
 

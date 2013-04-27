@@ -57,6 +57,7 @@ enum Menu_Games_e
 #ifdef GAME_ENABLE_BURGLER
 	MENU_SELECT_BURGLER,
 #endif
+DUMMY
 };
 
 // ----------------------------------------------------------------------

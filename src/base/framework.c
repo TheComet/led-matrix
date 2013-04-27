@@ -29,12 +29,23 @@ static struct FrameWork_t FrameWork;
 // initialise framework
 void initFrameWork( void )
 {
+
+	// set initial values
 	FrameWork.updateCounter = 0;
 	FrameWork.updateDivider = 1;
 	FrameWork.updateFlag = 0;
 	FrameWork.gamesRegistered = 0;
-	FrameWork.state = FRAMEWORK_STATE_START_UP_SCREEN;
-	loadStartUpScreen();
+
+	// register start screen
+	registerGame( loadStartUpScreen, processStartUpScreenLoop, processStartUpScreenInput, drawStartUpScreenIconDummy );
+
+	// register menu
+	//registerGame( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
+
+	// load startup screen
+	unsigned char gameSelected = 0;
+	unsigned char playerCount = 0;
+	startGame( &gameSelected, &playerCount );
 }
 
 // ----------------------------------------------------------------------
@@ -162,7 +173,6 @@ unsigned char rnd( void )
 void startGame( unsigned char* gameSelected, unsigned char* playerCount )
 {
 	FrameWork.game[ *gameSelected ].load( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_GAME;
 	FrameWork.gameSelected = *gameSelected;
 }
 
@@ -171,7 +181,6 @@ void startGame( unsigned char* gameSelected, unsigned char* playerCount )
 void endGame( void )
 {
 	loadMenu();
-	FrameWork.state = FRAMEWORK_STATE_MENU;
 }
 
 // ----------------------------------------------------------------------
