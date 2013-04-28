@@ -192,6 +192,13 @@ void menuDrawBurglerIcon( void )
 #endif
 
 // ----------------------------------------------------------------------
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+void menuDrawCatAndMouseIcon( void )
+{
+}
+#endif
+
+// ----------------------------------------------------------------------
 // updates the icon
 void menuUpdateIcon( unsigned char* selected )
 {
@@ -221,6 +228,9 @@ void menuUpdateIcon( unsigned char* selected )
 #endif
 #ifdef GAME_ENABLE_BURGLER
 	if( *selected == MENU_SELECT_BURGLER )        { menuDrawBurglerIcon();       return; }
+#endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+	if( *selected == MENU_SELECT_CAT_AND_MOUSE ){ menuDrawCatAndMouseIcon();   return; }
 #endif
 
 	return;
@@ -360,6 +370,9 @@ void processMenuInput( void )
 				#endif
 				#ifdef GAME_ENABLE_BURGLER
 					case MENU_SELECT_BURGLER        : startBurgler( &Menu.playerList );              break;
+				#endif
+				#ifdef GAME_ENABLE_CAT_AND_MOUSE
+					case MENU_SELECT_CAT_AND_MOUSE  : startCatAndMouse( &Menu.playerList );          break;
 				#endif
 
 					default : break;

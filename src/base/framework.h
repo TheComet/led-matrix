@@ -89,6 +89,9 @@ enum FrameWork_State_e
 #ifdef GAME_ENABLE_BURGLER
 	FRAMEWORK_STATE_BURGLER,
 #endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+	FRAMEWORK_STATE_CAT_AND_MOUSE,
+#endif
 	FRAMEWORK_STATE_MENU,
 	FRAMEWORK_STATE_START_UP_SCREEN
 };
@@ -127,6 +130,9 @@ void startPong( unsigned char* playerCount );
 #endif
 #ifdef GAME_ENABLE_BURGLER
 void startBurgler( unsigned char* playerCount );
+#endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+void startCatAndMouse( unsigned char* playerCount );
 #endif
 void endGame( void );
 

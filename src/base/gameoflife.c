@@ -19,7 +19,7 @@ static struct GameOfLife_t GameOfLife;
 // load game of life
 void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount )
 {
-
+GameOfLife.gay.jonas = 1;
 	// get frame buffer and player count
 	GameOfLife.frameBuffer = frameBuffer;
 	GameOfLife.bufferOffset = 0;

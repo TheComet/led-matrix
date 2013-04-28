@@ -57,6 +57,9 @@ enum Menu_Games_e
 #ifdef GAME_ENABLE_BURGLER
 	MENU_SELECT_BURGLER,
 #endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+	MENU_SELECT_CAT_AND_MOUSE
+#endif
 };
 
 // ----------------------------------------------------------------------
@@ -98,6 +101,9 @@ void menuDrawPongIcon( void );
 #endif
 #ifdef GAME_ENABLE_BURGLER
 void menuDrawBurglerIcon( void );
+#endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+void menuDrawCatAndMouseIcon( void );
 #endif
 
 #endif // _MENU_H_

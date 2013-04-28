@@ -38,6 +38,9 @@
 #ifdef GAME_ENABLE_BURGLER
 	#include "burgler.h"
 #endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+	#include "catandmouse.h"
+#endif
 
 static struct FrameWork_t FrameWork;
 
@@ -233,6 +236,16 @@ void startBurgler( unsigned char* playerCount )
 {
 	loadBurgler( FrameWork.frameBuffer, playerCount );
 	FrameWork.state = FRAMEWORK_STATE_BURGLER;
+}
+#endif
+
+// ----------------------------------------------------------------------
+// starts cat and mouse
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+void startCatAndMouse( unsigned char* playerCount )
+{
+	loadCatAndMouse( FrameWork.frameBuffer, playerCount );
+	FrameWork.state = FRAMEWORK_STATE_CAT_AND_MOUSE;
 }
 #endif
 
@@ -461,6 +474,9 @@ void frameWorkUpdateProcessLoop( void )
 	#ifdef GAME_ENABLE_BURGLER
 		case FRAMEWORK_STATE_BURGLER         : processBurglerLoop();            break;
 	#endif
+	#ifdef GAME_ENABLE_CAT_AND_MOUSE
+		case FRAMEWORK_STATE_CAT_AND_MOUSE   : processCatAndMouseLoop();	break;
+	#endif
 
 		// error, reset to main menu
 		default:
@@ -506,6 +522,9 @@ void frameWorkUpdateInputLoop( void )
 	#endif
 	#ifdef GAME_ENABLE_BURGLER
 		case FRAMEWORK_STATE_BURGLER         : processBurglerInput();            break;
+	#endif
+	#ifdef GAME_ENABLE_CAT_AND_MOUSE
+		case FRAMEWORK_STATE_CAT_AND_MOUSE   : processCatAndMouseInput();	break;
 	#endif
 
 		default: break;

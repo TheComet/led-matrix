@@ -11,12 +11,13 @@
 
 //#define GAME_ENABLE_COLOUR_DEMO
 //#define GAME_ENABLE_SNAKE
-#define GAME_ENABLE_GAME_OF_LIFE
+//#define GAME_ENABLE_GAME_OF_LIFE
 //#define GAME_ENABLE_TRON
 //#define GAME_ENABLE_TETRIS
 //#define GAME_ENABLE_SPACE_INVADERS
 //#define GAME_ENABLE_PONG
 //#define GAME_ENABLE_BURGLER
+#define GAME_ENABLE_CAT_AND_MOUSE
 
 // ----------------------------------------------------------------------
 // Will count the commented games so the menu knows

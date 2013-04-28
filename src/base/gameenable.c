@@ -37,5 +37,8 @@ unsigned char getGameCount( void )
 #ifdef GAME_ENABLE_BURGLER
 	gameCount++;
 #endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+	gameCount++;
+#endif
 	return gameCount-1;
 }
