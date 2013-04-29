@@ -433,6 +433,24 @@ void processGameOfLifeInput( void )
 }
 
 // ----------------------------------------------------------------------
+// draws the menu icon for game of life
+void drawGameOfLifeMenuIcon( void )
+{
+	unsigned char x, y, i;
+	for( i = 0; i != 40; i++ )
+	{
+		x = rnd() & 0x0F;
+		y = rnd() & 0x0F;
+		if( x < 3 ) x = 3;
+		if( x > 12 ) x = 3+(x-12);
+		if( y < 3 ) y = 3;
+		if( y > 12 ) y = 3+(y-12);
+		dot( &x, &y, &GREEN );
+	}
+		
+}
+
+// ----------------------------------------------------------------------
 // randomizes buffer
 void randomizeFrameBuffer( void )
 {

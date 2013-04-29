@@ -22,5 +22,6 @@ struct Tetris_t
 void loadTetris( unsigned short* frameBuffer, unsigned char* playerCount );
 void processTetrisLoop( void );
 void processTetrisInput( void );
+void drawTetrisMenuIcon( void );
 
 #endif // _TETRIS_H_

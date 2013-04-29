@@ -39,4 +39,10 @@ void processBurglerLoop( void )
 void processBurglerInput( void )
 {
 }
+
+// ----------------------------------------------------------------------
+// draws the menu icon for burgler
+void drawBurglerMenuIcon( void )
+{
+}
 #endif // GAME_ENABLE_BURGLER

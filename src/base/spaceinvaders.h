@@ -22,5 +22,6 @@ struct SpaceInvaders_t
 void loadSpaceInvaders( unsigned short* frameBuffer, unsigned char* playerCount );
 void processSpaceInvadersLoop( void );
 void processSpaceInvadersInput( void );
+void drawSpaceInvadersMenuIcon( void );
 
 #endif // _SPACEINVADERS_H_

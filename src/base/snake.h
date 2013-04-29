@@ -59,5 +59,6 @@ struct Snake_t
 void loadSnake( unsigned short* frameBuffer, unsigned char* playerCount );
 void processSnakeLoop( void );
 void processSnakeInput( void );
+void drawSnakeMenuIcon( void );
 
 #endif // _SNAKE_H_

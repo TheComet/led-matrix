@@ -40,7 +40,33 @@ void initFrameWork( void )
 	registerGame( loadStartUpScreen, processStartUpScreenLoop, processStartUpScreenInput, drawStartUpScreenIconDummy );
 
 	// register menu
-	//registerGame( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
+	registerGame( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
+
+	// register user added games
+#ifdef GAME_ENABLE_COLOUR_DEMO
+	registerGame( loadColourDemo, processColourDemoLoop, processColourDemoInput, drawColourDemoMenuIcon );
+#endif
+#ifdef GAME_ENABLE_SNAKE
+	registerGame( loadSnake, processSnakeLoop, processSnakeInput, drawSnakeMenuIcon );
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
+	registerGame( loadGameOfLife, processGameOfLifeLoop, processGameOfLifeInput, drawGameOfLifeMenuIcon );
+#endif
+#ifdef GAME_ENABLE_TRON
+	registerGame( loadTron, processTronLoop, processTronInput, drawTronMenuIcon );
+#endif
+#ifdef GAME_ENABLE_TETRIS
+	registerGame( loadTetris, processTetrisLoop, processTetrisInput, drawTetrisMenuIcon );
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+	registerGame( loadSpaceInvaders, processSpaceInvadersLoop, processSpaceInvadersInput, drawSpaceInvadersMenuIcon );
+#endif
+#ifdef GAME_ENABLE_PONG
+	registerGame( loadPong, processPongLoop, processPongInput, drawPongMenuIcon );
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	registerGame( loadBurgler, processBurglerLoop, processBurglerInput, drawBurglerMenuIcon );
+#endif
 
 	// load startup screen
 	unsigned char gameSelected = 0;
@@ -126,14 +152,14 @@ void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t proc
 {
 
 	// check for free slots
-	if( FrameWork.gamesRegistered+1 == MAX_GAMES ) return;
+	if( FrameWork.gamesRegistered == MAX_GAMES ) return;
 
 	// register game
-	FrameWork.gamesRegistered++;
 	FrameWork.game[ FrameWork.gamesRegistered ].load = loadFunction;
 	FrameWork.game[ FrameWork.gamesRegistered ].processLoop = processLoopFunction;
 	FrameWork.game[ FrameWork.gamesRegistered ].processInput = processInputFunction;
 	FrameWork.game[ FrameWork.gamesRegistered ].drawMenuIcon = drawMenuIconFunction;
+	FrameWork.gamesRegistered++;
 }
 
 // ----------------------------------------------------------------------
@@ -180,7 +206,25 @@ void startGame( unsigned char* gameSelected, unsigned char* playerCount )
 // end the game
 void endGame( void )
 {
-	loadMenu();
+
+	// load the menu
+	FrameWork.gameSelected = 1; unsigned char discard;
+	FrameWork.game[ 1 ].load( FrameWork.frameBuffer, &discard );
+}
+
+// ----------------------------------------------------------------------
+// updates menu icon
+void menuUpdateIcon( unsigned char* selected )
+{
+
+	// clear icon space
+	unsigned char x1=3, x2=12;
+	fillBox( &x1, &x1, &x2, &x2, &BLACK );
+	menuDrawLeftArrow( 0 );
+	menuDrawRightArrow( 0 );
+
+	// call draw function
+	FrameWork.game[ *selected ].drawMenuIcon();
 }
 
 // ----------------------------------------------------------------------

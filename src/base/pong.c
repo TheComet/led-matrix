@@ -33,4 +33,10 @@ void processPongLoop( void )
 void processPongInput( void )
 {
 }
+
+// ----------------------------------------------------------------------
+// draws the menu icon for pong
+void drawPongMenuIcon( void )
+{
+}
 #endif // GAME_ENABLE_PONG

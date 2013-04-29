@@ -65,15 +65,14 @@ DUMMY
 // ----------------------------------------------------------------------
 
 void initMenu( void );
-void loadMenu( void );
+void loadMenu( unsigned short* frameBuffer, unsigned char* playerCount );
 void processMenuLoop( void );
 void processMenuInput( void );
+void drawMenuIconDummy( void );
 void menuDrawFrame( void );
 void menuDrawLeftArrow( unsigned char clear );
 void menuDrawRightArrow( unsigned char clear );
 void menuDrawStartArrow( unsigned char offset );
 void menuDrawJoinArrows( unsigned char* playerList );
-void menuClearIcon( void );
-void menuUpdateIcon( unsigned char* selected );
 
 #endif // _MENU_H_

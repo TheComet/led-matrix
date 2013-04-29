@@ -26,5 +26,6 @@ void loadColourDemo( unsigned short* frameBuffer, unsigned char* playerCount );
 void processColourDemoLoop( void );
 void processColourDemoInput( void );
 void colourDemoDrawFrameBuffer( void );
+void drawColourDemoMenuIcon( void );
 
 #endif // _COLOURDEMO_H_
