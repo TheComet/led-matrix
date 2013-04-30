@@ -21,7 +21,7 @@ void initDevice( void )
 	cfgSystemClock();
 
 	// wait, so other micro controller definately starts up before we start sending data
-	//__delay_cycles( 200000 );
+	__delay_cycles( 300000 );
 
 	// configure timers
 	cfgTimerA();
