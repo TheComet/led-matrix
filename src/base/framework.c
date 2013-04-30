@@ -14,33 +14,15 @@
 #include "gameenable.h"
 
 // added games
-#ifdef GAME_ENABLE_SNAKE
-	#include "snake.h"
-#endif
-#ifdef GAME_ENABLE_COLOUR_DEMO
-	#include "colourdemo.h"
-#endif
-#ifdef GAME_ENABLE_GAME_OF_LIFE
-	#include "gameoflife.h"
-#endif
-#ifdef GAME_ENABLE_TRON
-	#include "tron.h"
-#endif
-#ifdef GAME_ENABLE_SPACE_INVADERS
-	#include "spaceinvaders.h"
-#endif
-#ifdef GAME_ENABLE_TETRIS
-	#include "tetris.h"
-#endif
-#ifdef GAME_ENABLE_PONG
-	#include "pong.h"
-#endif
-#ifdef GAME_ENABLE_BURGLER
-	#include "burgler.h"
-#endif
-#ifdef GAME_ENABLE_CAT_AND_MOUSE
-	#include "catandmouse.h"
-#endif
+#include "snake.h"
+#include "colourdemo.h"
+#include "gameoflife.h"
+#include "tron.h"
+#include "spaceinvaders.h"
+#include "tetris.h"
+#include "pong.h"
+#include "burgler.h"
+#include "catandmouse.h"
 
 static struct FrameWork_t FrameWork;
 
@@ -48,11 +30,52 @@ static struct FrameWork_t FrameWork;
 // initialise framework
 void initFrameWork( void )
 {
+
+	// set initial values
 	FrameWork.updateCounter = 0;
 	FrameWork.updateDivider = 1;
 	FrameWork.updateFlag = 0;
-	FrameWork.state = FRAMEWORK_STATE_START_UP_SCREEN;
-	loadStartUpScreen();
+	FrameWork.gamesRegistered = 0;
+
+	// register start screen
+	registerGame( loadStartUpScreen, processStartUpScreenLoop, processStartUpScreenInput, drawStartUpScreenIconDummy );
+
+	// register menu
+	registerGame( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
+
+	// register user added games
+#ifdef GAME_ENABLE_COLOUR_DEMO
+	registerGame( loadColourDemo, processColourDemoLoop, processColourDemoInput, drawColourDemoMenuIcon );
+#endif
+#ifdef GAME_ENABLE_SNAKE
+	registerGame( loadSnake, processSnakeLoop, processSnakeInput, drawSnakeMenuIcon );
+#endif
+#ifdef GAME_ENABLE_GAME_OF_LIFE
+	registerGame( loadGameOfLife, processGameOfLifeLoop, processGameOfLifeInput, drawGameOfLifeMenuIcon );
+#endif
+#ifdef GAME_ENABLE_TRON
+	registerGame( loadTron, processTronLoop, processTronInput, drawTronMenuIcon );
+#endif
+#ifdef GAME_ENABLE_TETRIS
+	registerGame( loadTetris, processTetrisLoop, processTetrisInput, drawTetrisMenuIcon );
+#endif
+#ifdef GAME_ENABLE_SPACE_INVADERS
+	registerGame( loadSpaceInvaders, processSpaceInvadersLoop, processSpaceInvadersInput, drawSpaceInvadersMenuIcon );
+#endif
+#ifdef GAME_ENABLE_PONG
+	registerGame( loadPong, processPongLoop, processPongInput, drawPongMenuIcon );
+#endif
+#ifdef GAME_ENABLE_BURGLER
+	registerGame( loadBurgler, processBurglerLoop, processBurglerInput, drawBurglerMenuIcon );
+#endif
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
+	registerGame( loadCatAndMouse, processCatAndMouseLoop, processCatAndMouseInput, drawCatAndMouseMenuIcon );
+#endif
+
+	// load startup screen
+	unsigned char gameSelected = 0;
+	unsigned char playerCount = 0;
+	startGame( &gameSelected, &playerCount );
 }
 
 // ----------------------------------------------------------------------
@@ -128,6 +151,22 @@ void pollPorts( void )
 }
 
 // ----------------------------------------------------------------------
+// register a game with the framework
+void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction )
+{
+
+	// check for free slots
+	if( FrameWork.gamesRegistered == MAX_GAMES ) return;
+
+	// register game
+	FrameWork.game[ FrameWork.gamesRegistered ].load = loadFunction;
+	FrameWork.game[ FrameWork.gamesRegistered ].processLoop = processLoopFunction;
+	FrameWork.game[ FrameWork.gamesRegistered ].processInput = processInputFunction;
+	FrameWork.game[ FrameWork.gamesRegistered ].drawMenuIcon = drawMenuIconFunction;
+	FrameWork.gamesRegistered++;
+}
+
+// ----------------------------------------------------------------------
 // sets the refresh rate
 void setRefreshRate( unsigned char refresh )
 {
@@ -160,101 +199,36 @@ unsigned char rnd( void )
 }
 
 // ----------------------------------------------------------------------
-// starts the colour demo
-#ifdef GAME_ENABLE_COLOUR_DEMO
-void startColourDemo( unsigned char* playerCount )
+// starts a game
+void startGame( unsigned char* gameSelected, unsigned char* playerCount )
 {
-	loadColourDemo( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_COLOUR_DEMO;
+	FrameWork.game[ *gameSelected ].load( FrameWork.frameBuffer, playerCount );
+	FrameWork.gameSelected = *gameSelected;
 }
-#endif
-
-// ----------------------------------------------------------------------
-// starts snake
-#ifdef GAME_ENABLE_SNAKE
-void startSnake( unsigned char* playerCount )
-{
-	loadSnake( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_SNAKE;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts the game of life
-#ifdef GAME_ENABLE_GAME_OF_LIFE
-void startGameOfLife( unsigned char* playerCount )
-{
-	loadGameOfLife( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_GAME_OF_LIFE;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts tron
-#ifdef GAME_ENABLE_TRON
-void startTron( unsigned char* playerCount )
-{
-	loadTron( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_TRON;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts space invaders
-#ifdef GAME_ENABLE_SPACE_INVADERS
-void startSpaceInvaders( unsigned char* playerCount )
-{
-	loadSpaceInvaders( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_SPACE_INVADERS;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts tetris
-#ifdef GAME_ENABLE_TETRIS
-void startTetris( unsigned char* playerCount )
-{
-	loadTetris( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_TETRIS;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts pong
-#ifdef GAME_ENABLE_PONG
-void startPong( unsigned char* playerCount )
-{
-	loadPong( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_PONG;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts burgler
-#ifdef GAME_ENABLE_BURGLER
-void startBurgler( unsigned char* playerCount )
-{
-	loadBurgler( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_BURGLER;
-}
-#endif
-
-// ----------------------------------------------------------------------
-// starts cat and mouse
-#ifdef GAME_ENABLE_CAT_AND_MOUSE
-void startCatAndMouse( unsigned char* playerCount )
-{
-	loadCatAndMouse( FrameWork.frameBuffer, playerCount );
-	FrameWork.state = FRAMEWORK_STATE_CAT_AND_MOUSE;
-}
-#endif
 
 // ----------------------------------------------------------------------
 // end the game
 void endGame( void )
 {
-	loadMenu( FrameWork.frameBuffer );
-	FrameWork.state = FRAMEWORK_STATE_MENU;
+
+	// load the menu
+	FrameWork.gameSelected = 1; unsigned char discard;
+	FrameWork.game[ 1 ].load( FrameWork.frameBuffer, &discard );
+}
+
+// ----------------------------------------------------------------------
+// updates menu icon
+void menuUpdateIcon( unsigned char* selected )
+{
+
+	// clear icon space
+	unsigned char x1=3, x2=12;
+	fillBox( &x1, &x1, &x2, &x2, &BLACK );
+	menuDrawLeftArrow( 0 );
+	menuDrawRightArrow( 0 );
+
+	// call draw function
+	FrameWork.game[ *selected ].drawMenuIcon();
 }
 
 // ----------------------------------------------------------------------
@@ -438,51 +412,13 @@ unsigned char sqrt( unsigned short* value )
 
 // ----------------------------------------------------------------------
 // call update loop of current game running - passes the process on to
-// the current "main loop" using a state machine for different modes
+// the current "main loop" by using a callback
 // this allows expandability for more games/demos in the future
 void frameWorkUpdateProcessLoop( void )
 {
-	switch( FrameWork.state )
-	{
-
-		// built in
-		case FRAMEWORK_STATE_MENU : processMenuLoop();                          break;
-		case FRAMEWORK_STATE_START_UP_SCREEN : processStartUpScreenLoop();      break;
-
-		// added games
-	#ifdef GAME_ENABLE_SNAKE
-		case FRAMEWORK_STATE_SNAKE           : processSnakeLoop();              break;
-	#endif
-	#ifdef GAME_ENABLE_COLOUR_DEMO
-		case FRAMEWORK_STATE_COLOUR_DEMO     : processColourDemoLoop();         break;
-	#endif
-	#ifdef GAME_ENABLE_GAME_OF_LIFE
-		case FRAMEWORK_STATE_GAME_OF_LIFE    : processGameOfLifeLoop();         break;
-	#endif
-	#ifdef GAME_ENABLE_TRON
-		case FRAMEWORK_STATE_TRON            : processTronLoop();               break;
-	#endif
-	#ifdef GAME_ENABLE_SPACE_INVADERS
-		case FRAMEWORK_STATE_SPACE_INVADERS  : processSpaceInvadersLoop();      break;
-	#endif
-	#ifdef GAME_ENABLE_TETRIS
-		case FRAMEWORK_STATE_TETRIS          : processTetrisLoop();             break;
-	#endif
-	#ifdef GAME_ENABLE_PONG
-		case FRAMEWORK_STATE_PONG            : processPongLoop();               break;
-	#endif
-	#ifdef GAME_ENABLE_BURGLER
-		case FRAMEWORK_STATE_BURGLER         : processBurglerLoop();            break;
-	#endif
-	#ifdef GAME_ENABLE_CAT_AND_MOUSE
-		case FRAMEWORK_STATE_CAT_AND_MOUSE   : processCatAndMouseLoop();	break;
-	#endif
-
-		// error, reset to main menu
-		default:
-			FrameWork.state = FRAMEWORK_STATE_MENU;
-			break;
-	}
+	
+	// callback selected game's main loop
+	FrameWork.game[ FrameWork.gameSelected ].processLoop();
 }
 
 // ----------------------------------------------------------------------
@@ -490,45 +426,8 @@ void frameWorkUpdateProcessLoop( void )
 void frameWorkUpdateInputLoop( void )
 {
 
-	// call input loop of current game
-	switch( FrameWork.state )
-	{
-
-		// built in
-		case FRAMEWORK_STATE_MENU                  : processMenuInput();               break;
-		case FRAMEWORK_STATE_START_UP_SCREEN       : processStartUpScreenInput();      break;
-
-		// added games
-	#ifdef GAME_ENABLE_SNAKE
-		case FRAMEWORK_STATE_SNAKE           : processSnakeInput();              break;
-	#endif
-	#ifdef GAME_ENABLE_COLOUR_DEMO
-		case FRAMEWORK_STATE_COLOUR_DEMO     : processColourDemoInput();         break;
-	#endif
-	#ifdef GAME_ENABLE_GAME_OF_LIFE
-		case FRAMEWORK_STATE_GAME_OF_LIFE    : processGameOfLifeInput();         break;
-	#endif
-	#ifdef GAME_ENABLE_TRON
-		case FRAMEWORK_STATE_TRON            : processTronInput();               break;
-	#endif
-	#ifdef GAME_ENABLE_SPACE_INVADERS
-		case FRAMEWORK_STATE_SPACE_INVADERS  : processSpaceInvadersInput();      break;
-	#endif
-	#ifdef GAME_ENABLE_TETRIS
-		case FRAMEWORK_STATE_TETRIS          : processTetrisInput();             break;
-	#endif
-	#ifdef GAME_ENABLE_PONG
-		case FRAMEWORK_STATE_PONG            : processPongInput();               break;
-	#endif
-	#ifdef GAME_ENABLE_BURGLER
-		case FRAMEWORK_STATE_BURGLER         : processBurglerInput();            break;
-	#endif
-	#ifdef GAME_ENABLE_CAT_AND_MOUSE
-		case FRAMEWORK_STATE_CAT_AND_MOUSE   : processCatAndMouseInput();	break;
-	#endif
-
-		default: break;
-	}
+	// callback selected game's input loop
+	FrameWork.game[ FrameWork.gameSelected ].processInput();
 }
 
 // ----------------------------------------------------------------------

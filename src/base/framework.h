@@ -38,6 +38,20 @@ static const signed char sinus[30] = { 0x0,0x1A,0x33,0x4A,0x5E,0x6D,0x78,0x7E,0x
 // Structs
 // ----------------------------------------------------------------------
 
+// for callback registration
+typedef void (*loadFunction_cb_t)(unsigned short* frameBuffer, unsigned char* userData);
+typedef void (*processLoopFunction_cb_t)(void);
+typedef void (*processInputFunction_cb_t)(void);
+typedef void (*drawMenuIconFunction_cb_t)(void);
+struct FrameWork_Registered_Games_t
+{
+	loadFunction_cb_t load;
+	processLoopFunction_cb_t processLoop;
+	processInputFunction_cb_t processInput;
+	drawMenuIconFunction_cb_t drawMenuIcon;
+};
+
+// for input
 struct FrameWork_Buttons_t
 {
 	unsigned char oldButtonState;
@@ -46,94 +60,47 @@ struct FrameWork_Buttons_t
 	unsigned char menuButtonTracker;
 };
 
+// Framework struct
 struct FrameWork_t
 {
+
+	// input
 	struct FrameWork_Buttons_t player[4];
+	unsigned char menuButtonFlags;
+
+	// game registration
+	struct FrameWork_Registered_Games_t game[MAX_GAMES];
+	unsigned char gamesRegistered;
+
+	// frame rate
 	volatile unsigned char updateDivider;
 	volatile unsigned char updateCounter;
 	volatile unsigned char updateFlag;
-	unsigned char state;
+
+	// misc
 	unsigned short frameBuffer[256];
 	unsigned short randomSeed;
-	unsigned char menuButtonFlags;
-};
-
-// ----------------------------------------------------------------------
-// Enumerators
-// ----------------------------------------------------------------------
-
-// states
-enum FrameWork_State_e
-{
-#ifdef GAME_ENABLE_SNAKE
-	FRAMEWORK_STATE_SNAKE,
-#endif
-#ifdef GAME_ENABLE_COLOUR_DEMO
-	FRAMEWORK_STATE_COLOUR_DEMO,
-#endif
-#ifdef GAME_ENABLE_GAME_OF_LIFE
-	FRAMEWORK_STATE_GAME_OF_LIFE,
-#endif
-#ifdef GAME_ENABLE_TRON
-	FRAMEWORK_STATE_TRON,
-#endif
-#ifdef GAME_ENABLE_SPACE_INVADERS
-	FRAMEWORK_STATE_SPACE_INVADERS,
-#endif
-#ifdef GAME_ENABLE_TETRIS
-	FRAMEWORK_STATE_TETRIS,
-#endif
-#ifdef GAME_ENABLE_PONG
-	FRAMEWORK_STATE_PONG,
-#endif
-#ifdef GAME_ENABLE_BURGLER
-	FRAMEWORK_STATE_BURGLER,
-#endif
-#ifdef GAME_ENABLE_CAT_AND_MOUSE
-	FRAMEWORK_STATE_CAT_AND_MOUSE,
-#endif
-	FRAMEWORK_STATE_MENU,
-	FRAMEWORK_STATE_START_UP_SCREEN
+	unsigned char gameSelected;
 };
 
 // ----------------------------------------------------------------------
 // Function Prototypes
 // ----------------------------------------------------------------------
 
+// framework specific functions, which shouldn't be called
+// by anything else other than the framework
 void initFrameWork( void );
 void startFrameWork( void );
 void pollPorts( void );
 void frameWorkUpdateProcessLoop( void );
 void frameWorkUpdateInputLoop( void );
+void menuUpdateIcon( unsigned char* selected );
+
+// used to register a game to the framework for callbacks
+void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction );
 
 // change applications
-#ifdef GAME_ENABLE_COLOUR_DEMO
-void startColourDemo( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_SNAKE
-void startSnake( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_GAME_OF_LIFE
-void startGameOfLife( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_TRON
-void startTron( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_SPACE_INVADERS
-void startSpaceInvaders( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_TETRIS
-void startTetris( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_PONG
-void startPong( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_BURGLER
-void startBurgler( unsigned char* playerCount );
-#endif
-#ifdef GAME_ENABLE_CAT_AND_MOUSE
-void startCatAndMouse( unsigned char* playerCount );
-#endif
+void startGame( unsigned char* gameSelected, unsigned char* playerCount );
 void endGame( void );
 
 // misc

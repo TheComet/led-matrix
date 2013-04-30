@@ -22,5 +22,6 @@ struct Pong_t
 void loadPong( unsigned short* frameBuffer, unsigned char* playerCount );
 void processPongLoop( void );
 void processPongInput( void );
+void drawPongMenuIcon( void );
 
 #endif // _PONG_H_

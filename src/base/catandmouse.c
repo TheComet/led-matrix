@@ -9,6 +9,9 @@
 #include "catandmouse.h"
 #include "uart.h"
 #include "framework.h"
+#include "gameenable.h"
+
+#ifdef GAME_ENABLE_CAT_AND_MOUSE
 
 static struct CatAndMouse_t CatAndMouse;
 
@@ -66,3 +69,10 @@ void processCatAndMouseInput( void )
 {
 	if( player1ButtonMenu() ) endGame();
 }
+
+// -----------------------------------------------------------------------
+// draw cat and mouse menu icon
+void drawCatAndMouseMenuIcon( void )
+{
+}
+#endif // GAME_ENABLE_CAT_AND_MOUSE

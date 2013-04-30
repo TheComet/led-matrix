@@ -127,4 +127,13 @@ void colourDemoDrawFrameBuffer()
 		}
 	}
 }
+
+// ----------------------------------------------------------------------
+// menu icon
+void drawColourDemoMenuIcon( void )
+{
+	unsigned char x1=3, x2=12;
+	unsigned short cA=0xE00, cB=0x0E0, cC=0x00E, cD=0xEE0;
+	blendColourFillBox( &x1, &x1, &x2, &x2, &cA, &cB, &cC, &cD );
+}
 #endif // GAME_ENABLE_COLOUR_DEMO

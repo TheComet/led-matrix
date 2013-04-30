@@ -28,5 +28,6 @@ struct CatAndMouse_t
 void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCounter );
 void processCatAndMouseLoop( void );
 void processCatAndMouseInput( void );
+void drawCatAndMouseMenuIcon( void );
 
 #endif // _CATANDMOUSE_H_

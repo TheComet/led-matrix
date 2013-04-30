@@ -33,4 +33,10 @@ void processSpaceInvadersLoop( void )
 void processSpaceInvadersInput( void )
 {
 }
+
+// ----------------------------------------------------------------------
+// draws the space invaders icon for the menu
+void drawSpaceInvadersMenuIcon( void )
+{
+}
 #endif // GAME_ENABLE_SPACE_INVADERS

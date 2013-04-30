@@ -38,5 +38,6 @@ enum Tron_Direction_e
 void loadTron( unsigned short* frameBuffer, unsigned char* playerCount );
 void processTronLoop( void );
 void processTronInput( void );
+void drawTronMenuIcon( void );
 
 #endif // _TRON_H_

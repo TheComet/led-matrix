@@ -22,5 +22,6 @@ struct Burgler_t
 void loadBurgler( unsigned short* frameBuffer, unsigned char* playerCount );
 void processBurglerLoop( void );
 void processBurglerInput( void );
+void drawBurglerMenuIcon( void );
 
 #endif // _BURGLER_H_

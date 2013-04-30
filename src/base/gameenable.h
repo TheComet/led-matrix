@@ -5,18 +5,20 @@
 #ifndef _GAMEENABLE_H_
 	#define _GAMEENABLE_H_
 
+#define MAX_GAMES 10
+
 // ----------------------------------------------------------------------
 // Comment in the games you would like enabled
 // ----------------------------------------------------------------------
 
-//#define GAME_ENABLE_COLOUR_DEMO
-//#define GAME_ENABLE_SNAKE
+#define GAME_ENABLE_COLOUR_DEMO
+#define GAME_ENABLE_SNAKE
 //#define GAME_ENABLE_GAME_OF_LIFE
-//#define GAME_ENABLE_TRON
-//#define GAME_ENABLE_TETRIS
-//#define GAME_ENABLE_SPACE_INVADERS
-//#define GAME_ENABLE_PONG
-//#define GAME_ENABLE_BURGLER
+#define GAME_ENABLE_TRON
+#define GAME_ENABLE_TETRIS
+#define GAME_ENABLE_SPACE_INVADERS
+#define GAME_ENABLE_PONG
+#define GAME_ENABLE_BURGLER
 #define GAME_ENABLE_CAT_AND_MOUSE
 
 // ----------------------------------------------------------------------

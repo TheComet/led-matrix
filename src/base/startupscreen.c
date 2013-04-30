@@ -44,8 +44,14 @@ void drawButtonHelp( void )
 }
 
 // ----------------------------------------------------------------------
+// start up screen icon dummy, to satisfy the framework
+void drawStartUpScreenIconDummy( void )
+{
+}
+
+// ----------------------------------------------------------------------
 // load start up screen
-void loadStartUpScreen( void )
+void loadStartUpScreen( unsigned short* frameBuffer, unsigned char* playerCount )
 {
 
 	// reset values

@@ -51,6 +51,7 @@ enum GameOfLife_States_e
 void loadGameOfLife( unsigned short* frameBuffer, unsigned char* playerCount );
 void processGameOfLifeLoop( void );
 void processGameOfLifeInput( void );
+void drawGameOfLifeMenuIcon( void );
 void randomizeFrameBuffer( void );
 void gameOfLifeDrawFrameBufferNoCheck( void );
 void gameOfLifeDrawFrameBuffer( void );
