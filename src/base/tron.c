@@ -32,21 +32,21 @@ void loadTron( unsigned short* frameBuffer, unsigned char* playerCount )
 	dot(&Tron.Player[0].X, &Tron.Player[0].Y, &MAGENTA);
 
   	// player 2  Start Position
-	Tron.Player[1].X = 15;
-	Tron.Player[1].Y = 8;
-	Tron.Player[1].Direction = TRON_DIRECTION_UP;
+	Tron.Player[1].X = 7;
+	Tron.Player[1].Y = 0;
+	Tron.Player[1].Direction = TRON_DIRECTION_DOWN;
 	dot(&Tron.Player[1].X, &Tron.Player[1].Y, &GREEN);
 
   	// player 3  Start Position
-	Tron.Player[2].X = 8;
-	Tron.Player[2].Y = 0;
-	Tron.Player[2].Direction = TRON_DIRECTION_UP;
+	Tron.Player[2].X = 0;
+	Tron.Player[2].Y = 8;
+	Tron.Player[2].Direction = TRON_DIRECTION_RIGHT;
 	dot(&Tron.Player[2].X, &Tron.Player[2].Y, &YELLOW);
 
   	// player 4  Start Position
-	Tron.Player[3].X = 0;
-	Tron.Player[3].Y = 8;
-	Tron.Player[3].Direction = TRON_DIRECTION_UP;
+	Tron.Player[3].X = 15;
+	Tron.Player[3].Y = 7;
+	Tron.Player[3].Direction = TRON_DIRECTION_LEFT;
 	dot(&Tron.Player[3].X, &Tron.Player[3].Y, &BLUE);
   
      
@@ -62,39 +62,27 @@ void loadTron( unsigned short* frameBuffer, unsigned char* playerCount )
 // process tron loop
 void processTronLoop( void )
 {
-        
-switch(Tron.Player[0].Direction){
-    case      TRON_DIRECTION_UP: 
-      Tron.Player[0].Y --;
-    break;
-    case      TRON_DIRECTION_DOWN: 
-      Tron.Player[0].Y ++;
-    break;
-    case      TRON_DIRECTION_LEFT: 
-      Tron.Player[0].X --;
-    break;
-    case      TRON_DIRECTION_RIGHT: 
-      Tron.Player[0].X ++;
-    break;
-}
-switch(Tron.Player[1].Direction){
-    case      TRON_DIRECTION_UP: 
-      Tron.Player[1].Y --;
-    break;
-    case      TRON_DIRECTION_DOWN: 
-      Tron.Player[1].Y ++;
-    break;
-    case      TRON_DIRECTION_LEFT: 
-      Tron.Player[1].X --;
-    break;
-    case      TRON_DIRECTION_RIGHT: 
-      Tron.Player[1].X ++;
-    break;
-    
-  }
+
+unsigned char j;
+for (j=0;j!=4;j++){        
+	switch(Tron.Player[j].Direction){
+	    case      TRON_DIRECTION_UP: 
+	      Tron.Player[j].Y --;
+	    break;
+	    case      TRON_DIRECTION_DOWN: 
+	      Tron.Player[j].Y ++;
+	    break;
+	    case      TRON_DIRECTION_LEFT: 
+	      Tron.Player[j].X --;
+	    break;
+	    case      TRON_DIRECTION_RIGHT: 
+	      Tron.Player[j].X ++;
+	    break;
+	}
+
   
-    Tron.Player[0].X &= 0x0F;
-    Tron.Player[0].Y &= 0x0F;
+    	Tron.Player[j].X &= 0x0F;
+    	Tron.Player[j].Y &= 0x0F;
 
 	//Speed
 
@@ -102,17 +90,44 @@ switch(Tron.Player[1].Direction){
 	Tron.Speed ++;
 
 	setRefreshRate( Tron.Speed );
-   
-	// set new position to frame buffer
+
+	//Collision
+	if( (*(Tron.frameBuffer+Tron.Player[j].Y+(Tron.Player[j].X<<4))) & (1<<j) ){
+		
+
+	}
+	
+
+	(*(Tron.frameBuffer+Tron.Player[j].Y+(Tron.Player[j].X<<4))) |= (1<<j);
+
+}   
+	// set new position to frame buffer Player 1
 	*(Tron.frameBuffer+Tron.Player[0].Y+(Tron.Player[0].X<<4)) |=  1;
         dot( &Tron.Player[0].X, &Tron.Player[0].Y, &MAGENTA);
         send();
+
+	// set new position to frame buffer Player 2
+	*(Tron.frameBuffer+Tron.Player[1].Y+(Tron.Player[1].X<<4)) |=  1;
+        dot( &Tron.Player[1].X, &Tron.Player[1].Y, &GREEN);
+        send();
+
+	// set new position to frame buffer Player 3
+	*(Tron.frameBuffer+Tron.Player[2].Y+(Tron.Player[2].X<<4)) |=  1;
+        dot( &Tron.Player[2].X, &Tron.Player[2].Y, &YELLOW);
+        send();
+
+	// set new position to frame buffer Player 4
+	*(Tron.frameBuffer+Tron.Player[3].Y+(Tron.Player[3].X<<4)) |=  1;
+        dot( &Tron.Player[3].X, &Tron.Player[3].Y, &BLUE);
+        send();	
+
 }
 
 // ----------------------------------------------------------------------
 // process tron input
 void processTronInput( void )
 {
+
  
          if (player1ButtonLeft())
           Tron.Player[0].Direction = TRON_DIRECTION_LEFT;
@@ -125,6 +140,45 @@ void processTronInput( void )
 
         if (player1ButtonDown())
           Tron.Player[0].Direction = TRON_DIRECTION_DOWN; 
+
+
+         if (player2ButtonLeft())
+          Tron.Player[1].Direction = TRON_DIRECTION_RIGHT;
+        
+        if (player2ButtonRight())
+          Tron.Player[1].Direction = TRON_DIRECTION_LEFT;
+        
+        if (player2ButtonUp())
+          Tron.Player[1].Direction = TRON_DIRECTION_DOWN;        
+
+        if (player2ButtonDown())
+          Tron.Player[1].Direction = TRON_DIRECTION_UP; 
+
+
+         if (player3ButtonLeft())
+          Tron.Player[2].Direction = TRON_DIRECTION_UP;
+        
+        if (player3ButtonRight())
+          Tron.Player[2].Direction = TRON_DIRECTION_DOWN;
+        
+        if (player3ButtonUp())
+          Tron.Player[2].Direction = TRON_DIRECTION_RIGHT;        
+
+        if (player3ButtonDown())
+          Tron.Player[2].Direction = TRON_DIRECTION_LEFT; 
+
+         if (player4ButtonLeft())
+          Tron.Player[3].Direction = TRON_DIRECTION_DOWN;
+        
+        if (player4ButtonRight())
+          Tron.Player[3].Direction = TRON_DIRECTION_UP;
+        
+        if (player4ButtonUp())
+          Tron.Player[3].Direction = TRON_DIRECTION_LEFT;        
+
+        if (player4ButtonDown())
+          Tron.Player[3].Direction = TRON_DIRECTION_RIGHT; 
+	
 
 	// end game with menu button
 	if( player1ButtonMenu() ) endGame();
