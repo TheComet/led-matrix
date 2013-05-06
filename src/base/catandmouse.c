@@ -9,7 +9,7 @@
 #include "catandmouse.h"
 #include "uart.h"
 #include "framework.h"
-#include "gameenable.h"
+#include "moduleenable.h"
 
 #ifdef GAME_ENABLE_CAT_AND_MOUSE
 

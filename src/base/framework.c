@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "menu.h"
 #include "startupscreen.h"
-#include "gameenable.h"
+#include "moduleenable.h"
 
 // added games
 #include "snake.h"
@@ -38,38 +38,38 @@ void initFrameWork( void )
 	FrameWork.gamesRegistered = 0;
 
 	// register start screen
-	registerGame( loadStartUpScreen, processStartUpScreenLoop, processStartUpScreenInput, drawStartUpScreenIconDummy );
+	registerModule( loadStartUpScreen, processStartUpScreenLoop, processStartUpScreenInput, drawStartUpScreenIconDummy );
 
 	// register menu
-	registerGame( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
+	registerModule( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
 
 	// register user added games
 #ifdef GAME_ENABLE_COLOUR_DEMO
-	registerGame( loadColourDemo, processColourDemoLoop, processColourDemoInput, drawColourDemoMenuIcon );
+	registerModule( loadColourDemo, processColourDemoLoop, processColourDemoInput, drawColourDemoMenuIcon );
 #endif
 #ifdef GAME_ENABLE_SNAKE
-	registerGame( loadSnake, processSnakeLoop, processSnakeInput, drawSnakeMenuIcon );
+	registerModule( loadSnake, processSnakeLoop, processSnakeInput, drawSnakeMenuIcon );
 #endif
 #ifdef GAME_ENABLE_GAME_OF_LIFE
-	registerGame( loadGameOfLife, processGameOfLifeLoop, processGameOfLifeInput, drawGameOfLifeMenuIcon );
+	registerModule( loadGameOfLife, processGameOfLifeLoop, processGameOfLifeInput, drawGameOfLifeMenuIcon );
 #endif
 #ifdef GAME_ENABLE_TRON
-	registerGame( loadTron, processTronLoop, processTronInput, drawTronMenuIcon );
+	registerModule( loadTron, processTronLoop, processTronInput, drawTronMenuIcon );
 #endif
 #ifdef GAME_ENABLE_TETRIS
-	registerGame( loadTetris, processTetrisLoop, processTetrisInput, drawTetrisMenuIcon );
+	registerModule( loadTetris, processTetrisLoop, processTetrisInput, drawTetrisMenuIcon );
 #endif
 #ifdef GAME_ENABLE_SPACE_INVADERS
-	registerGame( loadSpaceInvaders, processSpaceInvadersLoop, processSpaceInvadersInput, drawSpaceInvadersMenuIcon );
+	registerModule( loadSpaceInvaders, processSpaceInvadersLoop, processSpaceInvadersInput, drawSpaceInvadersMenuIcon );
 #endif
 #ifdef GAME_ENABLE_PONG
-	registerGame( loadPong, processPongLoop, processPongInput, drawPongMenuIcon );
+	registerModule( loadPong, processPongLoop, processPongInput, drawPongMenuIcon );
 #endif
 #ifdef GAME_ENABLE_BURGLER
-	registerGame( loadBurgler, processBurglerLoop, processBurglerInput, drawBurglerMenuIcon );
+	registerModule( loadBurgler, processBurglerLoop, processBurglerInput, drawBurglerMenuIcon );
 #endif
 #ifdef GAME_ENABLE_CAT_AND_MOUSE
-	registerGame( loadCatAndMouse, processCatAndMouseLoop, processCatAndMouseInput, drawCatAndMouseMenuIcon );
+	registerModule( loadCatAndMouse, processCatAndMouseLoop, processCatAndMouseInput, drawCatAndMouseMenuIcon );
 #endif
 
 	// load startup screen
@@ -152,11 +152,11 @@ void pollPorts( void )
 
 // ----------------------------------------------------------------------
 // register a game with the framework
-void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction )
+void registerModule( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction )
 {
 
 	// check for free slots
-	if( FrameWork.gamesRegistered == MAX_GAMES ) return;
+	if( FrameWork.gamesRegistered == MAX_MODULES ) return;
 
 	// register game
 	FrameWork.game[ FrameWork.gamesRegistered ].load = loadFunction;

@@ -5,7 +5,7 @@
 #ifndef _FRAMEWORK_H_
 	#define _FRAMEWORK_H_
 
-#include "gameenable.h"
+#include "moduleenable.h"
 
 // ----------------------------------------------------------------------
 // global constants
@@ -69,7 +69,7 @@ struct FrameWork_t
 	unsigned char menuButtonFlags;
 
 	// game registration
-	struct FrameWork_Registered_Games_t game[MAX_GAMES];
+	struct FrameWork_Registered_Games_t game[MAX_MODULES];
 	unsigned char gamesRegistered;
 
 	// frame rate
@@ -97,7 +97,7 @@ void frameWorkUpdateInputLoop( void );
 void menuUpdateIcon( unsigned char* selected );
 
 // used to register a game to the framework for callbacks
-void registerGame( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction );
+void registerModule( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction );
 
 // change applications
 void startGame( unsigned char* gameSelected, unsigned char* playerCount );

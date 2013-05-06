@@ -9,7 +9,7 @@
 #include "menu.h"
 #include "uart.h"
 #include "framework.h"
-#include "gameenable.h"
+#include "moduleenable.h"
 
 static struct Menu_t Menu;
 
@@ -82,7 +82,7 @@ void menuDrawJoinArrows( unsigned char* playerList )
 void initMenu( void )
 {
 	Menu.selected  = 2;
-	Menu.gameCount = getGameCount() + 2; // startup screen and menu are 0, 1
+	Menu.gameCount = getModuleCount() + 2; // startup screen and menu are 0, 1
 }
 
 // ----------------------------------------------------------------------

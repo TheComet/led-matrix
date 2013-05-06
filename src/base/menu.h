@@ -5,7 +5,7 @@
 #ifndef _MENU_H_
 	#define _MENU_H_
 
-#include "gameenable.h"
+#include "moduleenable.h"
 
 // ----------------------------------------------------------------------
 // Structs

@@ -9,7 +9,7 @@
 #include "colourdemo.h"
 #include "framework.h"
 #include "uart.h"
-#include "gameenable.h"
+#include "moduleenable.h"
 
 #ifdef GAME_ENABLE_COLOUR_DEMO
 

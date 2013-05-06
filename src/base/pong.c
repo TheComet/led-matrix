@@ -9,7 +9,7 @@
 #include "framework.h"
 #include "uart.h"
 #include "pong.h"
-#include "gameenable.h"
+#include "moduleenable.h"
 
 #ifdef GAME_ENABLE_PONG
 
