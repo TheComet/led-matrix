@@ -96,6 +96,7 @@ void loadMenu( unsigned short* frameBuffer, unsigned char* playerCount )
 	// reset values
 	Menu.toggleArrow = 0;
 	Menu.playerList = 0;
+	Menu.selected = 1;
 
 	// draw current game
 	cls();

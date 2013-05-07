@@ -212,7 +212,7 @@ void endGame( void )
 {
 
 	// load the menu
-	FrameWork.gameSelected = 1; unsigned char discard;
+	FrameWork.gameSelected = 1; unsigned char discard=0;
 	FrameWork.game[ 1 ].load( FrameWork.frameBuffer, &discard );
 }
 
