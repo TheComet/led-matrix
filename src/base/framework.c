@@ -44,31 +44,31 @@ void initFrameWork( void )
 	registerModule( loadMenu, processMenuLoop, processMenuInput, drawMenuIconDummy );
 
 	// register user added games
-#ifdef GAME_ENABLE_COLOUR_DEMO
+#ifdef MODULE_ENABLE_COLOUR_DEMO
 	registerModule( loadColourDemo, processColourDemoLoop, processColourDemoInput, drawColourDemoMenuIcon );
 #endif
-#ifdef GAME_ENABLE_SNAKE
+#ifdef MODULE_ENABLE_SNAKE
 	registerModule( loadSnake, processSnakeLoop, processSnakeInput, drawSnakeMenuIcon );
 #endif
-#ifdef GAME_ENABLE_GAME_OF_LIFE
+#ifdef MODULE_ENABLE_GAME_OF_LIFE
 	registerModule( loadGameOfLife, processGameOfLifeLoop, processGameOfLifeInput, drawGameOfLifeMenuIcon );
 #endif
-#ifdef GAME_ENABLE_TRON
+#ifdef MODULE_ENABLE_TRON
 	registerModule( loadTron, processTronLoop, processTronInput, drawTronMenuIcon );
 #endif
-#ifdef GAME_ENABLE_TETRIS
+#ifdef MODULE_ENABLE_TETRIS
 	registerModule( loadTetris, processTetrisLoop, processTetrisInput, drawTetrisMenuIcon );
 #endif
-#ifdef GAME_ENABLE_SPACE_INVADERS
+#ifdef MODULE_ENABLE_SPACE_INVADERS
 	registerModule( loadSpaceInvaders, processSpaceInvadersLoop, processSpaceInvadersInput, drawSpaceInvadersMenuIcon );
 #endif
-#ifdef GAME_ENABLE_PONG
+#ifdef MODULE_ENABLE_PONG
 	registerModule( loadPong, processPongLoop, processPongInput, drawPongMenuIcon );
 #endif
-#ifdef GAME_ENABLE_BURGLER
+#ifdef MODULE_ENABLE_BURGLER
 	registerModule( loadBurgler, processBurglerLoop, processBurglerInput, drawBurglerMenuIcon );
 #endif
-#ifdef GAME_ENABLE_CAT_AND_MOUSE
+#ifdef MODULE_ENABLE_CAT_AND_MOUSE
 	registerModule( loadCatAndMouse, processCatAndMouseLoop, processCatAndMouseInput, drawCatAndMouseMenuIcon );
 #endif
 

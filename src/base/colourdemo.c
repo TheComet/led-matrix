@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_COLOUR_DEMO
+#ifdef MODULE_ENABLE_COLOUR_DEMO
 
 static struct ColourDemo_t ColourDemo;
 

@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_TETRIS
+#ifdef MODULE_ENABLE_TETRIS
 
 static struct Tetris_t Tetris;
 

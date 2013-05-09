@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_SPACE_INVADERS
+#ifdef MODULE_ENABLE_SPACE_INVADERS
 
 static struct SpaceInvaders_t SpaceInvaders;
 

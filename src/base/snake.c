@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_SNAKE
+#ifdef MODULE_ENABLE_SNAKE
 
 static struct Snake_t Snake;
 

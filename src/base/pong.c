@@ -11,7 +11,7 @@
 #include "pong.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_PONG
+#ifdef MODULE_ENABLE_PONG
 
 struct Pong_t Pong;
 

@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_GAME_OF_LIFE
+#ifdef MODULE_ENABLE_GAME_OF_LIFE
 
 static struct GameOfLife_t GameOfLife;
 

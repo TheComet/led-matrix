@@ -81,7 +81,6 @@ void menuDrawJoinArrows( unsigned char* playerList )
 // initialises some values for the menu
 void initMenu( void )
 {
-	Menu.selected  = 2;
 	Menu.gameCount = getModuleCount() + 2; // startup screen and menu are 0, 1
 }
 
@@ -96,7 +95,7 @@ void loadMenu( unsigned short* frameBuffer, unsigned char* playerCount )
 	// reset values
 	Menu.toggleArrow = 0;
 	Menu.playerList = 0;
-	Menu.selected = 1;
+	Menu.selected = 2;
 
 	// draw current game
 	cls();

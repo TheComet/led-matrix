@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_BURGLER
+#ifdef MODULE_ENABLE_BURGLER
 
 static struct Burgler_t Burgler;
 

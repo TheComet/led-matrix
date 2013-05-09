@@ -11,7 +11,7 @@
 #include "uart.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_TRON
+#ifdef MODULE_ENABLE_TRON
 
 static struct Tron_t Tron;
 

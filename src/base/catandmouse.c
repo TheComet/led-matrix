@@ -11,7 +11,7 @@
 #include "framework.h"
 #include "moduleenable.h"
 
-#ifdef GAME_ENABLE_CAT_AND_MOUSE
+#ifdef MODULE_ENABLE_CAT_AND_MOUSE
 
 static struct CatAndMouse_t CatAndMouse;
 
