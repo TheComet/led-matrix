@@ -30,6 +30,7 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 
 		// set initial color
 		CatAndMouse.player[player].color=GREEN;
+		CatAndMouse.player[rnd()&0x03].color=RED;
 
 		// set positions
 		do
@@ -52,6 +53,8 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 
 		dot(&CatAndMouse.player[player].pos_x, &CatAndMouse.player[player].pos_y, &CatAndMouse.player[player].color);
 	}
+	
+	
 
 	send();
 	
