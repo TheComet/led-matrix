@@ -418,6 +418,7 @@ void processGameOfLifeInput( void )
 // draws the menu icon for game of life
 void drawGameOfLifeMenuIcon( void )
 {
+	menuClearIconSpace();
 	unsigned char x, y, i;
 	for( i = 0; i != 40; i++ )
 	{

@@ -82,6 +82,7 @@ void menuDrawJoinArrows( unsigned char* playerList )
 void initMenu( void )
 {
 	Menu.gameCount = getModuleCount() + 2; // startup screen and menu are 0, 1
+	Menu.selected = 2;
 }
 
 // ----------------------------------------------------------------------
@@ -95,7 +96,6 @@ void loadMenu( unsigned short* frameBuffer, unsigned char* playerCount )
 	// reset values
 	Menu.toggleArrow = 0;
 	Menu.playerList = 0;
-	Menu.selected = 2;
 
 	// draw current game
 	cls();
@@ -118,6 +118,9 @@ void processMenuLoop( void )
 	// control left and right arrow blinking
 	if( Menu.selected > 2 ) menuDrawLeftArrow( Menu.toggleArrow );
 	if( Menu.selected < Menu.gameCount ) menuDrawRightArrow( Menu.toggleArrow );
+
+	// update icon
+	menuUpdateIcon( &Menu.selected );
 	send();
 
 }
@@ -142,7 +145,7 @@ void processMenuInput( void )
 		menuDrawJoinArrows( &Menu.playerList );
 
 		// draw appropriate icon
-		menuUpdateIcon( &Menu.selected );
+		menuRedrawIcon( &Menu.selected );
 		send();
 	}
 
@@ -156,7 +159,7 @@ void processMenuInput( void )
 		menuDrawJoinArrows( &Menu.playerList );
 
 		// draw appropriate icon
-		menuUpdateIcon( &Menu.selected );
+		menuRedrawIcon( &Menu.selected );
 		send();
 	}
 

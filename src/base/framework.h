@@ -94,7 +94,9 @@ void startFrameWork( void );
 void pollPorts( void );
 void frameWorkUpdateProcessLoop( void );
 void frameWorkUpdateInputLoop( void );
+void menuRedrawIcon( unsigned char* selected );
 void menuUpdateIcon( unsigned char* selected );
+void menuClearIconSpace( void );
 
 // used to register a game to the framework for callbacks
 void registerModule( loadFunction_cb_t loadFunction, processLoopFunction_cb_t processLoopFunction, processInputFunction_cb_t processInputFunction, drawMenuIconFunction_cb_t drawMenuIconFunction );

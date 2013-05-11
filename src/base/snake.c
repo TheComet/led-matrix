@@ -120,6 +120,7 @@ void processSnakeInput( void )
 // draws the menu icon for snake
 void drawSnakeMenuIcon( void )
 {
+
 	unsigned char x, y, index = 0;
 	for( y = 3; y != 13; y++ )
 	{

@@ -15,10 +15,19 @@
 
 static struct CatAndMouse_t CatAndMouse;
 
+// Icon
+static const unsigned short catAndMouseIcon[100] = {0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0xD0,0xD0,0x0,0x0,0xD0,0xD0,0x0,0x0,0x0,0x0,0xD0,0xD0,0xD0,0xD0,0xD0,0xD0,0x0,0x0,0xD0,0x0,0xD0,0x0,0x0,0x0,0x0,0xD0,0x0,0xD0,0x0,0xD0,0x0,0xE00,0x0,0x0,0xE00,0x0,0xD0,0x0,0xD0,0xD0,0x0,0x0,0x0,0x0,0x0,0x0,0xD0,0xD0,0x0,0x0,0xD0,0x0,0x0,0x0,0x0,0xD0,0x0,0x0,0x0,0x0,0x0,0xD0,0xD0,0xD0,0xD0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0};
+
 // ----------------------------------------------------------------------
 // load cat and mouse
 void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 {
+	//2-4 Players allowed
+	if(*playerCount==0)
+	{
+		endGame();
+		return;
+	}
 	cls();
 	
 	CatAndMouse.frameBuffer=frameBuffer;
@@ -34,6 +43,10 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 
 	for(unsigned char player=0; player!=4; player++)
 	{
+
+		// check if player is active
+		if( ( (*CatAndMouse.playerCount) & (0x01 << (player-1) ))==0 && player) continue;
+		
 		// set initial color
 		CatAndMouse.player[player].color=GREEN;
 
@@ -52,7 +65,10 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 
 			// check if position isn't colliding with other player
 			for(x=0; x!=player; x++)
-			{
+			{	
+				// check if player is active
+				if( ( (*CatAndMouse.playerCount) & (0x01 << (x-1) ))==0 && x) continue;
+				
 				if(CatAndMouse.player[player].pos_x==CatAndMouse.player[x].pos_x
 					&& CatAndMouse.player[player].pos_y==CatAndMouse.player[x].pos_y) break;
 			}
@@ -64,10 +80,15 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 				
 		CatAndMouse.player[player].old_pos_x=CatAndMouse.player[player].pos_x;		//initialise old position
 		CatAndMouse.player[player].old_pos_y=CatAndMouse.player[player].pos_y;
-	}	
-	
+	}
+
 	//set a random player as the cat
-	x=rnd()&0x03;
+	do
+	{
+		x=rnd()&0x03;
+
+	}while( ( (*CatAndMouse.playerCount) & (0x01 << (x-1) ))==0 && x);	// check if player is active
+
 	CatAndMouse.player[x].color=RED;
 	dot(&CatAndMouse.player[x].pos_x, &CatAndMouse.player[x].pos_y, &CatAndMouse.player[x].color);
 
@@ -88,6 +109,8 @@ void processCatAndMouseInput( void )
 	unsigned char x;
 	for(x=0;x!=4;x++)
 	{
+		// check if player is active
+		if( ( (*CatAndMouse.playerCount) & (0x01 << (x-1) ))==0 && x) continue;
 
 		// process input from all players
 		if( globalPlayerButtonLeft( x ) )
@@ -125,6 +148,10 @@ void processCatAndMouseInput( void )
 	// draw new positions and do other updates
 	for(x=0;x!=4;x++)
 	{
+		
+		// check if player is active
+		if( ( (*CatAndMouse.playerCount) & (0x01 << (x-1) ))==0 && x) continue;
+		
 		CatAndMouse.player[x].pos_x&=0x0F;	//set player x on the other side of the matrix if player x cross the line
 		CatAndMouse.player[x].pos_y&=0x0F;
 		
@@ -134,6 +161,26 @@ void processCatAndMouseInput( void )
 		dot(&CatAndMouse.player[x].pos_x, &CatAndMouse.player[x].pos_y, &CatAndMouse.player[x].color);
 	}
 
+	for(x=0;x!=4;x++)
+	{
+		if(CatAndMouse.player[x].color == RED)
+		{
+			unsigned char y;
+			for(y=0;y!=4;y++)
+			{
+				
+				// check if player is active
+				if( ( (*CatAndMouse.playerCount) & (0x01 << (y-1) ))==0 && y) continue;
+				
+				if(CatAndMouse.player[x].pos_x == CatAndMouse.player[y].pos_x && CatAndMouse.player[x].pos_y 
+					== CatAndMouse.player[y].pos_y && CatAndMouse.player[y].color==GREEN)
+				{
+					CatAndMouse.player[y].color=RED;
+					y=0;
+				}
+			}
+		}
+	}
 	if( globalPlayer1ButtonMenu() ) endGame();	//if player 1 press the the Button Up and Down in the same time the game end and you will jump to the menu
 
 	send();
@@ -143,5 +190,14 @@ void processCatAndMouseInput( void )
 // draw cat and mouse menu icon
 void drawCatAndMouseMenuIcon( void )
 {
+	unsigned char x, y, index = 0;
+	for( y = 3; y != 13; y++ )
+	{
+		for( x = 3; x != 13; x++ )
+		{
+			dot( &x, &y, &catAndMouseIcon[index] );
+			index++;
+		}
+	}
 }
 #endif // GAME_ENABLE_CAT_AND_MOUSE
