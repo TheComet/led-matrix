@@ -23,21 +23,29 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 	
 	CatAndMouse.frameBuffer=frameBuffer;
 	CatAndMouse.playerCount=playerCount;	
+	
+	unsigned char x,x2;	//local variable for drawing functions and other stuff
+	unsigned char y,y2;
+	unsigned short LIGHTORANGE=0xA50;	//define the color for the box
+
+	//set boundary
+	x=0x00; y=0x00; x2=0x0F; y2=0x0F;
+	box(&x, &y, &x2, &y2, &LIGHTORANGE);	
 
 	for(unsigned char player=0; player!=4; player++)
 	{
-		unsigned char x;
-
 		// set initial color
 		CatAndMouse.player[player].color=GREEN;
-		CatAndMouse.player[rnd()&0x03].color=RED;
 
 		// set positions
 		do
 		{
-			// set position
+			// set random position
 			CatAndMouse.player[player].pos_x=rnd()&0x0F;
 			CatAndMouse.player[player].pos_y=rnd()&0x0F;
+
+			clamp(&CatAndMouse.player[player].pos_x, 0x01, 0x0E);	//clamp the positions to the gamebox
+			clamp(&CatAndMouse.player[player].pos_y, 0x01, 0x0E);
 
 			// player 0 doesn't need checking
 			if(player==0) break;
@@ -45,19 +53,25 @@ void loadCatAndMouse( unsigned short* frameBuffer, unsigned char* playerCount )
 			// check if position isn't colliding with other player
 			for(x=0; x!=player; x++)
 			{
-				if(CatAndMouse.player[player].pos_x!=CatAndMouse.player[x].pos_x) break;
-				if(CatAndMouse.player[player].pos_y!=CatAndMouse.player[x].pos_y) break;
+				if(CatAndMouse.player[player].pos_x==CatAndMouse.player[x].pos_x
+					&& CatAndMouse.player[player].pos_y==CatAndMouse.player[x].pos_y) break;
 			}
 
-		}while(x==player);
-
+		}while(x!=player);
+		
+		//draw all players 
 		dot(&CatAndMouse.player[player].pos_x, &CatAndMouse.player[player].pos_y, &CatAndMouse.player[player].color);
-	}
+				
+		CatAndMouse.player[player].old_pos_x=CatAndMouse.player[player].pos_x;		//initialise old position
+		CatAndMouse.player[player].old_pos_y=CatAndMouse.player[player].pos_y;
+	}	
 	
-	
+	//set a random player as the cat
+	x=rnd()&0x03;
+	CatAndMouse.player[x].color=RED;
+	dot(&CatAndMouse.player[x].pos_x, &CatAndMouse.player[x].pos_y, &CatAndMouse.player[x].color);
 
-	send();
-	
+	send();	
 }
 
 // ----------------------------------------------------------------------
@@ -70,7 +84,59 @@ void processCatAndMouseLoop( void )
 // process cat and mouse input
 void processCatAndMouseInput( void )
 {
-	if( player1ButtonMenu() ) endGame();
+
+	unsigned char x;
+	for(x=0;x!=4;x++)
+	{
+
+		// process input from all players
+		if( globalPlayerButtonLeft( x ) )
+		{
+			if( CatAndMouse.player[x].pos_x > 0x01 ) CatAndMouse.player[x].pos_x--;
+		}
+		if( globalPlayerButtonRight( x ) )
+		{
+			if( CatAndMouse.player[x].pos_x < 0x0E ) CatAndMouse.player[x].pos_x++;
+		}
+		if( globalPlayerButtonUp( x ) )
+		{
+			if( CatAndMouse.player[x].pos_y > 0x01 ) CatAndMouse.player[x].pos_y--;
+		}
+		if( globalPlayerButtonDown( x ) )
+		{
+			if( CatAndMouse.player[x].pos_y < 0x0E ) CatAndMouse.player[x].pos_y++;
+		}
+		/*if( globalPlayerButtonFire( x ) )
+		{
+		}*/
+
+		//I have to clear here all the positions otherwise dots with higher drawing priority are cleared
+		if(CatAndMouse.player[x].old_pos_x!=CatAndMouse.player[x].pos_x)
+		{
+			dot(&CatAndMouse.player[x].old_pos_x, &CatAndMouse.player[x].old_pos_y, &BLACK);
+		}
+
+		if(CatAndMouse.player[x].old_pos_y!=CatAndMouse.player[x].pos_y)
+		{
+			dot(&CatAndMouse.player[x].old_pos_x, &CatAndMouse.player[x].old_pos_y, &BLACK);
+		}	
+	}
+
+	// draw new positions and do other updates
+	for(x=0;x!=4;x++)
+	{
+		CatAndMouse.player[x].pos_x&=0x0F;	//set player x on the other side of the matrix if player x cross the line
+		CatAndMouse.player[x].pos_y&=0x0F;
+		
+		CatAndMouse.player[x].old_pos_x=CatAndMouse.player[x].pos_x;
+		CatAndMouse.player[x].old_pos_y=CatAndMouse.player[x].pos_y;
+
+		dot(&CatAndMouse.player[x].pos_x, &CatAndMouse.player[x].pos_y, &CatAndMouse.player[x].color);
+	}
+
+	if( globalPlayer1ButtonMenu() ) endGame();	//if player 1 press the the Button Up and Down in the same time the game end and you will jump to the menu
+
+	send();
 }
 
 // -----------------------------------------------------------------------

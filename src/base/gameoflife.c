@@ -164,10 +164,10 @@ void processGameOfLifeInput( void )
 			oldCursorY = &GameOfLife.player[0].oldCursor.y;
 
 			// move cursor with up, down, left, right
-			if( player1ButtonUp() ) (*cursorY) = (((*cursorY)-1)&0x0F);
-			if( player1ButtonDown() ) (*cursorY) = (((*cursorY)+1)&0x0F);
-			if( player1ButtonLeft() ) (*cursorX) = (((*cursorX)-1)&0x0F);
-			if( player1ButtonRight() ) (*cursorX) = (((*cursorX)+1)&0x0F);
+			if( globalPlayer1ButtonUp() ) (*cursorY) = (((*cursorY)-1)&0x0F);
+			if( globalPlayer1ButtonDown() ) (*cursorY) = (((*cursorY)+1)&0x0F);
+			if( globalPlayer1ButtonLeft() ) (*cursorX) = (((*cursorX)-1)&0x0F);
+			if( globalPlayer1ButtonRight() ) (*cursorX) = (((*cursorX)+1)&0x0F);
 
 			// get buffer
 			bufferPtr = (GameOfLife.frameBuffer + (*cursorY) + ((*cursorX)<<4));
@@ -176,7 +176,7 @@ void processGameOfLifeInput( void )
 			readMask = (0x01<<GameOfLife.bufferOffset);
 
 			// edit cells
-			if( player1ButtonFire() )
+			if( globalPlayer1ButtonFire() )
 			{
 
 				// update frame buffer and draw new cursor
@@ -200,7 +200,7 @@ void processGameOfLifeInput( void )
 				dot( cursorX, cursorY, &WHITE );
 
 			// clear frame buffer with clear button
-			if( player1ButtonClear() )
+			if( globalPlayer1ButtonClear() )
 			{
 				clearFrameBuffer( GameOfLife.frameBuffer );
 				gameOfLifeDrawFrameBufferNoCheck();
@@ -209,7 +209,7 @@ void processGameOfLifeInput( void )
 			}
 
 			// resume simulation
-			if( player1ButtonMenu() )
+			if( globalPlayer1ButtonMenu() )
 			{
 				gameOfLifeDrawFrameBufferNoCheck(); // force re-drawing of all pixels
 				GameOfLife.state = GAMEOFLIFE_STATE_PLAY_SINGLE;
@@ -224,7 +224,7 @@ void processGameOfLifeInput( void )
 		case GAMEOFLIFE_STATE_PLAY_SINGLE :
 
 			// switch to editing mode
-			if( player1ButtonFire() )
+			if( globalPlayer1ButtonFire() )
 			{
 				gameOfLifeDrawFrameBufferCustom( &BLUE, &RED, &GREEN, &YELLOW ); // force re-drawing of all pixels in a different colour
 				dot( &GameOfLife.player[0].cursor.x, &GameOfLife.player[0].cursor.y, &WHITE );
@@ -233,7 +233,7 @@ void processGameOfLifeInput( void )
 			}
 
 			// end game with menu button
-			if( player1ButtonMenu() ) endGame();
+			if( globalPlayer1ButtonMenu() ) endGame();
 
 			break;
 
@@ -254,16 +254,16 @@ void processGameOfLifeInput( void )
 					oldCursorX = &GameOfLife.player[i].oldCursor.x;
 					oldCursorY = &GameOfLife.player[i].oldCursor.y;
 
+					// move cursor with up, down, left, right
+					if( globalPlayerButtonUp(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
+					if( globalPlayerButtonDown(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
+					if( globalPlayerButtonLeft(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
+					if( globalPlayerButtonRight(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
+
 					// player specific actions
 					switch( i )
 					{
 						case 0 :
-
-							// move cursor with up, down, left, right
-							if( playerButtonUp(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
-							if( playerButtonDown(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
-							if( playerButtonLeft(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
-							if( playerButtonRight(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
 
 							// set colours
 							cursorColour = BLUEGREEN;
@@ -271,35 +271,17 @@ void processGameOfLifeInput( void )
 							break;
 						case 1 :
 
-							// move cursor with up, down, left, right
-							if( playerButtonUp(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
-							if( playerButtonDown(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
-							if( playerButtonLeft(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
-							if( playerButtonRight(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
-
 							// set colours
 							cursorColour = PURPLE;
 							cursorSelectColour = ORANGE;
 							break;
 						case 2 :
 
-							// move cursor with up, down, left, right
-							if( playerButtonUp(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
-							if( playerButtonDown(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
-							if( playerButtonLeft(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
-							if( playerButtonRight(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
-
 							// set colours
 							cursorColour = PINK;
 							cursorSelectColour = LIGHTBLUE;
 							break;
 						case 3 :
-
-							// move cursor with up, down, left, right
-							if( playerButtonUp(i) ) (*cursorX) = (((*cursorX)-1)&0x0F);
-							if( playerButtonDown(i) ) (*cursorX) = (((*cursorX)+1)&0x0F);
-							if( playerButtonLeft(i) ) (*cursorY) = (((*cursorY)+1)&0x0F);
-							if( playerButtonRight(i) ) (*cursorY) = (((*cursorY)-1)&0x0F);
 
 							// set colours
 							cursorColour = LIGHTYELLOW;
@@ -326,7 +308,7 @@ void processGameOfLifeInput( void )
 					readMask = ((1<<(i<<1))<<GameOfLife.bufferOffset);
 
 					// edit cells
-					if( playerButtonFire(i) )
+					if( globalPlayerButtonFire(i) )
 					{
 
 						// decrement cells placed
@@ -408,7 +390,7 @@ void processGameOfLifeInput( void )
 			send();
 
 			// end game with menu button
-			if( player1ButtonMenu() ) endGame();
+			if( globalPlayer1ButtonMenu() ) endGame();
 
 			break;
 
@@ -416,7 +398,7 @@ void processGameOfLifeInput( void )
 		case GAMEOFLIFE_STATE_WINNER :
 
 			// end game with menu button
-			if( player1ButtonMenu() ) endGame();
+			if( globalPlayer1ButtonMenu() ) endGame();
 
 			break;
 
@@ -424,7 +406,7 @@ void processGameOfLifeInput( void )
 		case GAMEOFLIFE_STATE_WINNER2 :
 
 			// end game with menu button
-			if( player1ButtonMenu() ) endGame();
+			if( globalPlayer1ButtonMenu() ) endGame();
 
 			break;
 

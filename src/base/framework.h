@@ -109,48 +109,91 @@ void clearFrameBuffer( unsigned short* frameBuffer );
 unsigned char rnd( void );
 extern inline signed char sin( unsigned short angle );
 extern inline void wrap( unsigned short* value, unsigned char wrap );
+extern inline void clamp( unsigned char* value, unsigned char lower, unsigned char higher );
 unsigned char sqrt( unsigned short* value );
 
-// player specific input
-extern inline unsigned char player1ButtonFire( void );
-extern inline unsigned char player1ButtonLeft( void );
-extern inline unsigned char player1ButtonRight( void );
-extern inline unsigned char player1ButtonUp( void );
-extern inline unsigned char player1ButtonDown( void );
-extern inline unsigned char player1ButtonMenu( void );
-extern inline unsigned char player1ButtonClear( void );
+// player specific input with local orientation
+extern inline unsigned char localPlayer1ButtonFire( void );
+extern inline unsigned char localPlayer1ButtonLeft( void );
+extern inline unsigned char localPlayer1ButtonRight( void );
+extern inline unsigned char localPlayer1ButtonUp( void );
+extern inline unsigned char localPlayer1ButtonDown( void );
+extern inline unsigned char localPlayer1ButtonMenu( void );
+extern inline unsigned char localPlayer1ButtonClear( void );
 
-extern inline unsigned char player2ButtonFire( void );
-extern inline unsigned char player2ButtonLeft( void );
-extern inline unsigned char player2ButtonRight( void );
-extern inline unsigned char player2ButtonUp( void );
-extern inline unsigned char player2ButtonDown( void );
-extern inline unsigned char player2ButtonMenu( void );
-extern inline unsigned char player2ButtonClear( void );
+extern inline unsigned char localPlayer2ButtonFire( void );
+extern inline unsigned char localPlayer2ButtonLeft( void );
+extern inline unsigned char localPlayer2ButtonRight( void );
+extern inline unsigned char localPlayer2ButtonUp( void );
+extern inline unsigned char localPlayer2ButtonDown( void );
+extern inline unsigned char localPlayer2ButtonMenu( void );
+extern inline unsigned char localPlayer2ButtonClear( void );
 
-extern inline unsigned char player3ButtonFire( void );
-extern inline unsigned char player3ButtonLeft( void );
-extern inline unsigned char player3ButtonRight( void );
-extern inline unsigned char player3ButtonUp( void );
-extern inline unsigned char player3ButtonDown( void );
-extern inline unsigned char player3ButtonMenu( void );
-extern inline unsigned char player3ButtonClear( void );
+extern inline unsigned char localPlayer3ButtonFire( void );
+extern inline unsigned char localPlayer3ButtonLeft( void );
+extern inline unsigned char localPlayer3ButtonRight( void );
+extern inline unsigned char localPlayer3ButtonUp( void );
+extern inline unsigned char localPlayer3ButtonDown( void );
+extern inline unsigned char localPlayer3ButtonMenu( void );
+extern inline unsigned char localPlayer3ButtonClear( void );
 
-extern inline unsigned char player4ButtonFire( void );
-extern inline unsigned char player4ButtonLeft( void );
-extern inline unsigned char player4ButtonRight( void );
-extern inline unsigned char player4ButtonUp( void );
-extern inline unsigned char player4ButtonDown( void );
-extern inline unsigned char player4ButtonMenu( void );
-extern inline unsigned char player4ButtonClear( void );
+extern inline unsigned char localPlayer4ButtonFire( void );
+extern inline unsigned char localPlayer4ButtonLeft( void );
+extern inline unsigned char localPlayer4ButtonRight( void );
+extern inline unsigned char localPlayer4ButtonUp( void );
+extern inline unsigned char localPlayer4ButtonDown( void );
+extern inline unsigned char localPlayer4ButtonMenu( void );
+extern inline unsigned char localPlayer4ButtonClear( void );
 
-// player general input
-unsigned char playerButtonFire( unsigned char playerID );
-unsigned char playerButtonLeft( unsigned char playerID );
-unsigned char playerButtonRight( unsigned char playerID );
-unsigned char playerButtonUp( unsigned char playerID );
-unsigned char playerButtonDown( unsigned char playerID );
-extern inline unsigned char playerButtonMenu( unsigned char playerID );
-extern inline unsigned char playerButtonClear( unsigned char playerID );
+// player general input with local orientation
+unsigned char localPlayerButtonFire( unsigned char playerID );
+unsigned char localPlayerButtonLeft( unsigned char playerID );
+unsigned char localPlayerButtonRight( unsigned char playerID );
+unsigned char localPlayerButtonUp( unsigned char playerID );
+unsigned char localPlayerButtonDown( unsigned char playerID );
+extern inline unsigned char localPlayerButtonMenu( unsigned char playerID );
+extern inline unsigned char localPlayerButtonClear( unsigned char playerID );
+
+// player specific input with global orientation
+extern inline unsigned char globalPlayer1ButtonFire( void );
+extern inline unsigned char globalPlayer1ButtonLeft( void );
+extern inline unsigned char globalPlayer1ButtonRight( void );
+extern inline unsigned char globalPlayer1ButtonUp( void );
+extern inline unsigned char globalPlayer1ButtonDown( void );
+extern inline unsigned char globalPlayer1ButtonMenu( void );
+extern inline unsigned char globalPlayer1ButtonClear( void );
+
+extern inline unsigned char globalPlayer2ButtonFire( void );
+extern inline unsigned char globalPlayer2ButtonLeft( void );
+extern inline unsigned char globalPlayer2ButtonRight( void );
+extern inline unsigned char globalPlayer2ButtonUp( void );
+extern inline unsigned char globalPlayer2ButtonDown( void );
+extern inline unsigned char globalPlayer2ButtonMenu( void );
+extern inline unsigned char globalPlayer2ButtonClear( void );
+
+extern inline unsigned char globalPlayer3ButtonFire( void );
+extern inline unsigned char globalPlayer3ButtonLeft( void );
+extern inline unsigned char globalPlayer3ButtonRight( void );
+extern inline unsigned char globalPlayer3ButtonUp( void );
+extern inline unsigned char globalPlayer3ButtonDown( void );
+extern inline unsigned char globalPlayer3ButtonMenu( void );
+extern inline unsigned char globalPlayer3ButtonClear( void );
+
+extern inline unsigned char globalPlayer4ButtonFire( void );
+extern inline unsigned char globalPlayer4ButtonLeft( void );
+extern inline unsigned char globalPlayer4ButtonRight( void );
+extern inline unsigned char globalPlayer4ButtonUp( void );
+extern inline unsigned char globalPlayer4ButtonDown( void );
+extern inline unsigned char globalPlayer4ButtonMenu( void );
+extern inline unsigned char globalPlayer4ButtonClear( void );
+
+// player general input with global orientation
+unsigned char globalPlayerButtonFire( unsigned char playerID );
+unsigned char globalPlayerButtonLeft( unsigned char playerID );
+unsigned char globalPlayerButtonRight( unsigned char playerID );
+unsigned char globalPlayerButtonUp( unsigned char playerID );
+unsigned char globalPlayerButtonDown( unsigned char playerID );
+extern inline unsigned char globalPlayerButtonMenu( unsigned char playerID );
+extern inline unsigned char globalPlayerButtonClear( unsigned char playerID );
 
 #endif // _FRAMEWORK_H_

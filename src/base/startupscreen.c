@@ -86,5 +86,5 @@ void processStartUpScreenInput( void )
 {
 
 	// start is pressed
-	if( player1ButtonMenu() ) endGame();
+	if( globalPlayer1ButtonMenu() ) endGame();
 }

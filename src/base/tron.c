@@ -128,60 +128,17 @@ for (j=0;j!=4;j++){
 void processTronInput( void )
 {
 
- 
-         if (player1ButtonLeft())
-          Tron.Player[0].Direction = TRON_DIRECTION_LEFT;
-        
-        if (player1ButtonRight())
-          Tron.Player[0].Direction = TRON_DIRECTION_RIGHT;
-        
-        if (player1ButtonUp())
-          Tron.Player[0].Direction = TRON_DIRECTION_UP;        
-
-        if (player1ButtonDown())
-          Tron.Player[0].Direction = TRON_DIRECTION_DOWN; 
-
-
-         if (player2ButtonLeft())
-          Tron.Player[1].Direction = TRON_DIRECTION_RIGHT;
-        
-        if (player2ButtonRight())
-          Tron.Player[1].Direction = TRON_DIRECTION_LEFT;
-        
-        if (player2ButtonUp())
-          Tron.Player[1].Direction = TRON_DIRECTION_DOWN;        
-
-        if (player2ButtonDown())
-          Tron.Player[1].Direction = TRON_DIRECTION_UP; 
-
-
-         if (player3ButtonLeft())
-          Tron.Player[2].Direction = TRON_DIRECTION_UP;
-        
-        if (player3ButtonRight())
-          Tron.Player[2].Direction = TRON_DIRECTION_DOWN;
-        
-        if (player3ButtonUp())
-          Tron.Player[2].Direction = TRON_DIRECTION_RIGHT;        
-
-        if (player3ButtonDown())
-          Tron.Player[2].Direction = TRON_DIRECTION_LEFT; 
-
-         if (player4ButtonLeft())
-          Tron.Player[3].Direction = TRON_DIRECTION_DOWN;
-        
-        if (player4ButtonRight())
-          Tron.Player[3].Direction = TRON_DIRECTION_UP;
-        
-        if (player4ButtonUp())
-          Tron.Player[3].Direction = TRON_DIRECTION_LEFT;        
-
-        if (player4ButtonDown())
-          Tron.Player[3].Direction = TRON_DIRECTION_RIGHT; 
-	
+ 	// process input for all players
+	for( unsigned char x = 0; x != 4; x++ )
+	{
+		if( globalPlayerButtonLeft( x ) )  Tron.Player[x].Direction = TRON_DIRECTION_LEFT;
+		if( globalPlayerButtonRight( x ) ) Tron.Player[x].Direction = TRON_DIRECTION_RIGHT;
+		if( globalPlayerButtonUp( x ) )    Tron.Player[x].Direction = TRON_DIRECTION_UP;
+		if( globalPlayerButtonDown( x ) )  Tron.Player[x].Direction = TRON_DIRECTION_DOWN;
+	}
 
 	// end game with menu button
-	if( player1ButtonMenu() ) endGame();
+	if( globalPlayer1ButtonMenu() ) endGame();
 }
 
 // ----------------------------------------------------------------------

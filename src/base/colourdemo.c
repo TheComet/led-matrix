@@ -110,7 +110,7 @@ void processColourDemoInput( void )
 {
 	
 	// exit game
-	if( player1ButtonMenu() ) endGame();
+	if( globalPlayer1ButtonMenu() ) endGame();
 }
 
 // ----------------------------------------------------------------------

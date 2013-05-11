@@ -103,14 +103,17 @@ void processSnakeLoop( void )
 void processSnakeInput( void )
 {
 
-	// process for player 1
-	if( player1ButtonUp() ) Snake.player[0].direction = SNAKE_PLAYER_DIRECTION_UP;
-	if( player1ButtonDown() ) Snake.player[0].direction = SNAKE_PLAYER_DIRECTION_DOWN;
-	if( player1ButtonLeft() ) Snake.player[0].direction = SNAKE_PLAYER_DIRECTION_LEFT;
-	if( player1ButtonRight() ) Snake.player[0].direction = SNAKE_PLAYER_DIRECTION_RIGHT;
+	// process input for all players
+	for( unsigned char x = 0; x != 4; x++ )
+	{
+		if( globalPlayerButtonUp( x ) ) Snake.player[x].direction = SNAKE_PLAYER_DIRECTION_UP;
+		if( globalPlayerButtonDown( x ) ) Snake.player[x].direction = SNAKE_PLAYER_DIRECTION_DOWN;
+		if( globalPlayerButtonLeft( x ) ) Snake.player[x].direction = SNAKE_PLAYER_DIRECTION_LEFT;
+		if( globalPlayerButtonRight( x ) ) Snake.player[x].direction = SNAKE_PLAYER_DIRECTION_RIGHT;
+	}
 
 	// exit game
-	if( player1ButtonMenu() ) endGame();
+	if( globalPlayer1ButtonMenu() ) endGame();
 }
 
 // ----------------------------------------------------------------------

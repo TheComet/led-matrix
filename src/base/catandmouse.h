@@ -13,6 +13,8 @@ struct CatAndMouse_Player_t
 {
 	unsigned char pos_x;
 	unsigned char pos_y;
+	unsigned char old_pos_x;
+	unsigned char old_pos_y;
 	unsigned short color;
 };
 struct CatAndMouse_t

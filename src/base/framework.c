@@ -232,43 +232,43 @@ void menuUpdateIcon( unsigned char* selected )
 }
 
 // ----------------------------------------------------------------------
-// gets the button state of a specific player (positive edge only)
+// gets the button state of a specific player (positive edge only) with global orientation
 // unfortunately, I see no way to compress this, because it is dependant on global definitions
-inline unsigned char player1ButtonFire ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_FIRE;  }
-inline unsigned char player1ButtonLeft ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_LEFT;  }
-inline unsigned char player1ButtonRight( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_RIGHT; }
-inline unsigned char player1ButtonUp   ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_UP;    }
-inline unsigned char player1ButtonDown ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_DOWN;  }
-inline unsigned char player1ButtonMenu ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
-inline unsigned char player1ButtonClear( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+inline unsigned char globalPlayer1ButtonFire ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_FIRE;  }
+inline unsigned char globalPlayer1ButtonLeft ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_LEFT;  }
+inline unsigned char globalPlayer1ButtonRight( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_RIGHT; }
+inline unsigned char globalPlayer1ButtonUp   ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_UP;    }
+inline unsigned char globalPlayer1ButtonDown ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_DOWN;  }
+inline unsigned char globalPlayer1ButtonMenu ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char globalPlayer1ButtonClear( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
-inline unsigned char player2ButtonFire ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_FIRE;  }
-inline unsigned char player2ButtonLeft ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_LEFT;  }
-inline unsigned char player2ButtonRight( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_RIGHT; }
-inline unsigned char player2ButtonUp   ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_UP;    }
-inline unsigned char player2ButtonDown ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_DOWN;  }
-inline unsigned char player2ButtonMenu ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
-inline unsigned char player2ButtonClear( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+inline unsigned char globalPlayer2ButtonFire ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_FIRE;  }
+inline unsigned char globalPlayer2ButtonLeft ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_RIGHT; }
+inline unsigned char globalPlayer2ButtonRight( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_LEFT;  }
+inline unsigned char globalPlayer2ButtonUp   ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_DOWN;  }
+inline unsigned char globalPlayer2ButtonDown ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_UP;    }
+inline unsigned char globalPlayer2ButtonMenu ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char globalPlayer2ButtonClear( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
-inline unsigned char player3ButtonFire ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_FIRE;  }
-inline unsigned char player3ButtonLeft ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_LEFT;  }
-inline unsigned char player3ButtonRight( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_RIGHT; }
-inline unsigned char player3ButtonUp   ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_UP;    }
-inline unsigned char player3ButtonDown ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_DOWN;  }
-inline unsigned char player3ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
-inline unsigned char player3ButtonClear( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+inline unsigned char globalPlayer3ButtonFire ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_FIRE;  }
+inline unsigned char globalPlayer3ButtonLeft ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_UP;    }
+inline unsigned char globalPlayer3ButtonRight( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_DOWN;  }
+inline unsigned char globalPlayer3ButtonUp   ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_RIGHT; }
+inline unsigned char globalPlayer3ButtonDown ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_LEFT;  }
+inline unsigned char globalPlayer3ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char globalPlayer3ButtonClear( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
-inline unsigned char player4ButtonFire ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_FIRE;  }
-inline unsigned char player4ButtonLeft ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_LEFT;  }
-inline unsigned char player4ButtonRight( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_RIGHT; }
-inline unsigned char player4ButtonUp   ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_UP;    }
-inline unsigned char player4ButtonDown ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_DOWN;  }
-inline unsigned char player4ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
-inline unsigned char player4ButtonClear( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+inline unsigned char globalPlayer4ButtonFire ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_FIRE;  }
+inline unsigned char globalPlayer4ButtonLeft ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_DOWN;  }
+inline unsigned char globalPlayer4ButtonRight( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_UP;    }
+inline unsigned char globalPlayer4ButtonUp   ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_LEFT;  }
+inline unsigned char globalPlayer4ButtonDown ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_RIGHT; }
+inline unsigned char globalPlayer4ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char globalPlayer4ButtonClear( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
 
 // ----------------------------------------------------------------------
-// general player input for "fire"
-unsigned char playerButtonFire( unsigned char playerID )
+// general player input for "fire" with global orientation
+unsigned char globalPlayerButtonFire( unsigned char playerID )
 {
 	unsigned char mask;
 	switch( playerID )
@@ -283,8 +283,137 @@ unsigned char playerButtonFire( unsigned char playerID )
 }
 
 // ----------------------------------------------------------------------
-// general player input for "left"
-unsigned char playerButtonLeft( unsigned char playerID )
+// general player input for "left" with global orientation
+unsigned char globalPlayerButtonLeft( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_LEFT;  break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_RIGHT; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_UP;    break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_DOWN;  break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "right" with global orientation
+unsigned char globalPlayerButtonRight( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_RIGHT; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_LEFT;  break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_DOWN;  break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_UP;    break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "up" with global orientation
+unsigned char globalPlayerButtonUp( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_UP;    break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_DOWN;  break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_RIGHT; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_LEFT;  break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "down" with global orientation
+unsigned char globalPlayerButtonDown( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_DOWN;  break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_UP;    break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_LEFT;  break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_RIGHT; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "menu" with global orientation
+inline unsigned char globalPlayerButtonMenu( unsigned char playerID )
+{
+	return FrameWork.player[playerID].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "clear" with global orientation
+inline unsigned char globalPlayerButtonClear( unsigned char playerID )
+{
+	return FrameWork.player[playerID].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;
+}
+
+// ----------------------------------------------------------------------
+// gets the button state of a specific player (positive edge only) with local orientation
+// unfortunately, I see no way to compress this, because it is dependant on global definitions
+inline unsigned char localPlayer1ButtonFire ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_FIRE;  }
+inline unsigned char localPlayer1ButtonLeft ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_LEFT;  }
+inline unsigned char localPlayer1ButtonRight( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_RIGHT; }
+inline unsigned char localPlayer1ButtonUp   ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_UP;    }
+inline unsigned char localPlayer1ButtonDown ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER1_BUTTON_DOWN;  }
+inline unsigned char localPlayer1ButtonMenu ( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char localPlayer1ButtonClear( void ){ return FrameWork.player[0].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+
+inline unsigned char localPlayer2ButtonFire ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_FIRE;  }
+inline unsigned char localPlayer2ButtonLeft ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_LEFT;  }
+inline unsigned char localPlayer2ButtonRight( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_RIGHT; }
+inline unsigned char localPlayer2ButtonUp   ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_UP;    }
+inline unsigned char localPlayer2ButtonDown ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER2_BUTTON_DOWN;  }
+inline unsigned char localPlayer2ButtonMenu ( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char localPlayer2ButtonClear( void ){ return FrameWork.player[1].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+
+inline unsigned char localPlayer3ButtonFire ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_FIRE;  }
+inline unsigned char localPlayer3ButtonLeft ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_LEFT;  }
+inline unsigned char localPlayer3ButtonRight( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_RIGHT; }
+inline unsigned char localPlayer3ButtonUp   ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_UP;    }
+inline unsigned char localPlayer3ButtonDown ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER3_BUTTON_DOWN;  }
+inline unsigned char localPlayer3ButtonMenu ( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char localPlayer3ButtonClear( void ){ return FrameWork.player[2].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+
+inline unsigned char localPlayer4ButtonFire ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_FIRE;  }
+inline unsigned char localPlayer4ButtonLeft ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_LEFT;  }
+inline unsigned char localPlayer4ButtonRight( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_RIGHT; }
+inline unsigned char localPlayer4ButtonUp   ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_UP;    }
+inline unsigned char localPlayer4ButtonDown ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER4_BUTTON_DOWN;  }
+inline unsigned char localPlayer4ButtonMenu ( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;   }
+inline unsigned char localPlayer4ButtonClear( void ){ return FrameWork.player[3].buttonPositiveEdge & MAP_PLAYER_BUTTON_CLEAR;  }
+
+// ----------------------------------------------------------------------
+// general player input for "fire" with local orientation
+unsigned char localPlayerButtonFire( unsigned char playerID )
+{
+	unsigned char mask;
+	switch( playerID )
+	{
+		case 0 : mask = MAP_PLAYER1_BUTTON_FIRE; break;
+		case 1 : mask = MAP_PLAYER2_BUTTON_FIRE; break;
+		case 2 : mask = MAP_PLAYER3_BUTTON_FIRE; break;
+		case 3 : mask = MAP_PLAYER4_BUTTON_FIRE; break;
+		default: break;
+	}
+	return FrameWork.player[playerID].buttonPositiveEdge & mask;
+}
+
+// ----------------------------------------------------------------------
+// general player input for "left" with local orientation
+unsigned char localPlayerButtonLeft( unsigned char playerID )
 {
 	unsigned char mask;
 	switch( playerID )
@@ -299,8 +428,8 @@ unsigned char playerButtonLeft( unsigned char playerID )
 }
 
 // ----------------------------------------------------------------------
-// general player input for "right"
-unsigned char playerButtonRight( unsigned char playerID )
+// general player input for "right" with local orientation
+unsigned char localPlayerButtonRight( unsigned char playerID )
 {
 	unsigned char mask;
 	switch( playerID )
@@ -315,8 +444,8 @@ unsigned char playerButtonRight( unsigned char playerID )
 }
 
 // ----------------------------------------------------------------------
-// general player input for "up"
-unsigned char playerButtonUp( unsigned char playerID )
+// general player input for "up" with local orientation
+unsigned char localPlayerButtonUp( unsigned char playerID )
 {
 	unsigned char mask;
 	switch( playerID )
@@ -331,8 +460,8 @@ unsigned char playerButtonUp( unsigned char playerID )
 }
 
 // ----------------------------------------------------------------------
-// general player input for "down"
-unsigned char playerButtonDown( unsigned char playerID )
+// general player input for "down" with local orientation
+unsigned char localPlayerButtonDown( unsigned char playerID )
 {
 	unsigned char mask;
 	switch( playerID )
@@ -347,15 +476,15 @@ unsigned char playerButtonDown( unsigned char playerID )
 }
 
 // ----------------------------------------------------------------------
-// general player input for "menu"
-inline unsigned char playerButtonMenu( unsigned char playerID )
+// general player input for "menu" with local orientation
+inline unsigned char localPlayerButtonMenu( unsigned char playerID )
 {
 	return FrameWork.player[playerID].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;
 }
 
 // ----------------------------------------------------------------------
-// general player input for "clear"
-inline unsigned char playerButtonClear( unsigned char playerID )
+// general player input for "clear" with local orientation
+inline unsigned char localPlayerButtonClear( unsigned char playerID )
 {
 	return FrameWork.player[playerID].buttonPositiveEdge & MAP_PLAYER_BUTTON_MENU;
 }
@@ -374,6 +503,19 @@ inline signed char sin( unsigned short angle )
 inline void wrap( unsigned short* value, unsigned char wrap )
 {
 	while( (*value) >= wrap ){ (*value) -= wrap; }
+}
+
+// ----------------------------------------------------------------------
+// clamps a value between <lower> and <higher>
+inline void clamp( unsigned char* value, unsigned char lower, unsigned char higher )
+{
+	if( *value < lower )
+	{
+		*value = lower;
+		return; // no need to check for higher value
+	}
+	if( *value > higher ) *value = higher;
+	return;
 }
 
 // ----------------------------------------------------------------------

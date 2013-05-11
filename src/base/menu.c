@@ -128,12 +128,12 @@ void processMenuInput( void )
 {
 
 	// process players joining/leaving
-	if( player2ButtonFire() ){ Menu.playerList ^= 0x01; menuDrawJoinArrows( &Menu.playerList ); send(); }
-	if( player3ButtonFire() ){ Menu.playerList ^= 0x02; menuDrawJoinArrows( &Menu.playerList ); send(); }
-	if( player4ButtonFire() ){ Menu.playerList ^= 0x04; menuDrawJoinArrows( &Menu.playerList ); send(); }
+	if( globalPlayer2ButtonFire() ){ Menu.playerList ^= 0x01; menuDrawJoinArrows( &Menu.playerList ); send(); }
+	if( globalPlayer3ButtonFire() ){ Menu.playerList ^= 0x02; menuDrawJoinArrows( &Menu.playerList ); send(); }
+	if( globalPlayer4ButtonFire() ){ Menu.playerList ^= 0x04; menuDrawJoinArrows( &Menu.playerList ); send(); }
 
 	// select previous game
-	if( player1ButtonLeft() && Menu.selected > 2 )
+	if( globalPlayer1ButtonLeft() && Menu.selected > 2 )
 	{
 		Menu.selected--;
 				
@@ -147,7 +147,7 @@ void processMenuInput( void )
 	}
 
 	// select next game
-	if( player1ButtonRight() && Menu.selected < Menu.gameCount )
+	if( globalPlayer1ButtonRight() && Menu.selected < Menu.gameCount )
 	{
 		Menu.selected++;
 
@@ -161,7 +161,7 @@ void processMenuInput( void )
 	}
 
 	// start a game
-	if( player1ButtonFire() )
+	if( globalPlayer1ButtonFire() )
 	{
 		startGame( &Menu.selected, &Menu.playerList );
 	}
