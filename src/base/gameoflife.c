@@ -311,14 +311,21 @@ void processGameOfLifeInput( void )
 					if( globalPlayerButtonFire(i) )
 					{
 
-						// decrement cells placed
-						GameOfLife.player[i].cellsPlaced--;
+						// make sure player is allowed to edit this cell
+						// player can only remove own cells
+						if( ((*bufferPtr) & (~( (readMask>>GameOfLife.bufferOffset)<<(1-GameOfLife.bufferOffset) ))) == 0 )
+						{
 
-						// update frame buffer
-						if( (*bufferPtr) & readMask )
-							(*bufferPtr) &= ~readMask;
-						else
-							(*bufferPtr) |= readMask;
+							// decrement cells placed
+							GameOfLife.player[i].cellsPlaced--;
+
+							// update frame buffer
+							if( (*bufferPtr) & readMask )
+								(*bufferPtr) = ~readMask;
+							else
+								(*bufferPtr) |= readMask;
+
+						}
 					}
 
 					// remove old cursor
@@ -424,9 +431,9 @@ void drawGameOfLifeMenuIcon( void )
 	{
 		x = rnd() & 0x0F;
 		y = rnd() & 0x0F;
-		if( x < 3 ) x = 3;
+		if( x < 3 ) x = 12-x;
 		if( x > 12 ) x = 3+(x-12);
-		if( y < 3 ) y = 3;
+		if( y < 3 ) y = 12-y;
 		if( y > 12 ) y = 3+(y-12);
 		dot( &x, &y, &GREEN );
 	}

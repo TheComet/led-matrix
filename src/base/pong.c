@@ -19,13 +19,16 @@ struct Pong_t Pong;
 // load pong
 void loadPong( unsigned short* frameBuffer, unsigned char* playerCount )
 {
+	cls();
+	unsigned char x=8, y=8, r=4;
+	circle( &x, &y, &r, &PINK );
 }
 
 // ----------------------------------------------------------------------
 // process pong main loop
 void processPongLoop( void )
 {
-	endGame(); // remove this
+	//endGame(); // remove this
 }
 
 // ----------------------------------------------------------------------

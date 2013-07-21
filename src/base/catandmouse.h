@@ -21,7 +21,9 @@ struct CatAndMouse_t
 {
 	struct CatAndMouse_Player_t player[4];
 	unsigned short* frameBuffer;
-	unsigned char* playerCount;
+	unsigned char* playersActive;
+	unsigned char playerCount;
+	unsigned char catCount;
 };
 // ----------------------------------------------------------------------
 // Function prototypes
