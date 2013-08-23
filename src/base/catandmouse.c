@@ -197,7 +197,7 @@ void processCatAndMouseInput( void )
 		}
 	}
 
-
+	/* change colour to blue - removed because it's currently bugged
 	if(CatAndMouse.catCount>=2)
 	{
 		for(x=0;x!=4;x++)
@@ -207,7 +207,7 @@ void processCatAndMouseInput( void )
 				CatAndMouse.player[x].color=BLUE;
 			}
 		}
-	}
+	}*/
 
 	
 	if( globalPlayer1ButtonMenu() ) endGame();	//if player 1 press the the Button Up and Down in the same time the game end and you will jump to the menu

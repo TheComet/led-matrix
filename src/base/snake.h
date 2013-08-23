@@ -42,7 +42,9 @@ struct Snake_Player_t
 {
 	struct Snake_Corner_Points_t cornerPoint;
 	unsigned char direction;
+	unsigned char oldDirection;
 	unsigned char alive;
+	unsigned short colour;
 };
 
 struct Snake_t
@@ -50,6 +52,7 @@ struct Snake_t
 	unsigned char* frameBuffer; // explicitly cast to (unsigned char*), so we have 512 bytes
 	unsigned char* playerCount;
 	struct Snake_Player_t player[4];
+	unsigned char foodPosition;
 };
 
 // ----------------------------------------------------------------------
