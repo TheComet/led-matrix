@@ -1,2 +1,3 @@
-# This is our README file
-Please refer to the wiki for more information
+# Video of Conway's Game of Life
+
+https://www.youtube.com/watch?v=chyND5x-EB0
